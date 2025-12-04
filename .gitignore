@@ -1,0 +1,66 @@
+# Xcode
+*.xcuserstate
+*.xcuserdatad/
+xcuserdata/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+# Build products
+build/
+*.app
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.swiftpm/
+.build/
+Packages/
+Package.pins
+Package.resolved
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Python
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+*.egg-info/
+dist/
+mlx-env/
+
+# Models (large files)
+models/
+*.gguf
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# Conversation data
+conversations/
+*.json.bak
+
+# Backup files
+*.backup
+*.bak
+*.old
+*.swp
+*~
+
+# Logs
+*.log
