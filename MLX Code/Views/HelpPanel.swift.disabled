@@ -1,0 +1,271 @@
+//
+//  HelpPanel.swift
+//  MLX Code
+//
+//  Created on 2025-11-19.
+//  Copyright © 2025. All rights reserved.
+//
+
+import SwiftUI
+
+struct HelpPanel: View {
+    @State private var searchText = ""
+    @State private var selectedTool: ToolHelp?
+    @State private var selectedCategory = "All"
+
+    private let categories = ["All", "Core", "Development", "Testing", "Security", "AI Enhancement", "Integration", "DevOps"]
+
+    var body: some View {
+        HSplitView {
+            // Tool List
+            VStack(spacing: 0) {
+                // Search bar
+                TextField("Search tools...", text: $searchText)
+                    .textFieldStyle(.roundedBorder)
+                    .padding()
+
+                // Category filter
+                Picker("Category", selection: $selectedCategory) {
+                    ForEach(categories, id: \.self) { category in
+                        Text(category).tag(category)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+
+                // Tool list
+                List(filteredTools, id: \.name, selection: $selectedTool) { tool in
+                    HStack {
+                        Image(systemName: iconFor(category: tool.category))
+                            .foregroundColor(.accentColor)
+                            .frame(width: 24)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(tool.displayName)
+                                .font(.headline)
+                            Text(tool.description)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .lineLimit(2)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                    .tag(tool)
+                }
+            }
+            .frame(minWidth: 250, idealWidth: 300)
+
+            // Help content
+            if let tool = selectedTool {
+                ToolHelpView(tool: tool)
+            } else {
+                VStack {
+                    Image(systemName: "questionmark.circle")
+                        .font(.system(size: 64))
+                        .foregroundColor(.secondary)
+                    Text("Select a tool to view help")
+                        .font(.title2)
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+        .navigationTitle("Tool Help & Documentation")
+    }
+
+    private var filteredTools: [ToolHelp] {
+        var tools = HelpSystem.shared.getAllTools()
+
+        if !searchText.isEmpty {
+            tools = HelpSystem.shared.searchHelp(query: searchText)
+        }
+
+        if selectedCategory != "All" {
+            tools = tools.filter { $0.category == selectedCategory }
+        }
+
+        return tools
+    }
+
+    private func iconFor(category: String) -> String {
+        switch category {
+        case "Core": return "gear"
+        case "Development": return "hammer"
+        case "Testing": return "checkmark.circle"
+        case "Security": return "lock.shield"
+        case "AI Enhancement": return "brain"
+        case "Integration": return "link"
+        case "DevOps": return "server.rack"
+        default: return "wrench.and.screwdriver"
+        }
+    }
+}
+
+struct ToolHelpView: View {
+    let tool: ToolHelp
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                // Header
+                HStack {
+                    Image(systemName: "info.circle.fill")
+                        .font(.system(size: 48))
+                        .foregroundColor(.accentColor)
+                    VStack(alignment: .leading) {
+                        Text(tool.displayName)
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                        Text(tool.category)
+                            .font(.title3)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding()
+                .background(Color.accentColor.opacity(0.1))
+                .cornerRadius(12)
+
+                // Description
+                GroupBox("Description") {
+                    Text(tool.description)
+                        .padding()
+                }
+
+                // Operations
+                if !tool.operations.isEmpty {
+                    GroupBox("Operations") {
+                        VStack(alignment: .leading, spacing: 16) {
+                            ForEach(tool.operations, id: \.name) { operation in
+                                OperationHelpView(operation: operation)
+                                Divider()
+                            }
+                        }
+                        .padding()
+                    }
+                }
+
+                // Use Cases
+                if !tool.useCases.isEmpty {
+                    GroupBox("Use Cases") {
+                        VStack(alignment: .leading, spacing: 8) {
+                            ForEach(tool.useCases, id: \.self) { useCase in
+                                HStack(alignment: .top) {
+                                    Text("•")
+                                    Text(useCase)
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                }
+
+                // Tips
+                if !tool.tips.isEmpty {
+                    GroupBox("💡 Tips & Best Practices") {
+                        VStack(alignment: .leading, spacing: 8) {
+                            ForEach(tool.tips, id: \.self) { tip in
+                                HStack(alignment: .top) {
+                                    Text("✓")
+                                        .foregroundColor(.green)
+                                    Text(tip)
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                }
+
+                // Quick Start
+                GroupBox("Quick Start") {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("To use this tool, tell the AI:")
+                            .font(.headline)
+                        Text("\"Use the \(tool.displayName) to [describe what you want]\"")
+                            .padding()
+                            .background(Color.secondary.opacity(0.1))
+                            .cornerRadius(8)
+                            .font(.system(.body, design: .monospaced))
+
+                        if !tool.operations.isEmpty {
+                            Text("Or use specific operations:")
+                                .font(.headline)
+                                .padding(.top)
+                            ForEach(tool.operations.prefix(3), id: \.name) { operation in
+                                Text("• \"\(operation.description)\"")
+                                    .font(.callout)
+                            }
+                        }
+                    }
+                    .padding()
+                }
+            }
+            .padding()
+        }
+    }
+}
+
+struct OperationHelpView: View {
+    let operation: OperationHelp
+
+    @State private var showExample = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(operation.name)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                Spacer()
+                Button(showExample ? "Hide Example" : "Show Example") {
+                    withAnimation {
+                        showExample.toggle()
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+            }
+
+            Text(operation.description)
+                .foregroundColor(.secondary)
+
+            if !operation.parameters.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Parameters:")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    ForEach(Array(operation.parameters.keys.sorted()), id: \.self) { key in
+                        HStack {
+                            Text("• \(key):")
+                                .font(.system(.caption, design: .monospaced))
+                            Text(operation.parameters[key] ?? "")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+                .padding(.leading)
+            }
+
+            if showExample {
+                VStack(alignment: .leading) {
+                    Text("Example:")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    Text(operation.example)
+                        .font(.system(.caption, design: .monospaced))
+                        .padding(8)
+                        .background(Color.black.opacity(0.05))
+                        .cornerRadius(6)
+
+                    Text("Returns: \(operation.returns)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .italic()
+                }
+                .transition(.opacity)
+            }
+        }
+    }
+}
+
+#Preview {
+    HelpPanel()
+}
