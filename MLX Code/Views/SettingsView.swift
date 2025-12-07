@@ -88,6 +88,9 @@ struct SettingsView: View {
                         Label("Paths", systemImage: "folder")
                     }
 
+                // Python MLX settings available in MLXPythonToolkitSettings.swift
+                // To enable: Add tab with MLXPythonToolkitSettingsView()
+
                 // Tools settings
                 toolsSettings
                     .tabItem {
