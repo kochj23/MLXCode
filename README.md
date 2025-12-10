@@ -508,6 +508,37 @@ Internal/Local use. Not for distribution.
 
 ## Version History
 
+### v3.4.0 - Smart Path Detection (2025-12-09)
+
+**New Features:**
+- 🔧 Automatic detection of writable models directory
+- 🏢 Work machine compatibility (~/Documents/MLXCode/models fallback)
+- 🔄 Backward compatible with existing ~/.mlx/models setups
+- 📍 Dynamic UI updates showing configured paths
+- ⚙️ Zero configuration required
+
+**Technical Changes:**
+- Added `detectWritableModelsPath()` with automatic write permission testing
+- Models directory search now checks multiple possible locations
+- Settings UI reflects actual configured path in real-time
+- Prerequisites documentation dynamically shows user's models path
+- Fixed .gitignore to properly track MLX Code/Models/ source directory
+
+**Problem Solved:**
+Resolves write permission issues on corporate/managed machines where ~/.mlx directory is restricted.
+
+---
+
+### v3.3.0 - Context-Aware Analysis (2025-12-08)
+
+**Features:**
+- RAG (Retrieval-Augmented Generation) system
+- Persistent MLX daemon for faster responses
+- Context-aware analysis tools
+- Enhanced memory management
+
+---
+
 ### v1.0.0 - Initial Release (2025-11-18)
 
 **Features:**
@@ -528,6 +559,6 @@ Internal/Local use. Not for distribution.
 
 ---
 
-**Last Updated:** 2025-11-18
+**Last Updated:** 2025-12-09
 **Project Location:** `/Volumes/Data/xcode/MLX Code/`
 **Status:** ✅ Initial release ready for testing
