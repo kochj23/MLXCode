@@ -34,6 +34,9 @@ struct MLXCodeApp: App {
     /// Show prerequisites window
     @State private var showingPrerequisites = false
 
+    /// Show help window
+    @State private var showingHelp = false
+
     /// Discovers models on disk and updates the model list with correct paths
     @MainActor
     private func discoverAndRefreshModels() async {
@@ -91,15 +94,21 @@ struct MLXCodeApp: App {
             }
 
             CommandGroup(replacing: .help) {
-                Button("Prerequisites Guide") {
+                Button("MLX Code Help") {
+                    showingHelp = true
+                }
+                .keyboardShortcut("?", modifiers: [.command])
+
+                Button("Prerequisites & Setup Guide") {
                     showingPrerequisites = true
                 }
                 .keyboardShortcut("?", modifiers: [.command, .shift])
 
                 Divider()
 
-                Link("MLX Code Documentation", destination: URL(string: "https://github.com")!)
-                Link("Report an Issue", destination: URL(string: "https://github.com")!)
+                Link("GitHub Repository", destination: URL(string: "https://github.com/kochj23/MLXCode")!)
+                Link("Report an Issue", destination: URL(string: "https://github.com/kochj23/MLXCode/issues")!)
+                Link("View Documentation", destination: URL(string: "https://github.com/kochj23/MLXCode/blob/main/README.md")!)
             }
         }
 
@@ -114,5 +123,12 @@ struct MLXCodeApp: App {
                 .frame(minWidth: 800, minHeight: 600)
         }
         .keyboardShortcut("?", modifiers: [.command, .shift])
+
+        // Help Window
+        Window("MLX Code Help", id: "help") {
+            HelpView()
+                .frame(minWidth: 900, minHeight: 600)
+        }
+        .keyboardShortcut("?", modifiers: [.command])
     }
 }
