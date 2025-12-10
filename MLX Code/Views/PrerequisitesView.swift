@@ -11,6 +11,7 @@ import SwiftUI
 struct PrerequisitesView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedSection: PrerequisiteSection = .hardware
+    @ObservedObject private var settings = AppSettings.shared
 
     enum PrerequisiteSection: String, CaseIterable {
         case hardware = "Hardware"
@@ -244,7 +245,7 @@ struct PrerequisitesView: View {
 
             Divider()
 
-            Text("MLX Code requires at least one LLM model. Models are stored in ~/.mlx/models/")
+            Text("MLX Code requires at least one LLM model. The app will automatically detect a writable location for models (typically ~/Documents/MLXCode/models or ~/.mlx/models)")
                 .font(.body)
                 .padding(.bottom, 8)
 
@@ -255,8 +256,8 @@ struct PrerequisitesView: View {
                 quality: "⭐️⭐️⭐️",
                 recommended: true,
                 downloadCommand: """
-                mkdir -p ~/.mlx/models/
-                cd ~/.mlx/models/
+                mkdir -p \(settings.modelsPath)/
+                cd \(settings.modelsPath)/
                 huggingface-cli download microsoft/Phi-3.5-mini-instruct --local-dir phi-3.5-mini
                 """
             )
@@ -268,8 +269,8 @@ struct PrerequisitesView: View {
                 quality: "⭐️⭐️⭐️⭐️",
                 recommended: false,
                 downloadCommand: """
-                mkdir -p ~/.mlx/models/
-                cd ~/.mlx/models/
+                mkdir -p \(settings.modelsPath)/
+                cd \(settings.modelsPath)/
                 huggingface-cli download meta-llama/Llama-3.2-3B-Instruct --local-dir llama-3.2-3b
                 """
             )
@@ -281,8 +282,8 @@ struct PrerequisitesView: View {
                 quality: "⭐️⭐️⭐️⭐️⭐️",
                 recommended: false,
                 downloadCommand: """
-                mkdir -p ~/.mlx/models/
-                cd ~/.mlx/models/
+                mkdir -p \(settings.modelsPath)/
+                cd \(settings.modelsPath)/
                 huggingface-cli download mistralai/Mistral-7B-Instruct-v0.2 --local-dir mistral-7b
                 """
             )
@@ -374,7 +375,7 @@ struct PrerequisitesView: View {
             troubleshootingItem(
                 problem: "Model not loading",
                 solution: """
-                • Ensure model is in ~/.mlx/models/
+                • Ensure model is in your configured models directory (check Settings → Paths)
                 • Check model is MLX-compatible (not PyTorch/GGUF only)
                 • Verify you have enough RAM for the model size
                 • Try a smaller model like Phi-3.5 Mini
@@ -427,8 +428,8 @@ struct PrerequisitesView: View {
                     pip3 install mlx mlx-lm huggingface-hub transformers sentence-transformers chromadb numpy tqdm
 
                     # 4. Download Phi-3.5 Mini model (3.8 GB)
-                    mkdir -p ~/.mlx/models/
-                    cd ~/.mlx/models/
+                    mkdir -p \(settings.modelsPath)/
+                    cd \(settings.modelsPath)/
                     huggingface-cli download microsoft/Phi-3.5-mini-instruct --local-dir phi-3.5-mini
 
                     # 5. Copy app to Applications
@@ -463,7 +464,7 @@ struct PrerequisitesView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("1. Launch MLX Code")
                     Text("2. Click 'Models' in the sidebar")
-                    Text("3. Browse to ~/.mlx/models/phi-3.5-mini")
+                    Text("3. Browse to \(settings.modelsPath)/phi-3.5-mini")
                     Text("4. Click 'Load Model'")
                     Text("5. Start chatting!")
                     Text("")

@@ -232,7 +232,7 @@ struct PathsSettingsView: View {
         if alert.runModal() == .alertFirstButtonReturn {
             settings.xcodeProjectsPath = "~/Desktop/xcode"
             settings.workspacePath = "~"
-            settings.modelsPath = "~/.mlx/models"
+            settings.modelsPath = AppSettings.detectWritableModelsPath() // Use smart default
             settings.templatesPath = "~/Documents"
             settings.conversationsExportPath = "~/Documents"
         }

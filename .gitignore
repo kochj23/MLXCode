@@ -43,8 +43,8 @@ env/
 dist/
 mlx-env/
 
-# Models (large files)
-models/
+# Models (large files) - only ignore at root level to allow MLX Code/Models/ source directory
+/models/
 *.gguf
 *.safetensors
 *.bin
