@@ -4,5 +4,14 @@
 <dict>
 	<key>com.apple.security.network.client</key>
 	<true/>
+	<key>com.apple.security.automation.apple-events</key>
+	<true/>
+	<key>com.apple.security.scripting-targets</key>
+	<dict>
+		<key>com.apple.dt.Xcode</key>
+		<array>
+			<string>com.apple.dt.Xcode</string>
+		</array>
+	</dict>
 </dict>
 </plist>

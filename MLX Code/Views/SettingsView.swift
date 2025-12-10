@@ -244,9 +244,26 @@ struct SettingsView: View {
 
                 // Available Models Section
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Available Models")
-                        .font(.headline)
-                        .foregroundColor(.primary)
+                    HStack {
+                        Text("Available Models")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+
+                        Spacer()
+
+                        Button(action: {
+                            Task {
+                                await refreshModelsFromDisk()
+                            }
+                        }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "arrow.clockwise")
+                                Text("Scan Disk")
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .help("Scan filesystem for installed models")
+                    }
 
                     VStack(spacing: 8) {
                         ForEach(settings.availableModels) { model in
@@ -614,6 +631,57 @@ struct SettingsView: View {
     }
 
     // MARK: - Helper Methods
+
+    /// Refreshes models by scanning disk for actual model directories
+    private func refreshModelsFromDisk() async {
+        print("🔍 Manually refreshing models from disk...")
+
+        do {
+            // Scan filesystem for actual models
+            let discovered = try await MLXService.shared.discoverModels()
+            print("✅ Discovered \(discovered.count) models")
+
+            await MainActor.run {
+                if !discovered.isEmpty {
+                    settings.availableModels = discovered
+
+                    // Auto-select first if none selected
+                    if settings.selectedModel == nil || !discovered.contains(where: { $0.id == settings.selectedModel?.id }) {
+                        settings.selectedModel = discovered.first
+                    }
+
+                    settings.saveSettings()
+                    print("✅ Model list updated with paths from disk")
+
+                    // Show success alert
+                    let alert = NSAlert()
+                    alert.messageText = "Models Refreshed"
+                    alert.informativeText = "Found \(discovered.count) model(s) on disk:\n\n" +
+                        discovered.map { "• \($0.name) - \($0.path)" }.joined(separator: "\n")
+                    alert.alertStyle = .informational
+                    alert.runModal()
+                } else {
+                    print("⚠️ No models found on disk")
+
+                    let alert = NSAlert()
+                    alert.messageText = "No Models Found"
+                    alert.informativeText = "No models found in \(settings.modelsPath)\n\nDownload models using the setup script or manually."
+                    alert.alertStyle = .warning
+                    alert.runModal()
+                }
+            }
+        } catch {
+            print("❌ Model discovery error: \(error.localizedDescription)")
+
+            await MainActor.run {
+                let alert = NSAlert()
+                alert.messageText = "Discovery Failed"
+                alert.informativeText = error.localizedDescription
+                alert.alertStyle = .critical
+                alert.runModal()
+            }
+        }
+    }
 
     /// Checks the Python environment and displays info
     private func checkPythonEnvironment() async {

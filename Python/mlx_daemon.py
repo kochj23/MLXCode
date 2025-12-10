@@ -48,7 +48,22 @@ class MLXDaemon:
     def load_model(self, model_path: str) -> dict:
         """Load model into memory (with caching)."""
         try:
+            print(json.dumps({
+                "type": "debug",
+                "message": f"load_model() called with: {model_path}"
+            }), flush=True)
+
             model_path = Path(model_path).expanduser()
+
+            print(json.dumps({
+                "type": "debug",
+                "message": f"Expanded to: {model_path}"
+            }), flush=True)
+
+            print(json.dumps({
+                "type": "debug",
+                "message": f"Path exists: {model_path.exists()}"
+            }), flush=True)
 
             if not model_path.exists():
                 return {
@@ -68,8 +83,18 @@ class MLXDaemon:
                 }
 
             # Load model
+            print(json.dumps({
+                "type": "debug",
+                "message": f"Calling mlx_lm.load() with: {str(model_path)}"
+            }), flush=True)
+
             self.model, self.tokenizer = load(str(model_path))
             self.model_path = model_path
+
+            print(json.dumps({
+                "type": "debug",
+                "message": "mlx_lm.load() completed successfully"
+            }), flush=True)
 
             return {
                 "success": True,

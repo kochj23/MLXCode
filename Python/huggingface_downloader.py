@@ -23,12 +23,9 @@ except ImportError:
     }), flush=True)
     sys.exit(1)
 
-try:
-    import mlx.core as mx
-    from mlx_lm import convert
-    MLX_CONVERT_AVAILABLE = True
-except ImportError:
-    MLX_CONVERT_AVAILABLE = False
+# Note: mlx_lm.convert is NOT imported here to avoid xcrun calls in App Sandbox
+# It will be imported lazily only if conversion is actually needed
+MLX_CONVERT_AVAILABLE = False  # Disabled to prevent sandbox issues
 
 
 class HuggingFaceDownloader:
@@ -91,27 +88,13 @@ class HuggingFaceDownloader:
             )
 
             # Convert to MLX if requested
-            if convert_to_mlx and MLX_CONVERT_AVAILABLE:
+            # Note: Conversion is disabled to prevent xcrun calls in App Sandbox
+            # All models should be from mlx-community (already in MLX format)
+            if convert_to_mlx:
                 print(json.dumps({
-                    "type": "progress",
-                    "stage": "converting",
-                    "message": "Converting to MLX format..."
+                    "type": "warning",
+                    "message": "Conversion skipped - use mlx-community models (already in MLX format)"
                 }), flush=True)
-
-                # Use mlx-lm convert utility
-                try:
-                    convert(
-                        hf_path=str(output_path),
-                        mlx_path=str(output_path),
-                        quantize=quantize is not None,
-                        q_bits=4 if quantize == "4bit" else 8 if quantize == "8bit" else None
-                    )
-                except Exception as convert_error:
-                    # Conversion failed but download succeeded
-                    print(json.dumps({
-                        "type": "warning",
-                        "message": f"Conversion failed: {convert_error}"
-                    }), flush=True)
 
             # Get model size
             model_size = sum(f.stat().st_size for f in output_path.rglob('*') if f.is_file())
