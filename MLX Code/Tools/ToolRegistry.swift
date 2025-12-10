@@ -271,59 +271,8 @@ class ToolRegistry: ObservableObject {
 
     /// Generate tool usage examples
     func generateToolExamples() -> String {
-        var examples: [String] = []
-
-        examples.append("\n# Tool Usage Examples\n")
-
-        // File operations example
-        examples.append("""
-        ## Reading a file:
-        To read a Swift file:
-        file_operations(operation=read, path="ContentView.swift")
-
-        ## Writing a file:
-        To create or update a file:
-        file_operations(operation=write, path="NewView.swift", content="import SwiftUI\\n\\nstruct NewView: View { }")
-
-        ## Editing a file:
-        To replace text in a file:
-        file_operations(operation=edit, path="ViewModel.swift", old_string="oldFunction", new_string="newFunction")
-        """)
-
-        // Bash example
-        examples.append("""
-        \n## Running commands:
-        To run a shell command:
-        bash(command="ls -la")
-
-        To run git commands:
-        bash(command="git status")
-        """)
-
-        // Search examples
-        examples.append("""
-        \n## Searching code:
-        To find all Swift files:
-        glob(pattern="**/*.swift")
-
-        To search for a function:
-        grep(pattern="func generateResponse", file_pattern="*.swift")
-        """)
-
-        // Xcode examples
-        examples.append("""
-        \n## Building with Xcode:
-        To build the project:
-        xcode(operation=build, scheme="MLX Code")
-
-        To run tests:
-        xcode(operation=test, scheme="MLX Code")
-
-        To clean build:
-        xcode(operation=clean)
-        """)
-
-        return examples.joined(separator: "\n")
+        // Return empty - examples cause LLM to copy verbatim
+        return ""
     }
 }
 
