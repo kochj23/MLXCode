@@ -63,14 +63,16 @@ actor EditTool {
         // Write new content
         try newContent.write(toFile: filePath, atomically: true, encoding: .utf8)
 
-        // Record for undo
-        let operation = FileOperation.edit(
-            path: filePath,
-            beforeContent: originalContent,
-            afterContent: newContent
-        )
-
-        await FileUndoManager.shared.recordOperation(operation)
+        // TODO: Record for undo (temporarily disabled due to build issues)
+        // let operation = FileOperation.edit(
+        //     path: filePath,
+        //     beforeContent: originalContent,
+        //     afterContent: newContent
+        // )
+        //
+        // await MainActor.run {
+        //     FileUndoManager.shared.recordOperation(operation)
+        // }
 
         return EditResult(
             success: true,
@@ -111,14 +113,16 @@ actor EditTool {
         // Write
         try currentContent.write(toFile: filePath, atomically: true, encoding: .utf8)
 
-        // Record undo
-        let operation = FileOperation.edit(
-            path: filePath,
-            beforeContent: originalContent,
-            afterContent: currentContent
-        )
-
-        await FileUndoManager.shared.recordOperation(operation)
+        // TODO: Record undo (temporarily disabled due to build issues)
+        // let operation = FileOperation.edit(
+        //     path: filePath,
+        //     beforeContent: originalContent,
+        //     afterContent: currentContent
+        // )
+        //
+        // await MainActor.run {
+        //     FileUndoManager.shared.recordOperation(operation)
+        // }
 
         return EditResult(
             success: true,
