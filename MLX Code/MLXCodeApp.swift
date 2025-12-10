@@ -37,6 +37,9 @@ struct MLXCodeApp: App {
     /// Show help window
     @State private var showingHelp = false
 
+    /// Show GitHub panel
+    @State private var showingGitHub = false
+
     /// Discovers models on disk and updates the model list with correct paths
     @MainActor
     private func discoverAndRefreshModels() async {
@@ -93,6 +96,19 @@ struct MLXCodeApp: App {
                 .keyboardShortcut("s", modifiers: [.command, .control])
             }
 
+            CommandMenu("GitHub") {
+                Button("Open GitHub Panel") {
+                    showingGitHub = true
+                }
+                .keyboardShortcut("g", modifiers: [.command])
+
+                Divider()
+
+                Link("View Repository", destination: URL(string: "https://github.com/kochj23/MLXCode")!)
+                Link("Create Issue", destination: URL(string: "https://github.com/kochj23/MLXCode/issues/new")!)
+                Link("View Pull Requests", destination: URL(string: "https://github.com/kochj23/MLXCode/pulls")!)
+            }
+
             CommandGroup(replacing: .help) {
                 Button("MLX Code Help") {
                     showingHelp = true
@@ -130,5 +146,12 @@ struct MLXCodeApp: App {
                 .frame(minWidth: 900, minHeight: 600)
         }
         .keyboardShortcut("?", modifiers: [.command])
+
+        // GitHub Panel Window
+        Window("GitHub Operations", id: "github") {
+            GitHubPanelView()
+                .frame(minWidth: 900, minHeight: 700)
+        }
+        .keyboardShortcut("g", modifiers: [.command])
     }
 }

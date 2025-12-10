@@ -25,6 +25,9 @@ struct ChatView: View {
     /// Whether Git helper panel is shown
     @State private var showingGitHelper = false
 
+    /// Whether GitHub panel is shown
+    @State private var showingGitHubPanel = false
+
     /// Whether build errors panel is shown
     @State private var showingBuildErrors = false
 
@@ -50,6 +53,7 @@ struct ChatView: View {
             .modifier(SheetsModifier(
                 showingSettings: $showingSettings,
                 showingGitHelper: $showingGitHelper,
+                showingGitHubPanel: $showingGitHubPanel,
                 showingBuildErrors: $showingBuildErrors,
                 showingHelp: $showingHelp,
                 gitStatus: $gitStatus,
@@ -259,6 +263,13 @@ struct ChatView: View {
             }
             .buttonStyle(.plain)
             .help("Git helper")
+
+            // GitHub panel button
+            Button(action: { showingGitHubPanel = true }) {
+                Image(systemName: "globe")
+            }
+            .buttonStyle(.plain)
+            .help("GitHub Operations (⌘G)")
 
             // Build errors button
             if !buildErrors.isEmpty {
@@ -818,6 +829,7 @@ struct BuildIssueRow: View {
 struct SheetsModifier: ViewModifier {
     @Binding var showingSettings: Bool
     @Binding var showingGitHelper: Bool
+    @Binding var showingGitHubPanel: Bool
     @Binding var showingBuildErrors: Bool
     @Binding var showingHelp: Bool
     @Binding var gitStatus: GitStatus?
@@ -830,6 +842,9 @@ struct SheetsModifier: ViewModifier {
             }
             .sheet(isPresented: $showingGitHelper) {
                 GitHelperView(gitStatus: $gitStatus)
+            }
+            .sheet(isPresented: $showingGitHubPanel) {
+                GitHubPanelView()
             }
             .sheet(isPresented: $showingBuildErrors) {
                 BuildErrorsView(errors: buildErrors)
