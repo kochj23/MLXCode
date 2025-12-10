@@ -88,6 +88,12 @@ struct SettingsView: View {
                         Label("Paths", systemImage: "folder")
                     }
 
+                // GitHub settings
+                GitHubSettingsView()
+                    .tabItem {
+                        Label("GitHub", systemImage: "arrow.triangle.branch")
+                    }
+
                 // Python MLX settings available in MLXPythonToolkitSettings.swift
                 // To enable: Add tab with MLXPythonToolkitSettingsView()
 
