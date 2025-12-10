@@ -524,6 +524,7 @@
 		2B8760B1300444B2B5F83176CCD4FDE8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASUPP_CODE_SIGN_STYLE = Automatic;
 				CODE_SIGN_ENTITLEMENTS = "MLX Code/MLX_Code.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -672,6 +673,7 @@
 		E7E15DB203DB43A790F24970D6FE7DF7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASUPP_CODE_SIGN_STYLE = Automatic;
 				CODE_SIGN_ENTITLEMENTS = "MLX Code/MLX_Code.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";

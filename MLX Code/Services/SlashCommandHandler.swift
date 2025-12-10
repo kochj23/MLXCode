@@ -332,10 +332,16 @@ struct SlashCommand: Identifiable {
         }
 
         let task = args.joined(separator: " ")
-        return try await AutonomousAgent.shared.executeTask(task) { progress in
-            // Update UI with progress
-            print("Agent progress: \(progress)")
-        }
+
+        // TODO: Implement AutonomousAgent
+        return """
+        **Agent Mode** (Coming Soon)
+
+        Task: \(task)
+
+        Autonomous agent execution is not yet implemented.
+        This feature will allow the LLM to independently execute multi-step tasks.
+        """
     }
 
     private static func helpHandler(_ args: [String]) async throws -> String {
