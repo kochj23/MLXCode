@@ -104,11 +104,21 @@ struct MessageRowView: View {
     private var actions: some View {
         HStack(spacing: 12) {
             Button(action: copyToClipboard) {
-                Label(showingCopyConfirmation ? "Copied!" : "Copy", systemImage: "doc.on.doc")
-                    .font(.caption)
+                HStack(spacing: 6) {
+                    Image(systemName: showingCopyConfirmation ? "checkmark.circle.fill" : "doc.on.doc.fill")
+                    Text(showingCopyConfirmation ? "Copied!" : "Copy Message")
+                }
+                .font(.caption)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(showingCopyConfirmation ? Color.green.opacity(0.2) : Color.blue.opacity(0.1))
+                .foregroundColor(showingCopyConfirmation ? .green : .blue)
+                .cornerRadius(6)
             }
             .buttonStyle(.plain)
+            .help("Copy entire message to clipboard")
         }
+        .padding(.top, 4)
     }
 
     // MARK: - Computed Properties
