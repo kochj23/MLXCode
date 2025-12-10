@@ -131,13 +131,35 @@ actor MLXService {
             "model_path": expandedPath
         ]
 
-        await SecureLogger.shared.info("📤 Sending load_model command to daemon...", category: "MLXService")
+        print("📤📤📤 Sending to daemon - model_path: '\(expandedPath)'")
+        await SecureLogger.shared.info("📤 Sending load_model command with path: '\(expandedPath)'", category: "MLXService")
         try await sendDaemonCommand(loadCommand)
         await SecureLogger.shared.info("✅ Load command sent", category: "MLXService")
 
-        // Wait for response
+        // Wait for response (may receive debug messages first)
         await SecureLogger.shared.info("⏳ Waiting for daemon load response...", category: "MLXService")
-        let response = try await readDaemonResponse()
+        var finalResponse: PythonResponse?
+
+        // Read responses until we get the final load result
+        while finalResponse == nil {
+            let response = try await readDaemonResponse()
+
+            if response.type == "debug" {
+                // Log debug messages from daemon
+                if let message = response.message {
+                    print("🐛 Daemon debug: \(message)")
+                    await SecureLogger.shared.info("🐛 Daemon: \(message)", category: "MLXService")
+                }
+            } else if response.success != nil {
+                // This is the load response (has success field, no type field)
+                finalResponse = response
+            } else if response.type != nil {
+                // Other typed response
+                finalResponse = response
+            }
+        }
+
+        let response = finalResponse!
         await SecureLogger.shared.info("📥 Received load response - success: \(response.success ?? false), cached: \(response.cached ?? false)", category: "MLXService")
 
         guard response.success == true else {
@@ -262,7 +284,7 @@ actor MLXService {
         await SecureLogger.shared.info("👂 Listening for daemon responses...", category: "MLXService")
         while true {
             let response = try await readDaemonResponse()
-            await SecureLogger.shared.info("📥 Received response type: \(response.type)", category: "MLXService")
+            await SecureLogger.shared.info("📥 Received response type: \(response.type ?? "nil")", category: "MLXService")
 
             if response.type == "token" {
                 // Streaming token
@@ -272,12 +294,11 @@ actor MLXService {
                     streamHandler?(token)
                 }
             } else if response.type == "complete" {
-                // Complete response (non-streaming)
-                fullResponse = response.text ?? ""
-                await SecureLogger.shared.info("✅ Complete response received (length: \(fullResponse.count))", category: "MLXService")
+                // Generation complete - DON'T overwrite accumulated tokens!
+                await SecureLogger.shared.info("✅ Complete signal received, total response length: \(fullResponse.count)", category: "MLXService")
                 break
             } else if response.type == "done" {
-                // Generation complete
+                // Generation complete (alternate signal)
                 await SecureLogger.shared.info("✅ Generation done signal received", category: "MLXService")
                 break
             } else if response.error != nil {
@@ -420,14 +441,25 @@ actor MLXService {
         let outputPipe = Pipe()
         let errorPipe = Pipe()  // Separate stderr to avoid mixing with JSON
 
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/python3")
+        // Use actual Xcode Python binary (not the xcode-select shim at /usr/bin/python3)
+        // The shim calls xcrun which is forbidden in App Sandbox
+        let pythonPath = "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9"
+        process.executableURL = URL(fileURLWithPath: pythonPath)
         process.arguments = [scriptPath]  // Daemon doesn't need --mode flag
         process.standardInput = inputPipe
         process.standardOutput = outputPipe
         process.standardError = errorPipe
 
-        // Set environment to include user's Python packages
-        process.environment = ProcessInfo.processInfo.environment
+        // Set environment with PYTHONPATH so Python can find user packages
+        var env = ProcessInfo.processInfo.environment
+
+        // CRITICAL: Add PYTHONPATH so Python can find user-installed packages (mlx, huggingface-hub, etc)
+        let userSitePackages = "/Users/\(NSUserName())/Library/Python/3.9/lib/python/site-packages"
+        env["PYTHONPATH"] = userSitePackages
+
+        await SecureLogger.shared.info("🔧 Daemon: Environment with PYTHONPATH: \(userSitePackages)", category: "MLXService")
+
+        process.environment = env
 
         // Set working directory
         process.currentDirectoryURL = FileManager.default.homeDirectoryForCurrentUser
@@ -462,10 +494,10 @@ actor MLXService {
         // Wait for ready signal
         await SecureLogger.shared.info("⏳ Waiting for daemon 'ready' signal...", category: "MLXService")
         let response = try await readDaemonResponse()
-        await SecureLogger.shared.info("📥 Received response type: \(response.type)", category: "MLXService")
+        await SecureLogger.shared.info("📥 Received response type: \(response.type ?? "nil")", category: "MLXService")
 
         guard response.type == "ready" else {
-            await SecureLogger.shared.error("❌ Daemon failed to send ready signal. Got: \(response.type)", category: "MLXService")
+            await SecureLogger.shared.error("❌ Daemon failed to send ready signal. Got: \(response.type ?? "nil")", category: "MLXService")
             throw MLXServiceError.generationFailed("Daemon failed to start")
         }
 
@@ -581,14 +613,26 @@ actor MLXService {
             await SecureLogger.shared.warning("⚠️ Could not decode line as UTF-8, bytes: \(line.count)", category: "MLXService")
         }
 
+        // Log raw data BEFORE parsing
+        if let rawString = String(data: line, encoding: .utf8) {
+            print("🔍🔍🔍 RAW JSON FROM DAEMON: \(rawString)")
+            await SecureLogger.shared.info("📥 Raw daemon response: \(rawString)", category: "MLXService")
+        } else {
+            print("❌❌❌ CANNOT DECODE DATA AS STRING")
+            await SecureLogger.shared.error("❌ Cannot decode response as UTF-8 string", category: "MLXService")
+        }
+
         // Parse JSON
         do {
             let response = try JSONDecoder().decode(PythonResponse.self, from: line)
-            await SecureLogger.shared.info("✅ Successfully decoded response: type=\(response.type)", category: "MLXService")
+            print("✅✅✅ JSON DECODED: type=\(response.type ?? "nil"), success=\(response.success ?? false)")
+            await SecureLogger.shared.info("✅ Successfully decoded response: type=\(response.type ?? "nil")", category: "MLXService")
             return response
         } catch {
+            print("❌❌❌ JSON DECODE ERROR: \(error)")
             await SecureLogger.shared.error("❌ JSON decode error: \(error)", category: "MLXService")
             if let jsonString = String(data: line, encoding: .utf8) {
+                print("❌❌❌ FAILED JSON WAS: \(jsonString)")
                 await SecureLogger.shared.error("❌ Failed JSON was: \(jsonString)", category: "MLXService")
             }
             throw error
@@ -697,13 +741,22 @@ actor MLXService {
 
 /// Response structure from daemon
 private struct PythonResponse: Codable {
-    let type: String
+    let type: String?  // OPTIONAL - load responses don't include type
     let success: Bool?
     let error: String?
     let message: String?
     let token: String?
     let text: String?
     let cached: Bool?  // Whether model was loaded from cache
+    let path: String?  // Model path from load response
+    let name: String?  // Model name from load response
+    let stage: String?  // Progress stage from download
+    let skipped: Bool?  // Whether download was skipped (already exists)
+    let repo_id: String?  // HuggingFace repo ID
+    let size_bytes: Int?  // Model size in bytes
+    let size_gb: Double?  // Model size in GB
+    let quantization: String?  // Quantization level
+    let converted_to_mlx: Bool?  // Whether model was converted
 }
 
 // MARK: - Error Types
@@ -803,24 +856,53 @@ extension MLXService {
             throw MLXServiceError.generationFailed("Script file not accessible at path: \(scriptPath)")
         }
 
-        // Verify Python exists
-        let pythonPath = "/usr/bin/python3"
+        // Use actual Xcode Python binary (not the xcode-select shim at /usr/bin/python3)
+        // The shim calls xcrun which is forbidden in App Sandbox
+        let pythonPath = "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9"
         let pythonExists = FileManager.default.fileExists(atPath: pythonPath)
         await SecureLogger.shared.info("Python exists at \(pythonPath): \(pythonExists)", category: "MLXService")
+
+        guard pythonExists else {
+            await SecureLogger.shared.error("❌ Python binary not found at: \(pythonPath)", category: "MLXService")
+            throw MLXServiceError.generationFailed("Python 3.9 not found. Please install Xcode and Command Line Tools.")
+        }
 
         // Create process to download
         let process = Process()
         process.executableURL = URL(fileURLWithPath: pythonPath)
-        process.arguments = [
+
+        // Detect if model is already in MLX format (mlx-community models don't need conversion)
+        let needsConversion = !huggingFaceId.lowercased().contains("mlx-community")
+
+        var arguments = [
             scriptPath,
             "download",
             huggingFaceId,
-            "--output", actualPath,
-            "--quantize", "4bit"
+            "--output", actualPath
         ]
 
-        // Set environment to include system PATH
-        process.environment = ProcessInfo.processInfo.environment
+        // Skip conversion for mlx-community models (already in MLX format)
+        if !needsConversion {
+            arguments.append("--no-convert")
+            await SecureLogger.shared.info("✅ Model is from mlx-community, skipping conversion", category: "MLXService")
+        } else {
+            arguments.append("--quantize")
+            arguments.append("4bit")
+            await SecureLogger.shared.info("⚙️ Model needs conversion, will quantize to 4bit", category: "MLXService")
+        }
+
+        process.arguments = arguments
+
+        // Set environment with PYTHONPATH so Python can find user packages
+        var env = ProcessInfo.processInfo.environment
+
+        // CRITICAL: Add PYTHONPATH so Python can find user-installed packages (mlx, huggingface-hub, etc)
+        let userSitePackages = "/Users/\(NSUserName())/Library/Python/3.9/lib/python/site-packages"
+        env["PYTHONPATH"] = userSitePackages
+
+        await SecureLogger.shared.info("🔧 Download: Environment with PYTHONPATH: \(userSitePackages)", category: "MLXService")
+
+        process.environment = env
 
         // Set working directory to home
         let homeDir = FileManager.default.homeDirectoryForCurrentUser
@@ -958,7 +1040,7 @@ extension MLXService {
             throw MLXServiceError.generationFailed(errorMessage)
         }
 
-        await SecureLogger.shared.info("Model download completed: \(model.name)", category: "MLXService")
+        await SecureLogger.shared.info("✅ Model download completed: \(model.name)", category: "MLXService")
 
         // Return updated model with actual path
         var updatedModel = model

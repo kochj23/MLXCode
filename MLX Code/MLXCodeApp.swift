@@ -34,12 +34,46 @@ struct MLXCodeApp: App {
     /// Show prerequisites window
     @State private var showingPrerequisites = false
 
+    /// Discovers models on disk and updates the model list with correct paths
+    @MainActor
+    private func discoverAndRefreshModels() async {
+        print("🔍 Discovering models on startup...")
+
+        do {
+            // Scan filesystem for actual models
+            let discovered = try await MLXService.shared.discoverModels()
+            print("✅ Found \(discovered.count) models on disk")
+
+            if !discovered.isEmpty {
+                // Update settings with discovered models (these have CORRECT paths from disk)
+                settings.availableModels = discovered
+
+                // Auto-select first model if none selected
+                if settings.selectedModel == nil {
+                    settings.selectedModel = discovered.first
+                    print("✅ Auto-selected: \(discovered.first?.name ?? "none")")
+                }
+
+                settings.saveSettings()
+                print("✅ Model list refreshed with actual paths")
+            }
+        } catch {
+            print("⚠️ Model discovery failed: \(error.localizedDescription)")
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
             ChatView()
                 .environmentObject(settings)
                 .environmentObject(chatViewModel)
                 .frame(minWidth: 900, minHeight: 600)
+                .onAppear {
+                    // Discover actual models on disk at startup
+                    Task {
+                        await discoverAndRefreshModels()
+                    }
+                }
         }
         .commands {
             CommandGroup(replacing: .newItem) {
