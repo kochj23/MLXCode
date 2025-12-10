@@ -43,6 +43,7 @@ class ToolRegistry: ObservableObject {
         register(TestGenerationTool())
         register(CodeNavigationTool())
         register(GitIntegrationTool())
+        register(GitHubTool())
         register(RefactoringTool())
         register(DocumentationTool())
         register(DependencyManagementTool())

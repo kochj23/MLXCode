@@ -80,6 +80,7 @@
 		F1BD00CFBB5011392418C88D /* ClaudeCodeAdvancedFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D174AFB1A044D063833692 /* ClaudeCodeAdvancedFeatures.swift */; };
 		DC08F7615EE44DE38CD6F066 /* GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F33DD1E9C544D49B9A2BB86 /* GitHubService.swift */; };
 		69830C5F813448DF82E04A92 /* GitHubPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15C262F06014103869EC97E /* GitHubPanelView.swift */; };
+		B4E8A7C2D91F46E5A8F3B6D7 /* GitHubTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A1F5C3B7D24E8FA6C9D4E2 /* GitHubTool.swift */; };
 		FB45C232C00FB094E07E98A6 /* BashTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5FD20620CC8E07FFA1428A /* BashTool.swift */; };
 		FFEA93AF903CFA3261DD0C56 /* Troubleshooting.md in Resources */ = {isa = PBXBuildFile; fileRef = B57C86C1B983667FB6632C96 /* Troubleshooting.md */; };
 /* End PBXBuildFile section */
@@ -114,6 +115,7 @@
 		61B7E2C6F89FEDAA54C278A7 /* HelpView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		1F33DD1E9C544D49B9A2BB86 /* GitHubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubService.swift; sourceTree = "<group>"; };
 		A15C262F06014103869EC97E /* GitHubPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubPanelView.swift; sourceTree = "<group>"; };
+		E9A1F5C3B7D24E8FA6C9D4E2 /* GitHubTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tools/GitHubTool.swift; sourceTree = "<group>"; };
 		64071C1709105BE6194D0570 /* DiffPreviewTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DiffPreviewTool.swift; path = Tools/DiffPreviewTool.swift; sourceTree = "<group>"; };
 		64FB3692EC085C7E8F420ABC /* LogViewerPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewerPanel.swift; sourceTree = "<group>"; };
 		6CC6C830E9E5801EFE2690F2 /* mlx_daemon.py */ = {isa = PBXFileReference; includeInIndex = 1; name = mlx_daemon.py; path = Python/mlx_daemon.py; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 				52CA5C71B521246C88421C5E /* TestGenerationTool.swift */,
 				F723876CB29C9B2490C118FE /* CodeNavigationTool.swift */,
 				C03995484D94FA4FA6BD0F6C /* GitIntegrationTool.swift */,
+				E9A1F5C3B7D24E8FA6C9D4E2 /* GitHubTool.swift */,
 				89D8A29938ED8AC85FA371AF /* AdvancedXcodeTools.swift */,
 				8B5F46C915794379DF0075F4 /* MCPServerTool.swift */,
 				64071C1709105BE6194D0570 /* DiffPreviewTool.swift */,
@@ -523,6 +526,7 @@
 				2CCA4DE90531D915D28CFF2C /* GitHubSettingsView.swift in Sources */,
 				DC08F7615EE44DE38CD6F066 /* GitHubService.swift in Sources */,
 				69830C5F813448DF82E04A92 /* GitHubPanelView.swift in Sources */,
+				B4E8A7C2D91F46E5A8F3B6D7 /* GitHubTool.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
