@@ -335,11 +335,13 @@ actor MLXService {
         let settingsModelsPath = await AppSettings.shared.modelsPath
         let expandedModelsPath = (settingsModelsPath as NSString).expandingTildeInPath
 
-        // Common model directories
+        // Common model directories (try all potential locations)
         let searchPaths = [
-            expandedModelsPath,
-            "~/.mlx/models",
-            "~/Library/Application Support/MLX Code/models"
+            expandedModelsPath,                                      // User's configured path
+            "~/.mlx/models",                                         // Original default
+            "~/Documents/MLXCode/models",                           // Work machine friendly
+            "~/Library/Application Support/MLXCode/models",         // Standard macOS location
+            "\(NSTemporaryDirectory())MLXCode/models"               // Fallback location
         ]
 
         for path in searchPaths {
