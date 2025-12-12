@@ -455,10 +455,6 @@ Performance:
 
 Build: Release, Universal Binary (arm64 + x86_64)
 Status: ✅ BUILD SUCCEEDED, ✅ ARCHIVE SUCCEEDED
-
-🤖 Generated with Claude Code
-
-Co-Authored-By: Claude Sonnet 4.5 (1M context) <noreply@anthropic.com>
 ```
 
 ---
@@ -488,7 +484,6 @@ These features transform MLX Code from a basic local LLM interface into an intel
 ---
 
 **Implemented by**: Jordan Koch
-**Assisted by**: Claude Code (Anthropic)
 **Date**: December 8, 2025
 **Version**: 3.3.0
 **Binary**: `/Volumes/Data/xcode/Binaries/MLX_Code_v3.3.0_RAG_Context_Daemon_2025-12-08_10-33-24/`

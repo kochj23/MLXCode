@@ -731,7 +731,7 @@ xcodebuild -project "MLX Code.xcodeproj" \
 - Qwen Coder (Alibaba)
 
 **Development:**
-- Built with Claude Code
+- Built by Jordan Koch
 - Swift 5.9+
 - Xcode 16.0
 

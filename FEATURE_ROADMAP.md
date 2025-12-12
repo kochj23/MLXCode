@@ -459,6 +459,6 @@ Based on user impact and implementation effort:
 
 ---
 
-**Created by:** Jordan Koch & Claude (Anthropic)
+**Created by:** Jordan Koch
 **Date:** November 19, 2025
 **Status:** Living Document - Update as features are added

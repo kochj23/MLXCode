@@ -423,6 +423,6 @@ Having issues?
 
 **Summary:** With 512GB RAM, you're in the top 1% of local LLM users. Download Mixtral 8x7B and Llama 3.1 70B immediately - you'll be amazed at the quality!
 
-**Created by:** Jordan Koch & Claude (Anthropic)
+**Created by:** Jordan Koch
 **Date:** November 19, 2025
 **Your RAM:** 512GB (Elite Tier 🏆)

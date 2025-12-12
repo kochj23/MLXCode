@@ -641,7 +641,7 @@ These features transform MLX Code from a basic local LLM interface into an intel
 
 ---
 
-**Implemented by**: Jordan Koch & Claude Code
+**Implemented by**: Jordan Koch
 **Date**: December 8, 2025
 **Version**: 3.3.0
 **Build Status**: ✅ Ready for Testing

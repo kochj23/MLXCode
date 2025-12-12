@@ -500,4 +500,4 @@ GitHub API limits:
 
 ---
 
-**Built by Jordan Koch with Claude Code**
+**Built by Jordan Koch**
