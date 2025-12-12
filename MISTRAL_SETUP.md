@@ -351,6 +351,6 @@ If you still encounter issues:
 
 ---
 
-**Created by:** Jordan Koch & Claude (Anthropic)
+**Created by:** Jordan Koch
 **Date:** November 19, 2025
 **Status:** ✅ Issue Resolved

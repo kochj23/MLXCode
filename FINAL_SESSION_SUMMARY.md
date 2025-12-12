@@ -2,7 +2,7 @@
 
 **Date:** December 9, 2025
 **Duration:** Extended session
-**Author:** Jordan Koch with Claude Sonnet 4.5
+**Author:** Jordan Koch
 
 ---
 
