@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		752E4C6F979705765D697B50 /* MultiModelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22C8A3ECC242DC0C424BE05 /* MultiModelProvider.swift */; };
+		2490B61430C36B4C58613DD7 /* IntentRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2296D68E813C17D937322A2 /* IntentRouter.swift */; };
+		164BE5735842316657088FA9 /* ImageGenerationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0FF3F5B783EB79D1C7C440 /* ImageGenerationTool.swift */; };
+		AB67BC81BFDB888A46052391 /* NewsTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CFEE59E559B89EE99D99FB /* NewsTool.swift */; };
+		A22B204237AD413DDE7F6C4C /* WebFetchTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8644CD9A3BAB9360F3680B /* WebFetchTool.swift */; };
 		0475B2DD296EECD045126C17 /* PrerequisitesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BF0FCAFA31E5516E7B5EC6 /* PrerequisitesView.swift */; };
 		04CD9847E3A8B0ABF870428E /* GitHubSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB108028C4E82CB53741E403 /* GitHubSettings.swift */; };
 		0A2E78E67E37DA8FC4CCA009 /* XcodeTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04006EF5054DB124F485C96 /* XcodeTool.swift */; };
@@ -86,6 +91,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F22C8A3ECC242DC0C424BE05 /* MultiModelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MultiModelProvider.swift; path = "MLX Code/Services/MultiModelProvider.swift"; sourceTree = "<group>"; };
+		C2296D68E813C17D937322A2 /* IntentRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = IntentRouter.swift; path = "MLX Code/Services/IntentRouter.swift"; sourceTree = "<group>"; };
+		CA0FF3F5B783EB79D1C7C440 /* ImageGenerationTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageGenerationTool.swift; path = "MLX Code/Tools/ImageGenerationTool.swift"; sourceTree = "<group>"; };
+		88CFEE59E559B89EE99D99FB /* NewsTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NewsTool.swift; path = "MLX Code/Tools/NewsTool.swift"; sourceTree = "<group>"; };
+		CC8644CD9A3BAB9360F3680B /* WebFetchTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebFetchTool.swift; path = "MLX Code/Tools/WebFetchTool.swift"; sourceTree = "<group>"; };
 		002CBB955151E156B3F40DAB /* GitHubSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GitHubSettingsView.swift; path = "MLX Code/Views/GitHubSettingsView.swift"; sourceTree = "<group>"; };
 		0095C89C8F1E4539863AE74D96B702F4 /* MLXService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLXService.swift; sourceTree = "<group>"; };
 		01A056387C5D6883F0932FA4 /* GitService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GitService.swift; path = "MLX Code/Services/GitService.swift"; sourceTree = "<group>"; };
@@ -204,6 +214,8 @@
 		6F0229DF0B6AF4821D6BC3FE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				F22C8A3ECC242DC0C424BE05 /* MultiModelProvider.swift */,
+				C2296D68E813C17D937322A2 /* IntentRouter.swift */,
 				01A056387C5D6883F0932FA4 /* GitService.swift */,
 			);
 			name = Services;
@@ -212,6 +224,9 @@
 		7D34E1B98B0D1BBD7FFBC41C /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				CA0FF3F5B783EB79D1C7C440 /* ImageGenerationTool.swift */,
+				88CFEE59E559B89EE99D99FB /* NewsTool.swift */,
+				CC8644CD9A3BAB9360F3680B /* WebFetchTool.swift */,
 				FBF68411190D219F58CC40B0 /* ToolProtocol.swift */,
 				C2F90FA396C5680D706B96B9 /* MemorySystem.swift */,
 				FF9E24703A8FCDC2C9B4B0BA /* FileOperationsTool.swift */,
@@ -460,6 +475,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				752E4C6F979705765D697B50 /* MultiModelProvider.swift in Sources */,
+				2490B61430C36B4C58613DD7 /* IntentRouter.swift in Sources */,
+				164BE5735842316657088FA9 /* ImageGenerationTool.swift in Sources */,
+				AB67BC81BFDB888A46052391 /* NewsTool.swift in Sources */,
+				A22B204237AD413DDE7F6C4C /* WebFetchTool.swift in Sources */,
 				4A14B6380E9E4A44949059C9DE2D703A /* MLXCodeApp.swift in Sources */,
 				2B11CE0AB8B2456D938A90B4A87D235C /* ContentView.swift in Sources */,
 				24010C4728F24595AD26D82143BDCF89 /* ChatView.swift in Sources */,
