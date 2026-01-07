@@ -50,14 +50,17 @@ class BashTool: BaseTool {
             let workingDir = try? stringParameter(parameters, key: "working_directory", default: context.workingDirectory)
             let timeoutSeconds = try? intParameter(parameters, key: "timeout", default: 30)
 
+            // 🔒 CRITICAL SECURITY: Validate command before execution
+            let validatedCommand = try CommandValidator.validateBashCommand(command)
+
             // Validate timeout
             let actualTimeout = min(Double(timeoutSeconds ?? 30), 120.0)
 
-            logInfo("Executing bash command: \(command)", category: "BashTool")
+            logInfo("Executing validated bash command: \(validatedCommand.prefix(100))", category: "BashTool")
 
-            // Execute command
+            // Execute command (use validated version)
             let result = try await executeCommand(
-                command: command,
+                command: validatedCommand,
                 workingDirectory: workingDir ?? context.workingDirectory,
                 timeout: actualTimeout
             )

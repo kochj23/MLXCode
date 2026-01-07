@@ -45,12 +45,15 @@ class WebFetchTool: BaseTool {
         let query = try? stringParameter(parameters, key: "query")
         let maxLength = (try? intParameter(parameters, key: "max_length")) ?? 500
 
-        // Validate URL
-        guard let url = URL(string: urlString) else {
-            return .failure("Invalid URL: \(urlString)")
+        // 🔒 SECURITY: Validate URL (prevent SSRF attacks)
+        let url: URL
+        do {
+            url = try CommandValidator.validateSafeURL(urlString)
+        } catch {
+            return .failure("URL validation failed: \(error.localizedDescription)")
         }
 
-        logInfo("[WebFetch] Fetching: \(urlString)", category: "WebFetchTool")
+        logInfo("[WebFetch] Fetching validated URL: \(urlString)", category: "WebFetchTool")
 
         do {
             // Fetch content
