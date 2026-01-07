@@ -223,37 +223,90 @@ extension MLXModel {
         let modelBasePath = basePath ?? AppSettings.detectWritableModelsPath()
 
         return [
+            // RECOMMENDED: Best Quality/Performance Balance
             MLXModel(
-                name: "Llama 3.2 3B",
-                path: "\(modelBasePath)/llama-3.2-3b",
-                parameters: ModelParameters(temperature: 0.7, maxTokens: 4096),
-                isDownloaded: false,
-                huggingFaceId: "mlx-community/Llama-3.2-3B-Instruct-4bit",
-                description: "Meta's Llama 3.2 3B parameter model, optimized for MLX"
-            ),
-            MLXModel(
-                name: "Qwen 2.5 7B",
+                name: "Qwen 2.5 7B ⭐ RECOMMENDED",
                 path: "\(modelBasePath)/qwen-2.5-7b",
-                parameters: ModelParameters(temperature: 0.7, maxTokens: 8192),
+                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
                 isDownloaded: false,
                 huggingFaceId: "mlx-community/Qwen2.5-7B-Instruct-4bit",
-                description: "Alibaba's Qwen 2.5 7B parameter model"
+                description: "Alibaba's Qwen 2.5 - Excellent quality, good instruction following. Best for coding. ~4GB"
             ),
+
             MLXModel(
-                name: "Mistral 7B",
+                name: "Mistral 7B v0.3 ⭐ POPULAR",
                 path: "\(modelBasePath)/mistral-7b",
-                parameters: ModelParameters(temperature: 0.7, maxTokens: 8192),
+                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
                 isDownloaded: false,
                 huggingFaceId: "mlx-community/Mistral-7B-Instruct-v0.3-4bit",
-                description: "Mistral AI's 7B parameter instruction-tuned model"
+                description: "Mistral AI's 7B - Very popular, versatile, good for code. ~4GB"
             ),
+
+            // Larger Models (Better Quality)
             MLXModel(
-                name: "Phi-3.5 Mini",
+                name: "Qwen 2.5 14B (Best Quality)",
+                path: "\(modelBasePath)/qwen-2.5-14b",
+                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                isDownloaded: false,
+                huggingFaceId: "mlx-community/Qwen2.5-14B-Instruct-4bit",
+                description: "Qwen 2.5 14B - Best quality, slower but excellent results. ~8GB"
+            ),
+
+            MLXModel(
+                name: "Llama 3.1 8B",
+                path: "\(modelBasePath)/llama-3.1-8b",
+                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                isDownloaded: false,
+                huggingFaceId: "mlx-community/Meta-Llama-3.1-8B-Instruct-4bit",
+                description: "Meta's Llama 3.1 8B - Solid performance, good for general use. ~5GB"
+            ),
+
+            // Specialized Models
+            MLXModel(
+                name: "DeepSeek Coder 6.7B",
+                path: "\(modelBasePath)/deepseek-coder",
+                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                isDownloaded: false,
+                huggingFaceId: "mlx-community/deepseek-coder-6.7b-instruct",
+                description: "DeepSeek Coder - Specialized for code, excellent for programming tasks. ~4GB"
+            ),
+
+            MLXModel(
+                name: "CodeLlama 7B",
+                path: "\(modelBasePath)/codellama-7b",
+                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                isDownloaded: false,
+                huggingFaceId: "mlx-community/CodeLlama-7b-Instruct-hf-4bit-MLX",
+                description: "Meta's CodeLlama - Trained specifically for code generation. ~4GB"
+            ),
+
+            // Compact Models (Faster)
+            MLXModel(
+                name: "Phi-3.5 Mini (Fast)",
                 path: "\(modelBasePath)/phi-3.5-mini",
-                parameters: ModelParameters(temperature: 0.7, maxTokens: 4096),
+                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
                 isDownloaded: false,
                 huggingFaceId: "mlx-community/Phi-3.5-mini-instruct-4bit",
-                description: "Microsoft's Phi-3.5 Mini model, small but capable"
+                description: "Microsoft's Phi-3.5 - Small but capable, very fast. ~2GB"
+            ),
+
+            MLXModel(
+                name: "Gemma 2 9B",
+                path: "\(modelBasePath)/gemma-2-9b",
+                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                isDownloaded: false,
+                huggingFaceId: "mlx-community/gemma-2-9b-it-4bit",
+                description: "Google's Gemma 2 9B - Excellent quality, good instruction following. ~5GB"
+            ),
+
+            // Keep original for backwards compatibility
+            MLXModel(
+                name: "Llama 3.2 3B (Small - NOT RECOMMENDED)",
+                path: "\(modelBasePath)/llama-3.2-3b",
+                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                isDownloaded: false,
+                huggingFaceId: "mlx-community/Llama-3.2-3B-Instruct-4bit",
+                description: "Meta's Llama 3.2 3B - Too small, causes loops. Use Qwen or Mistral instead. ~2GB"
             )
         ]
     }
