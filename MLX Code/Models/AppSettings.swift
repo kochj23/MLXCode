@@ -10,6 +10,16 @@ import Foundation
 import Combine
 import AppKit
 
+/// Image generation model configuration
+struct ImageModel: Identifiable {
+    let id: String
+    let name: String
+    let description: String
+    let speed: String
+    let quality: String
+    let size: String
+}
+
 /// Singleton class managing application settings
 /// Thread-safe using @MainActor annotation
 @MainActor
@@ -75,6 +85,18 @@ class AppSettings: ObservableObject {
     /// Conversation export directory
     @Published var conversationsExportPath: String = "~/Documents"
 
+    // MARK: - Image Generation Settings
+
+    /// Selected image generation model
+    @Published var selectedImageModel: String = "sdxl-turbo"
+
+    /// Available image generation models
+    let availableImageModels = [
+        ImageModel(id: "sdxl-turbo", name: "SDXL-Turbo", description: "Fast (2-5s), Good quality, 7GB", speed: "2-5s", quality: "Good", size: "7GB"),
+        ImageModel(id: "sd-2.1", name: "Stable Diffusion 2.1", description: "Balanced (5-15s), Excellent quality, 5GB", speed: "5-15s", quality: "Excellent", size: "5GB"),
+        ImageModel(id: "flux", name: "FLUX", description: "Best quality (10-30s), Professional, 24GB", speed: "10-30s", quality: "Professional", size: "24GB")
+    ]
+
     // MARK: - Private Properties
 
     private let userDefaults = UserDefaults.standard
@@ -99,6 +121,7 @@ class AppSettings: ObservableObject {
         static let modelsPath = "modelsPath"
         static let templatesPath = "templatesPath"
         static let conversationsExportPath = "conversationsExportPath"
+        static let selectedImageModel = "selectedImageModel"
     }
 
     // MARK: - Initialization
@@ -253,6 +276,11 @@ class AppSettings: ObservableObject {
             conversationsExportPath = path
         }
 
+        // Load image generation settings
+        if let imageModel = userDefaults.string(forKey: Keys.selectedImageModel), !imageModel.isEmpty {
+            selectedImageModel = imageModel
+        }
+
         // Load available models
         if let modelsData = userDefaults.data(forKey: Keys.availableModels),
            let models = try? JSONDecoder().decode([MLXModel].self, from: modelsData) {
@@ -289,6 +317,9 @@ class AppSettings: ObservableObject {
         userDefaults.set(modelsPath, forKey: Keys.modelsPath)
         userDefaults.set(templatesPath, forKey: Keys.templatesPath)
         userDefaults.set(conversationsExportPath, forKey: Keys.conversationsExportPath)
+
+        // Save image generation settings
+        userDefaults.set(selectedImageModel, forKey: Keys.selectedImageModel)
 
         // Save selected model ID
         if let modelId = selectedModel?.id.uuidString {

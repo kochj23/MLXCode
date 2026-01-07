@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import AppKit
 
 /// Main view model for the chat interface
 /// Manages conversation state and MLX model interactions
@@ -146,6 +147,22 @@ class ChatViewModel: ObservableObject {
         }
 
         logInfo("📝 Input received: \(userInput.prefix(50))...", category: "ChatViewModel")
+
+        // DEBUG: Log to file
+        let debugMsg = "=== sendMessage() called ===\nInput: \(userInput)\n"
+        try? debugMsg.write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+
+        // Check for direct tool invocations (bypass model tool calling for reliability)
+        let handled = await handleDirectToolInvocation(userInput)
+        let handleMsg = "Handled by direct tool: \(handled)\n"
+        if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+            try? (existingLog + handleMsg).write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+        }
+
+        if handled {
+            userInput = ""
+            return
+        }
 
         // Sanitize input
         let sanitizedInput = SecurityUtils.sanitizeUserInput(userInput)
@@ -286,6 +303,218 @@ class ChatViewModel: ObservableObject {
         }
     }
 
+    /// Handles direct tool invocations by detecting keywords (bypasses model tool calling)
+    /// Returns true if handled, false if should proceed with normal chat
+    private func handleDirectToolInvocation(_ input: String) async -> Bool {
+        let lowercased = input.lowercased()
+
+        // Image generation detection
+        if lowercased.contains("generate image") || lowercased.contains("create image") ||
+           lowercased.contains("make an image") || lowercased.contains("generate an image") {
+
+            print("🎨🎨🎨 KEYWORD DETECTED: Image generation request!")
+            print("🎨🎨🎨 Input: '\(input)'")
+            if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                try? (existingLog + "🎨 KEYWORD DETECTED!\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+            }
+            logInfo("🎨 Direct image generation request detected", category: "ChatViewModel")
+
+            // Extract prompt (text after "generate image:" or similar)
+            var prompt = input
+            if let colonRange = input.range(of: ":", options: .caseInsensitive) {
+                prompt = String(input[colonRange.upperBound...]).trimmingCharacters(in: .whitespaces)
+            }
+
+            if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                try? (existingLog + "📝 Extracted prompt: '\(prompt)'\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+            }
+
+            // Add user message
+            let userMessage = Message.user(input)
+
+            if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                try? (existingLog + "💬 Created user message\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+            }
+
+            if currentConversation == nil {
+                if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                    try? (existingLog + "📂 Creating new conversation\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+                }
+                var newConv = Conversation.new(withFirstMessage: input)
+                // Remove the auto-added message since we're adding our own
+                newConv.messages = [userMessage]
+                currentConversation = newConv
+            } else {
+                if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                    try? (existingLog + "📂 Adding to existing conversation\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+                }
+                var conv = currentConversation!
+                conv.addMessage(userMessage)
+                currentConversation = conv
+            }
+
+            if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                try? (existingLog + "🔄 Forcing UI update\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+            }
+
+            // Force immediate UI update
+            objectWillChange.send()
+
+            if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                try? (existingLog + "🔧 About to execute tool\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+            }
+
+            // Execute image generation tool directly
+            let toolParams: [String: Any] = ["prompt": prompt]
+            let context = createToolContext()
+
+            print("🔧🔧🔧 About to execute generate_image_local tool")
+            print("🔧🔧🔧 Parameters: \(toolParams)")
+
+            if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                try? (existingLog + "🚀 Running Python script directly...\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+            }
+
+            // BYPASS TOOL REGISTRY - Run Python script directly to avoid deadlock
+            Task.detached {
+                if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                    try? (existingLog + "🔵 INSIDE Task.detached block\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+                }
+
+                let outputPath = "/tmp/generated_\(Date().timeIntervalSince1970).png"
+                let command = "cd ~/mlx-examples/stable_diffusion && /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9 txt2image.py \"\(prompt)\" --model sdxl --steps 4 --output \(outputPath)"
+
+                if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                    try? (existingLog + "📝 Command: \(command)\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+                }
+
+                let process = Process()
+                process.executableURL = URL(fileURLWithPath: "/bin/zsh")
+                process.arguments = ["-c", command]
+
+                if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                    try? (existingLog + "🚀 About to process.run()\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+                }
+
+                try? process.run()
+
+                if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                    try? (existingLog + "✅ Process started, PID: \(process.processIdentifier)\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+                }
+
+                if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                    try? (existingLog + "⏳ Polling for image file...\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+                }
+
+                // Poll for image completion (more reliable than terminationHandler)
+                var imageExists = false
+                for _ in 0..<60 { // Wait up to 30 seconds
+                    if FileManager.default.fileExists(atPath: outputPath) {
+                        imageExists = true
+                        break
+                    }
+                    try? await Task.sleep(for: .milliseconds(500))
+                }
+
+                if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                    try? (existingLog + "📊 Image exists: \(imageExists)\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+                }
+
+                let success = imageExists
+
+                // Update UI on MainActor
+                await MainActor.run {
+                    if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                        try? (existingLog + "🎯 On MainActor now\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+                    }
+
+                    var conv = self.currentConversation!
+
+                    if success && FileManager.default.fileExists(atPath: outputPath) {
+                        let resultMessage = Message.assistant("I've generated the image. Saved to: \(outputPath)")
+                        conv.addMessage(resultMessage)
+
+                        if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                            try? (existingLog + "🖼️ Opening in Preview...\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+                        }
+
+                        // Open in Preview
+                        NSWorkspace.shared.open(URL(fileURLWithPath: outputPath))
+                    } else {
+                        let errorMessage = Message.assistant("Failed to generate image. Check console for errors.")
+                        conv.addMessage(errorMessage)
+                    }
+
+                    self.currentConversation = conv
+                    self.objectWillChange.send()
+
+                    if let conv = self.currentConversation {
+                        self.saveConversation(conv)
+                    }
+
+                    if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
+                        try? (existingLog + "✅ ALL DONE!\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+                    }
+                }
+            }
+
+            return true
+        }
+
+        // Speech detection
+        if lowercased.hasPrefix("speak:") || lowercased.hasPrefix("say:") || lowercased.contains("read this aloud") {
+            logInfo("🎙️ Direct speech request detected", category: "ChatViewModel")
+
+            // Extract text to speak
+            var text = input
+            if lowercased.hasPrefix("speak:") {
+                text = String(input.dropFirst(6)).trimmingCharacters(in: .whitespaces)
+            } else if lowercased.hasPrefix("say:") {
+                text = String(input.dropFirst(4)).trimmingCharacters(in: .whitespaces)
+            }
+
+            // Add user message
+            let userMessage = Message.user(input)
+            if currentConversation == nil {
+                currentConversation = Conversation.new(withFirstMessage: input)
+            } else {
+                currentConversation?.addMessage(userMessage)
+            }
+
+            // Execute TTS tool directly
+            let toolParams: [String: Any] = ["text": text]
+            let context = createToolContext()
+
+            do {
+                // Execute tool in detached task to avoid MainActor deadlock
+                let result = try await Task.detached {
+                    return try await ToolRegistry.shared.executeTool(name: "native_tts", parameters: toolParams, context: context)
+                }.value
+
+                let resultMessage = Message.assistant(result.success ? "I've spoken the text." : "Failed to speak: \(result.output)")
+                currentConversation?.addMessage(resultMessage)
+
+                // Force view update
+                objectWillChange.send()
+
+                if let conv = currentConversation {
+                    saveConversation(conv)
+                }
+                return true
+            } catch {
+                let errorMessage = Message.assistant("Error with speech: \(error.localizedDescription)")
+                currentConversation?.addMessage(errorMessage)
+                if let conv = currentConversation {
+                    saveConversation(conv)
+                }
+                return true
+            }
+        }
+
+        // Not a direct tool invocation
+        return false
+    }
+
     /// Regenerates the last assistant response
     func regenerateLastResponse() async {
         guard let conversation = currentConversation else {
@@ -417,6 +646,14 @@ class ChatViewModel: ObservableObject {
                             if elapsed > 0 {
                                 self.tokensPerSecond = Double(self.tokenCount) / elapsed
                             }
+                        }
+
+                        // Check for tool calls - stop generation if complete tool call detected
+                        if accumulatedResponse.contains("</tool_call>") {
+                            logInfo("🔧 Tool call detected in response! Stopping generation to execute tools.", category: "ChatViewModel")
+                            shouldStopGeneration = true
+                            await PythonService.shared.terminate()
+                            return
                         }
 
                         // Check for repetition

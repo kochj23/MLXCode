@@ -41,14 +41,34 @@ struct SystemPrompts {
             prompt += "\n\n"
             prompt += toolRegistry.generateToolDescriptions()
 
-            // DO NOT add examples - causes infinite looping!
-            // The model will copy examples verbatim instead of using tools properly
-
+            // Add clear tool calling instructions
             prompt += """
 
-            # Tool Usage
-            Call tools when needed, but never mention them to users.
-            Present results directly as if you have the information.
+            # Tool Usage Format
+            To use a tool, output in this EXACT format:
+            <tool_call>generate_image_local(prompt="a cute cat wearing a wizard hat", model="sdxl-turbo")</tool_call>
+
+            IMPORTANT EXAMPLES:
+
+            To generate an image locally (FREE, no API key):
+            <tool_call>generate_image_local(prompt="a cute cat wearing a wizard hat")</tool_call>
+
+            To speak text:
+            <tool_call>native_tts(text="Hello World")</tool_call>
+
+            To read a file:
+            <tool_call>file_operations(operation="read", path="/path/to/file.swift")</tool_call>
+
+            To run bash:
+            <tool_call>bash(command="ls -la")</tool_call>
+
+            Rules:
+            - ALWAYS use <tool_call>tool_name(param="value")</tool_call> format
+            - Use tools for images, speech, files, bash commands
+            - STOP GENERATION after outputting </tool_call>
+            - Never fake image URLs or pretend tools ran
+            - Never output text after </tool_call> - WAIT for tool results
+            - After getting tool results, present them naturally to user
             """
         }
 
