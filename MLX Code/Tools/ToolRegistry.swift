@@ -273,8 +273,9 @@ class ToolRegistry: ObservableObject {
                 descriptions.append("  - \(paramName)\(required): \(paramDef.description)")
             }
 
-            descriptions.append("\nExample usage:")
-            descriptions.append("  \(tool.name)(...)")
+            // DO NOT ADD EXAMPLES - causes model to generate infinite examples
+            // descriptions.append("\nExample usage:")
+            // descriptions.append("  \(tool.name)(...)")
         }
 
         return descriptions.joined(separator: "\n")
