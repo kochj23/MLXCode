@@ -97,17 +97,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		F86D6F52AC0498F1F751CCF0 /* LocalImageGenerationTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocalImageGenerationTool.swift; path = "MLX Code/Tools/LocalImageGenerationTool.swift"; sourceTree = "<group>"; };
+		F86D6F52AC0498F1F751CCF0 /* LocalImageGenerationTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocalImageGenerationTool.swift; path = "Tools/LocalImageGenerationTool.swift"; sourceTree = "<group>"; };
 		BB69700D48233E87937D2E3E /* CommandValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CommandValidator.swift; path = "MLX Code/Utilities/CommandValidator.swift"; sourceTree = "<group>"; };
-		60F6F2D343A69759DB5987B6 /* VoiceCloningTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VoiceCloningTool.swift; path = "MLX Code/Tools/VoiceCloningTool.swift"; sourceTree = "<group>"; };
-		CC8B087E8CA724AAEDEAD476 /* MLXAudioTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MLXAudioTool.swift; path = "MLX Code/Tools/MLXAudioTool.swift"; sourceTree = "<group>"; };
-		0814555D11E7F6462B745795 /* NativeTTSTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NativeTTSTool.swift; path = "MLX Code/Tools/NativeTTSTool.swift"; sourceTree = "<group>"; };
+		60F6F2D343A69759DB5987B6 /* VoiceCloningTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VoiceCloningTool.swift; path = "Tools/VoiceCloningTool.swift"; sourceTree = "<group>"; };
+		CC8B087E8CA724AAEDEAD476 /* MLXAudioTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MLXAudioTool.swift; path = "Tools/MLXAudioTool.swift"; sourceTree = "<group>"; };
+		0814555D11E7F6462B745795 /* NativeTTSTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NativeTTSTool.swift; path = "Tools/NativeTTSTool.swift"; sourceTree = "<group>"; };
 		B3135C47FACB8AE8CB699414 /* ModelSecurityValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ModelSecurityValidator.swift; path = "MLX Code/Services/ModelSecurityValidator.swift"; sourceTree = "<group>"; };
 		F22C8A3ECC242DC0C424BE05 /* MultiModelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MultiModelProvider.swift; path = "MLX Code/Services/MultiModelProvider.swift"; sourceTree = "<group>"; };
 		C2296D68E813C17D937322A2 /* IntentRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = IntentRouter.swift; path = "MLX Code/Services/IntentRouter.swift"; sourceTree = "<group>"; };
-		CA0FF3F5B783EB79D1C7C440 /* ImageGenerationTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageGenerationTool.swift; path = "MLX Code/Tools/ImageGenerationTool.swift"; sourceTree = "<group>"; };
-		88CFEE59E559B89EE99D99FB /* NewsTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NewsTool.swift; path = "MLX Code/Tools/NewsTool.swift"; sourceTree = "<group>"; };
-		CC8644CD9A3BAB9360F3680B /* WebFetchTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebFetchTool.swift; path = "MLX Code/Tools/WebFetchTool.swift"; sourceTree = "<group>"; };
+		CA0FF3F5B783EB79D1C7C440 /* ImageGenerationTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageGenerationTool.swift; path = "Tools/ImageGenerationTool.swift"; sourceTree = "<group>"; };
+		88CFEE59E559B89EE99D99FB /* NewsTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NewsTool.swift; path = "Tools/NewsTool.swift"; sourceTree = "<group>"; };
+		CC8644CD9A3BAB9360F3680B /* WebFetchTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebFetchTool.swift; path = "Tools/WebFetchTool.swift"; sourceTree = "<group>"; };
 		002CBB955151E156B3F40DAB /* GitHubSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GitHubSettingsView.swift; path = "MLX Code/Views/GitHubSettingsView.swift"; sourceTree = "<group>"; };
 		0095C89C8F1E4539863AE74D96B702F4 /* MLXService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLXService.swift; sourceTree = "<group>"; };
 		01A056387C5D6883F0932FA4 /* GitService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GitService.swift; path = "MLX Code/Services/GitService.swift"; sourceTree = "<group>"; };
