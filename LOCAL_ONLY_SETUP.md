@@ -15,13 +15,22 @@ Run MLX Code entirely on your Mac:
 
 ---
 
-## 📦 One-Command Install
+## 📦 Complete Local Setup (Two Commands)
 
+### **Core + TTS + Voice:**
 ```bash
 pip3 install mlx mlx-lm mlx-audio f5-tts-mlx
 ```
 
-**That's it!** Wait 10-15 minutes for models to download (one-time only).
+### **Add Local Image Generation:**
+```bash
+git clone https://github.com/ml-explore/mlx-examples.git ~/mlx-examples
+cd ~/mlx-examples/stable_diffusion
+pip3 install -r requirements.txt
+```
+
+**That's it!** Wait 15-25 minutes for models to download (one-time only).
+**Result:** EVERYTHING runs locally - no API keys needed!
 
 ---
 
@@ -46,6 +55,12 @@ pip3 install mlx mlx-lm mlx-audio f5-tts-mlx
 - ✅ MLX-Audio TTS (7 models, excellent quality)
 - ✅ Voice cloning (F5-TTS, 5-10 sec samples)
 
+### **Image Generation:**
+- ✅ MLX Stable Diffusion (SDXL-Turbo, SD 2.1, FLUX)
+- ✅ 100% local on your Mac
+- ✅ FREE - no API costs
+- ✅ Fast (2-30 seconds on M3 Ultra)
+
 ### **Intent Router:**
 - ✅ Auto tool selection
 - ✅ Pattern-based routing
@@ -56,8 +71,8 @@ pip3 install mlx mlx-lm mlx-audio f5-tts-mlx
 ## ❌ What Requires Internet
 
 **During Setup (One-Time):**
-- Model downloads (~9GB total)
-- Takes 10-15 minutes
+- Model downloads (~16GB total with image models)
+- Takes 20-30 minutes
 - Models cached locally forever after
 
 **During Use (Optional Features):**
@@ -67,13 +82,14 @@ pip3 install mlx mlx-lm mlx-audio f5-tts-mlx
 
 ---
 
-## 🚫 What We're Skipping (Cloud-Only)
+## 🚫 What We're NOT Using (Cloud Services)
 
-**Image Generation:**
-- Requires OpenAI API key
-- Costs $0.04 per image
-- Cloud-based (DALL-E 3)
-- **Not needed for coding!**
+**Cloud Image Generation (DALL-E):**
+- We're using LOCAL Stable Diffusion instead!
+- No API key needed
+- No costs
+- Similar quality
+- Similar speed
 
 **Alternative Model Providers:**
 - OpenAI GPT-4 (cloud API)

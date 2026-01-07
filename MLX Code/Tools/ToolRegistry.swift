@@ -41,7 +41,8 @@ class ToolRegistry: ObservableObject {
         // External data & content tools (NEW from TinyLLM)
         register(WebFetchTool())
         register(NewsTool())
-        register(ImageGenerationTool())
+        register(ImageGenerationTool())  // Cloud-based (DALL-E) - requires API key
+        register(LocalImageGenerationTool())  // LOCAL - Apple MLX Stable Diffusion (FREE)
 
         // Text-to-Speech & Voice tools (NEW)
         register(NativeTTSTool())
