@@ -96,11 +96,11 @@ struct ModelParameters: Codable, Equatable, Hashable {
     ///   - repetitionContextSize: Context size for repetition (default: 64, look back farther)
     init(
         temperature: Double = 0.7,
-        maxTokens: Int = 2048,
+        maxTokens: Int = 512,  // Reduced from 2048 to prevent infinite generation
         topP: Double = 0.9,
         topK: Int = 40,
-        repetitionPenalty: Double = 1.2,
-        repetitionContextSize: Int = 64
+        repetitionPenalty: Double = 1.8,  // Increased from 1.2 to heavily penalize repetition
+        repetitionContextSize: Int = 256  // Increased from 64 to look back farther for repetition
     ) {
         self.temperature = temperature
         self.maxTokens = maxTokens
