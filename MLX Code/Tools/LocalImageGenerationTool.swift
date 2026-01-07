@@ -85,7 +85,10 @@ class LocalImageGenerationTool: BaseTool {
 
         // Extract parameters
         let prompt = try stringParameter(parameters, key: "prompt")
-        let model = (try? stringParameter(parameters, key: "model")) ?? "sdxl-turbo"
+
+        // Use selected model from settings, or parameter override, or default
+        let selectedModelFromSettings = await AppSettings.shared.selectedImageModel
+        let model = (try? stringParameter(parameters, key: "model")) ?? selectedModelFromSettings
         let width = (try? intParameter(parameters, key: "width")) ?? 512
         let height = (try? intParameter(parameters, key: "height")) ?? 512
         let numSteps = (try? intParameter(parameters, key: "num_steps")) ?? (model == "sdxl-turbo" ? 4 : 20)
@@ -189,7 +192,12 @@ class LocalImageGenerationTool: BaseTool {
                 }
             }
 
-            process.waitUntilExit()
+            // Wait asynchronously without blocking
+            await withCheckedContinuation { continuation in
+                process.terminationHandler = { _ in
+                    continuation.resume()
+                }
+            }
             progressTask.cancel()
 
             let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
@@ -266,26 +274,9 @@ class LocalImageGenerationTool: BaseTool {
         let mlxPath = NSHomeDirectory() + "/mlx-examples/stable_diffusion"
         let scriptPath = mlxPath + "/txt2image.py"
 
-        if !FileManager.default.fileExists(atPath: scriptPath) {
-            return false
-        }
-
-        // Verify dependencies
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/bin/zsh")
-        process.arguments = ["-c", "cd \(mlxPath) && python3 -c 'import mlx.core'"]
-
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = pipe
-
-        do {
-            try process.run()
-            process.waitUntilExit()
-            return process.terminationStatus == 0
-        } catch {
-            return false
-        }
+        // Simple check - just verify the script exists
+        // Don't run Python verification as it blocks the UI
+        return FileManager.default.fileExists(atPath: scriptPath)
     }
 
     private func formatBytes(_ bytes: Int64) -> String {

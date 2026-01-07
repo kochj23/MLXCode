@@ -143,14 +143,36 @@ struct ChatView: View {
 
         let hasText = !viewModel.userInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
 
-        // Button is disabled if no model is loaded OR no text entered
-        return !viewModel.isModelLoaded || !hasText
+        // Check if this is a direct tool command (doesn't need LLM loaded)
+        let lowercased = viewModel.userInput.lowercased()
+        let isDirectToolCommand = lowercased.contains("generate image") ||
+                                  lowercased.contains("create image") ||
+                                  lowercased.contains("make an image") ||
+                                  lowercased.hasPrefix("speak:") ||
+                                  lowercased.hasPrefix("say:")
+
+        // Button is enabled if:
+        // - Has text AND (model is loaded OR is a direct tool command)
+        return !hasText || (!viewModel.isModelLoaded && !isDirectToolCommand)
     }
 
     /// Color for the send button
     private var sendButtonColor: Color {
         if viewModel.isGenerating {
             return .red
+        }
+
+        // Check if this is a direct tool command
+        let lowercased = viewModel.userInput.lowercased()
+        let isDirectToolCommand = lowercased.contains("generate image") ||
+                                  lowercased.contains("create image") ||
+                                  lowercased.contains("make an image") ||
+                                  lowercased.hasPrefix("speak:") ||
+                                  lowercased.hasPrefix("say:")
+
+        // Use purple for direct tool commands (no LLM needed)
+        if isDirectToolCommand && !viewModel.isModelLoaded {
+            return .purple
         }
 
         if !viewModel.isModelLoaded {
@@ -167,8 +189,20 @@ struct ChatView: View {
             return "Stop generation"
         }
 
+        // Check if this is a direct tool command
+        let lowercased = viewModel.userInput.lowercased()
+        let isDirectToolCommand = lowercased.contains("generate image") ||
+                                  lowercased.contains("create image") ||
+                                  lowercased.contains("make an image") ||
+                                  lowercased.hasPrefix("speak:") ||
+                                  lowercased.hasPrefix("say:")
+
+        if isDirectToolCommand && !viewModel.isModelLoaded {
+            return "Execute tool (no model needed) (⌘↩)"
+        }
+
         if !viewModel.isModelLoaded {
-            return "Load a model first"
+            return "Load a model first (or use tool commands)"
         }
 
         let hasText = !viewModel.userInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty

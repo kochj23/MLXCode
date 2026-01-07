@@ -82,6 +82,12 @@ struct SettingsView: View {
                         Label("Appearance", systemImage: "paintbrush")
                     }
 
+                // Image generation settings
+                imageGenerationSettings
+                    .tabItem {
+                        Label("Images", systemImage: "photo")
+                    }
+
                 // Paths settings
                 PathsSettingsView()
                     .tabItem {
@@ -258,6 +264,17 @@ struct SettingsView: View {
                         Spacer()
 
                         Button(action: {
+                            resetModelsToDefaults()
+                        }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "arrow.counterclockwise")
+                                Text("Reset to Defaults")
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .help("Reset to all 9 default models")
+
+                        Button(action: {
                             Task {
                                 await refreshModelsFromDisk()
                             }
@@ -338,6 +355,149 @@ struct SettingsView: View {
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    // MARK: - Image Generation Settings
+
+    private var imageGenerationSettings: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                // Header
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Local Image Generation")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+
+                    Text("Generate images on your Mac using Apple's MLX framework. No API keys, no costs, 100% private.")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+
+                Divider()
+
+                // Model Selection
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Image Model")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+
+                    Picker("Image Model", selection: $settings.selectedImageModel) {
+                        ForEach(settings.availableImageModels) { model in
+                            VStack(alignment: .leading) {
+                                Text(model.name)
+                                Text(model.description)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .tag(model.id)
+                        }
+                    }
+                    .pickerStyle(.radioGroup)
+                    .labelsHidden()
+
+                    // Model details
+                    if let selectedModel = settings.availableImageModels.first(where: { $0.id == settings.selectedImageModel }) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Text("Speed:")
+                                    .foregroundColor(.secondary)
+                                Text(selectedModel.speed)
+                                    .fontWeight(.medium)
+                            }
+                            .font(.subheadline)
+
+                            HStack {
+                                Text("Quality:")
+                                    .foregroundColor(.secondary)
+                                Text(selectedModel.quality)
+                                    .fontWeight(.medium)
+                            }
+                            .font(.subheadline)
+
+                            HStack {
+                                Text("Model Size:")
+                                    .foregroundColor(.secondary)
+                                Text(selectedModel.size)
+                                    .fontWeight(.medium)
+                            }
+                            .font(.subheadline)
+                        }
+                        .padding()
+                        .background(Color.secondary.opacity(0.1))
+                        .cornerRadius(8)
+                    }
+                }
+
+                Divider()
+
+                // Usage Instructions
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Usage")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("In chat, type any of these:")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("• \"Generate image locally: sunset over mountains\"")
+                                .font(.system(.body, design: .monospaced))
+                            Text("• \"Create an app icon design\"")
+                                .font(.system(.body, design: .monospaced))
+                            Text("• \"Generate 1024x1024 image: futuristic city\"")
+                                .font(.system(.body, design: .monospaced))
+                        }
+                        .padding(.leading, 8)
+                    }
+
+                    Text("First generation will download the model (~5-24GB depending on model). Subsequent generations are instant!")
+                        .font(.caption)
+                        .foregroundColor(.orange)
+                        .padding(8)
+                        .background(Color.orange.opacity(0.1))
+                        .cornerRadius(6)
+                }
+
+                Divider()
+
+                // Performance Info
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Performance on Your M3 Ultra")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack {
+                            Text("SDXL-Turbo:")
+                                .frame(width: 120, alignment: .leading)
+                                .fontWeight(.medium)
+                            Text("2-5 seconds")
+                                .foregroundColor(.green)
+                        }
+                        HStack {
+                            Text("SD 2.1:")
+                                .frame(width: 120, alignment: .leading)
+                                .fontWeight(.medium)
+                            Text("5-15 seconds")
+                                .foregroundColor(.blue)
+                        }
+                        HStack {
+                            Text("FLUX:")
+                                .frame(width: 120, alignment: .leading)
+                                .fontWeight(.medium)
+                            Text("10-30 seconds")
+                                .foregroundColor(.purple)
+                        }
+                    }
+                    .font(.subheadline)
+                }
+
+                Spacer()
+            }
+            .padding()
         }
     }
 
@@ -728,6 +888,33 @@ struct SettingsView: View {
 
             NSWorkspace.shared.open(mlxCodeFolder)
         }
+    }
+
+    /// Resets the available models list to default (all 9 models)
+    private func resetModelsToDefaults() {
+        print("🔄 Resetting models to defaults...")
+
+        // Get the current models path from settings
+        let modelsPath = settings.modelsPath
+
+        // Load all default models with the correct base path
+        let defaultModels = MLXModel.commonModels(basePath: modelsPath)
+
+        print("✅ Loaded \(defaultModels.count) default models")
+
+        // Update settings
+        settings.availableModels = defaultModels
+
+        // Auto-select the recommended model (Qwen 2.5 7B) if none selected
+        if settings.selectedModel == nil {
+            settings.selectedModel = defaultModels.first(where: { $0.name.contains("Qwen 2.5 7B") }) ?? defaultModels.first
+        }
+
+        // Save settings
+        settings.saveSettings()
+
+        print("✅ Models list reset to \(defaultModels.count) defaults")
+        logInfo("Reset models list to \(defaultModels.count) defaults", category: "Settings")
     }
 
     /// Downloads a model with progress tracking
