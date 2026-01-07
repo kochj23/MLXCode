@@ -207,10 +207,12 @@ extension MLXModel {
     static func `default`(basePath: String? = nil) -> MLXModel {
         let modelBasePath = basePath ?? AppSettings.detectWritableModelsPath()
         return MLXModel(
-            name: "Default Model",
-            path: "\(modelBasePath)/default",
+            name: "Llama 3.2 3B (Default)",
+            path: "\(modelBasePath)/llama-3.2-3b",
             parameters: ModelParameters(),
-            isDownloaded: false
+            isDownloaded: false,
+            huggingFaceId: "mlx-community/Llama-3.2-3B-Instruct-4bit",
+            description: "Meta's Llama 3.2 3B - Fast and efficient default model"
         )
     }
 

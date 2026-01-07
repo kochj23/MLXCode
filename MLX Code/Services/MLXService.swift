@@ -805,7 +805,16 @@ extension MLXService {
         progressHandler: ((Double) -> Void)? = nil
     ) async throws -> MLXModel {
         guard let huggingFaceId = model.huggingFaceId else {
-            throw MLXServiceError.generationFailed("Model does not have a HuggingFace ID")
+            throw MLXServiceError.generationFailed("""
+            Model '\(model.name)' does not have a HuggingFace ID configured.
+
+            To fix:
+            1. Go to Settings → Models
+            2. Select a model from the list (Llama 3.2, Qwen 2.5, Mistral, or Phi-3.5)
+            3. Or add HuggingFace ID to your custom model
+
+            Recommended: Use 'Llama 3.2 3B' (fast, 4-bit quantized)
+            """)
         }
 
         await SecureLogger.shared.info("Starting download of model: \(model.name)", category: "MLXService")
