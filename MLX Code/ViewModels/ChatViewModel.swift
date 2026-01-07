@@ -64,6 +64,15 @@ class ChatViewModel: ObservableObject {
     /// Average tokens per second for the conversation
     @Published var conversationAverageTokensPerSecond: Double = 0.0
 
+    /// Video/image generation progress
+    @Published var generationProgress: Double = 0.0
+
+    /// Video/image generation status message
+    @Published var generationStatus: String = ""
+
+    /// Whether video/image is generating
+    @Published var isGeneratingMedia: Bool = false
+
     // MARK: - Private Properties
 
     private var cancellables = Set<AnyCancellable>()
@@ -335,11 +344,22 @@ class ChatViewModel: ObservableObject {
 
             objectWillChange.send()
 
+            // Show progress UI
+            await MainActor.run {
+                self.isGeneratingMedia = true
+                self.generationProgress = 0.0
+                self.generationStatus = "Preparing video generation..."
+            }
+
             // Execute video generation directly
             Task.detached {
                 let outputPath = "/tmp/video_\(Date().timeIntervalSince1970).mp4"
                 let numFrames = 30  // Default
                 let fps = 24
+
+                // Get quality setting
+                let quality = await AppSettings.shared.imageQuality
+                let steps = quality.steps
 
                 // Create temp directory
                 let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent("video_frames_\(Date().timeIntervalSince1970)")
@@ -347,13 +367,19 @@ class ChatViewModel: ObservableObject {
 
                 // Generate frames
                 for frame in 0..<numFrames {
+                    // Update progress
+                    let progress = Double(frame) / Double(numFrames)
+                    await MainActor.run {
+                        self.generationProgress = progress
+                        self.generationStatus = "Generating frame \(frame + 1)/\(numFrames)..."
+                    }
                     let framePrompt = "\(prompt), frame \(frame)"
                     let framePath = tempDir.appendingPathComponent(String(format: "frame_%04d.png", frame)).path
 
                     let command = """
                     cd ~/mlx-examples/stable_diffusion && \
                     /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9 \
-                    txt2image.py "\(framePrompt)" --model sdxl --steps 4 --seed \(frame * 42) --n_images 1 --output "\(framePath)"
+                    txt2image.py "\(framePrompt)" --model sdxl --steps \(steps) --seed \(frame * 42) --n_images 1 --output "\(framePath)"
                     """
 
                     let process = Process()
@@ -364,6 +390,12 @@ class ChatViewModel: ObservableObject {
                     await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
                         process.terminationHandler = { _ in continuation.resume() }
                     }
+                }
+
+                // Update progress
+                await MainActor.run {
+                    self.generationProgress = 0.95
+                    self.generationStatus = "Combining \(numFrames) frames into video..."
                 }
 
                 // Combine with FFmpeg
@@ -386,10 +418,13 @@ class ChatViewModel: ObservableObject {
 
                 // Update UI
                 await MainActor.run {
+                    self.generationProgress = 1.0
+                    self.generationStatus = "Complete!"
+
                     var conv = self.currentConversation!
 
                     if FileManager.default.fileExists(atPath: outputPath) {
-                        let resultMessage = Message.assistant("I've generated the video (\(numFrames) frames at \(fps)fps). Saved to: \(outputPath)")
+                        let resultMessage = Message.assistant("I've generated the video (\(numFrames) frames at \(fps)fps, \(quality.displayName)). Saved to: \(outputPath)")
                         conv.addMessage(resultMessage)
                         NSWorkspace.shared.open(URL(fileURLWithPath: outputPath))
                     } else {
@@ -402,6 +437,14 @@ class ChatViewModel: ObservableObject {
 
                     if let conv = self.currentConversation {
                         self.saveConversation(conv)
+                    }
+
+                    // Clear progress after delay
+                    Task {
+                        try? await Task.sleep(for: .seconds(2))
+                        self.isGeneratingMedia = false
+                        self.generationProgress = 0.0
+                        self.generationStatus = ""
                     }
                 }
             }
@@ -461,6 +504,13 @@ class ChatViewModel: ObservableObject {
             // Force immediate UI update
             objectWillChange.send()
 
+            // Show progress UI
+            await MainActor.run {
+                self.isGeneratingMedia = true
+                self.generationProgress = 0.0
+                self.generationStatus = "Generating image..."
+            }
+
             if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
                 try? (existingLog + "🔧 About to execute tool\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
             }
@@ -484,6 +534,10 @@ class ChatViewModel: ObservableObject {
 
                 let outputPath = "/tmp/generated_\(Date().timeIntervalSince1970).png"
 
+                // Get quality setting
+                let quality = await AppSettings.shared.imageQuality
+                let steps = quality.steps
+
                 // Get selected model info
                 let selectedModelId = await AppSettings.shared.selectedImageModel
                 let selectedModel = await AppSettings.shared.availableImageModels.first(where: { $0.id == selectedModelId })
@@ -500,7 +554,6 @@ class ChatViewModel: ObservableObject {
                     modelArg = "sdxl"
                 }
 
-                let steps = modelArg == "sdxl" ? 4 : 20
                 let command = "cd ~/mlx-examples/stable_diffusion && /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9 txt2image.py \"\(prompt)\" --model \(modelArg) --steps \(steps) --output \(outputPath)"
 
                 if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
@@ -527,11 +580,19 @@ class ChatViewModel: ObservableObject {
 
                 // Poll for image completion (more reliable than terminationHandler)
                 var imageExists = false
-                for _ in 0..<60 { // Wait up to 30 seconds
+                for attempt in 0..<60 { // Wait up to 30 seconds
                     if FileManager.default.fileExists(atPath: outputPath) {
                         imageExists = true
                         break
                     }
+
+                    // Update progress
+                    let progress = 0.1 + (Double(attempt) / 60.0 * 0.9)
+                    await MainActor.run {
+                        self.generationProgress = progress
+                        self.generationStatus = "Generating image... \(Int(progress * 100))%"
+                    }
+
                     try? await Task.sleep(for: .milliseconds(500))
                 }
 
@@ -540,6 +601,14 @@ class ChatViewModel: ObservableObject {
                 }
 
                 let success = imageExists
+
+                // Get quality for message
+                let qualitySetting = await AppSettings.shared.imageQuality
+
+                await MainActor.run {
+                    self.generationProgress = 1.0
+                    self.generationStatus = "Complete!"
+                }
 
                 // Update UI on MainActor
                 await MainActor.run {
@@ -550,7 +619,7 @@ class ChatViewModel: ObservableObject {
                     var conv = self.currentConversation!
 
                     if success && FileManager.default.fileExists(atPath: outputPath) {
-                        let resultMessage = Message.assistant("I've generated the image. Saved to: \(outputPath)")
+                        let resultMessage = Message.assistant("I've generated the image (\(qualitySetting.displayName)). Saved to: \(outputPath)")
                         conv.addMessage(resultMessage)
 
                         if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
@@ -569,6 +638,14 @@ class ChatViewModel: ObservableObject {
 
                     if let conv = self.currentConversation {
                         self.saveConversation(conv)
+                    }
+
+                    // Clear progress after delay
+                    Task {
+                        try? await Task.sleep(for: .seconds(2))
+                        self.isGeneratingMedia = false
+                        self.generationProgress = 0.0
+                        self.generationStatus = ""
                     }
 
                     if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
