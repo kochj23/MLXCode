@@ -38,6 +38,11 @@ class ToolRegistry: ObservableObject {
         register(GlobTool())
         register(XcodeTool())
 
+        // External data & content tools (NEW from TinyLLM)
+        register(WebFetchTool())
+        register(NewsTool())
+        register(ImageGenerationTool())
+
         // Advanced development tools (Batch 1)
         register(ErrorDiagnosisTool())
         register(TestGenerationTool())
@@ -71,7 +76,7 @@ class ToolRegistry: ObservableObject {
         // Help System
         register(HelpTool())
 
-        logInfo("Registered \(tools.count) built-in tools", category: "ToolRegistry")
+        logInfo("Registered \(tools.count) built-in tools (including WebFetch, News, ImageGen)", category: "ToolRegistry")
     }
 
     /// Register a tool
