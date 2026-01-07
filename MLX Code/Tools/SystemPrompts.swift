@@ -65,7 +65,13 @@ struct SystemPrompts {
     - Read/write files
     - Run bash commands
 
-    When asked "What can you do?", list YOUR ACTUAL capabilities above.
+    When asked "What can you do?" or about capabilities:
+    - JUST LIST the features above
+    - DO NOT try to demonstrate by calling fake tools
+    - DO NOT use <tool_call> tags in your answer
+    - DO NOT analyze the project structure
+    - JUST tell them: images, videos, speech, dev tools, etc.
+
     When you don't have a capability, say so honestly.
 
     Guidelines:
@@ -91,31 +97,26 @@ struct SystemPrompts {
             // Add clear tool calling instructions
             prompt += """
 
-            # Tool Usage Format
-            To use a tool, output in this EXACT format:
-            <tool_call>generate_image_local(prompt="a cute cat wearing a wizard hat", model="sdxl-turbo")</tool_call>
+            # CRITICAL: Tool Usage is OPTIONAL - Use KEYWORDS Instead
 
-            IMPORTANT EXAMPLES:
+            For images/videos/speech, DO NOT use <tool_call> tags.
+            Instead, just tell the user to use KEYWORDS:
+            - "Generate image: sunset" (for images)
+            - "Generate video: rotating cube" (for videos)
+            - "Speak: Hello" (for speech)
 
-            To generate an image locally (FREE, no API key):
-            <tool_call>generate_image_local(prompt="a cute cat wearing a wizard hat")</tool_call>
+            These keywords are detected automatically - NO tools needed!
 
-            To speak text:
-            <tool_call>native_tts(text="Hello World")</tool_call>
-
-            To read a file:
+            For file/bash operations, you CAN use tools IF ASKED:
             <tool_call>file_operations(operation="read", path="/path/to/file.swift")</tool_call>
-
-            To run bash:
             <tool_call>bash(command="ls -la")</tool_call>
 
-            Rules:
-            - ALWAYS use <tool_call>tool_name(param="value")</tool_call> format
-            - Use tools for images, speech, files, bash commands
-            - STOP GENERATION after outputting </tool_call>
-            - Never fake image URLs or pretend tools ran
-            - Never output text after </tool_call> - WAIT for tool results
-            - After getting tool results, present them naturally to user
+            IMPORTANT RULES:
+            - NEVER make up fake tools (no "security_scanner", "dependencies", "scheme")
+            - NEVER hallucinate tool results
+            - If you don't have a tool, say so honestly
+            - For images/videos/speech: Tell user to use keywords (they work better!)
+            - ONLY use tools that exist in the tool list above
             """
         }
 
