@@ -148,6 +148,10 @@ struct ChatView: View {
         let isDirectToolCommand = lowercased.contains("generate image") ||
                                   lowercased.contains("create image") ||
                                   lowercased.contains("make an image") ||
+                                  lowercased.contains("generate video") ||
+                                  lowercased.contains("create video") ||
+                                  lowercased.contains("make a video") ||
+                                  lowercased.contains("create animation") ||
                                   lowercased.hasPrefix("speak:") ||
                                   lowercased.hasPrefix("say:")
 
@@ -167,6 +171,10 @@ struct ChatView: View {
         let isDirectToolCommand = lowercased.contains("generate image") ||
                                   lowercased.contains("create image") ||
                                   lowercased.contains("make an image") ||
+                                  lowercased.contains("generate video") ||
+                                  lowercased.contains("create video") ||
+                                  lowercased.contains("make a video") ||
+                                  lowercased.contains("create animation") ||
                                   lowercased.hasPrefix("speak:") ||
                                   lowercased.hasPrefix("say:")
 
@@ -194,6 +202,10 @@ struct ChatView: View {
         let isDirectToolCommand = lowercased.contains("generate image") ||
                                   lowercased.contains("create image") ||
                                   lowercased.contains("make an image") ||
+                                  lowercased.contains("generate video") ||
+                                  lowercased.contains("create video") ||
+                                  lowercased.contains("make a video") ||
+                                  lowercased.contains("create animation") ||
                                   lowercased.hasPrefix("speak:") ||
                                   lowercased.hasPrefix("say:")
 

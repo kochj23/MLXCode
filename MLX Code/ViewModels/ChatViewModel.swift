@@ -308,6 +308,107 @@ class ChatViewModel: ObservableObject {
     private func handleDirectToolInvocation(_ input: String) async -> Bool {
         let lowercased = input.lowercased()
 
+        // Video generation detection
+        if lowercased.contains("generate video") || lowercased.contains("create video") ||
+           lowercased.contains("make a video") || lowercased.contains("create animation") {
+
+            print("🎬🎬🎬 KEYWORD DETECTED: Video generation request!")
+            try? "🎬 VIDEO KEYWORD DETECTED!\n".write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
+
+            // Extract prompt
+            var prompt = input
+            if let colonRange = input.range(of: ":", options: .caseInsensitive) {
+                prompt = String(input[colonRange.upperBound...]).trimmingCharacters(in: .whitespaces)
+            }
+
+            // Add user message
+            let userMessage = Message.user(input)
+            if currentConversation == nil {
+                var newConv = Conversation.new(withFirstMessage: input)
+                newConv.messages = [userMessage]
+                currentConversation = newConv
+            } else {
+                var conv = currentConversation!
+                conv.addMessage(userMessage)
+                currentConversation = conv
+            }
+
+            objectWillChange.send()
+
+            // Execute video generation directly
+            Task.detached {
+                let outputPath = "/tmp/video_\(Date().timeIntervalSince1970).mp4"
+                let numFrames = 30  // Default
+                let fps = 24
+
+                // Create temp directory
+                let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent("video_frames_\(Date().timeIntervalSince1970)")
+                try? FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+
+                // Generate frames
+                for frame in 0..<numFrames {
+                    let framePrompt = "\(prompt), frame \(frame)"
+                    let framePath = tempDir.appendingPathComponent(String(format: "frame_%04d.png", frame)).path
+
+                    let command = """
+                    cd ~/mlx-examples/stable_diffusion && \
+                    /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9 \
+                    txt2image.py "\(framePrompt)" --model sdxl --steps 4 --seed \(frame * 42) --n_images 1 --output "\(framePath)"
+                    """
+
+                    let process = Process()
+                    process.executableURL = URL(fileURLWithPath: "/bin/zsh")
+                    process.arguments = ["-c", command]
+                    try? process.run()
+
+                    await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+                        process.terminationHandler = { _ in continuation.resume() }
+                    }
+                }
+
+                // Combine with FFmpeg
+                let ffmpegCommand = """
+                /opt/homebrew/bin/ffmpeg -y -framerate \(fps) -pattern_type glob -i '\(tempDir.path)/frame_*.png' \
+                -c:v libx264 -pix_fmt yuv420p -preset fast "\(outputPath)"
+                """
+
+                let ffmpegProcess = Process()
+                ffmpegProcess.executableURL = URL(fileURLWithPath: "/bin/zsh")
+                ffmpegProcess.arguments = ["-c", ffmpegCommand]
+                try? ffmpegProcess.run()
+
+                await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+                    ffmpegProcess.terminationHandler = { _ in continuation.resume() }
+                }
+
+                // Clean up frames
+                try? FileManager.default.removeItem(at: tempDir)
+
+                // Update UI
+                await MainActor.run {
+                    var conv = self.currentConversation!
+
+                    if FileManager.default.fileExists(atPath: outputPath) {
+                        let resultMessage = Message.assistant("I've generated the video (\(numFrames) frames at \(fps)fps). Saved to: \(outputPath)")
+                        conv.addMessage(resultMessage)
+                        NSWorkspace.shared.open(URL(fileURLWithPath: outputPath))
+                    } else {
+                        let errorMessage = Message.assistant("Failed to generate video.")
+                        conv.addMessage(errorMessage)
+                    }
+
+                    self.currentConversation = conv
+                    self.objectWillChange.send()
+
+                    if let conv = self.currentConversation {
+                        self.saveConversation(conv)
+                    }
+                }
+            }
+
+            return true
+        }
+
         // Image generation detection
         if lowercased.contains("generate image") || lowercased.contains("create image") ||
            lowercased.contains("make an image") || lowercased.contains("generate an image") {
@@ -382,7 +483,25 @@ class ChatViewModel: ObservableObject {
                 }
 
                 let outputPath = "/tmp/generated_\(Date().timeIntervalSince1970).png"
-                let command = "cd ~/mlx-examples/stable_diffusion && /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9 txt2image.py \"\(prompt)\" --model sdxl --steps 4 --output \(outputPath)"
+
+                // Get selected model info
+                let selectedModelId = await AppSettings.shared.selectedImageModel
+                let selectedModel = await AppSettings.shared.availableImageModels.first(where: { $0.id == selectedModelId })
+
+                // Determine model argument for txt2image.py
+                let modelArg: String
+                if let model = selectedModel, model.id == "flux" {
+                    // FLUX uses separate script
+                    modelArg = "flux"
+                } else if let model = selectedModel, model.id == "sd-1.5" || model.huggingFaceId.contains("1-5") {
+                    modelArg = "sd"
+                } else {
+                    // Default to SDXL
+                    modelArg = "sdxl"
+                }
+
+                let steps = modelArg == "sdxl" ? 4 : 20
+                let command = "cd ~/mlx-examples/stable_diffusion && /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9 txt2image.py \"\(prompt)\" --model \(modelArg) --steps \(steps) --output \(outputPath)"
 
                 if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
                     try? (existingLog + "📝 Command: \(command)\n").write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)

@@ -28,6 +28,13 @@ struct SettingsView: View {
     /// Download status messages
     @State private var downloadStatus: [UUID: String] = [:]
 
+    /// Whether to show add custom image model dialog
+    @State private var showingAddImageModel = false
+
+    /// Custom model input fields
+    @State private var customModelName = ""
+    @State private var customModelHFId = ""
+
     var body: some View {
         VStack(spacing: 0) {
             // Header with close button
@@ -118,6 +125,67 @@ struct SettingsView: View {
             .padding(.horizontal)
         }
         .frame(width: 650, height: 550)
+        .sheet(isPresented: $showingAddImageModel) {
+            addCustomImageModelSheet
+        }
+    }
+
+    // MARK: - Custom Model Dialog
+
+    private var addCustomImageModelSheet: some View {
+        VStack(spacing: 20) {
+            Text("Add Custom Image Model")
+                .font(.title2)
+                .fontWeight(.semibold)
+
+            Text("Add any Stable Diffusion model from Hugging Face. Make sure it's compatible with Apple MLX and uses SafeTensors format.")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Model Name")
+                    .font(.headline)
+                TextField("e.g., Realistic Vision", text: $customModelName)
+                    .textFieldStyle(.roundedBorder)
+
+                Text("Hugging Face Model ID")
+                    .font(.headline)
+                TextField("e.g., SG161222/Realistic_Vision_V5.1_noVAE", text: $customModelHFId)
+                    .textFieldStyle(.roundedBorder)
+
+                Divider()
+
+                Text("✅ Safe Models (Verified SafeTensors):")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.green)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("• stabilityai/stable-diffusion-2-1")
+                    Text("• runwayml/stable-diffusion-v1-5")
+                    Text("• SG161222/Realistic_Vision_V5.1_noVAE")
+                    Text("• prompthero/openjourney")
+                }
+                .font(.caption)
+                .foregroundColor(.secondary)
+            }
+
+            HStack(spacing: 12) {
+                Button("Cancel") {
+                    showingAddImageModel = false
+                }
+                .keyboardShortcut(.cancelAction)
+
+                Button("Add Model") {
+                    addCustomImageModel()
+                }
+                .keyboardShortcut(.defaultAction)
+                .disabled(customModelName.isEmpty || customModelHFId.isEmpty)
+            }
+        }
+        .padding(30)
+        .frame(width: 500)
     }
 
     // MARK: - General Settings
@@ -378,17 +446,44 @@ struct SettingsView: View {
 
                 // Model Selection
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Image Model")
-                        .font(.headline)
-                        .foregroundColor(.primary)
+                    HStack {
+                        Text("Image Model")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+
+                        Spacer()
+
+                        Button(action: {
+                            showAddCustomModelDialog()
+                        }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "plus.circle")
+                                Text("Add Custom Model")
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .help("Add a custom Stable Diffusion model from Hugging Face")
+                    }
+
+                    Text("Built-in models (SafeTensors verified):")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
 
                     Picker("Image Model", selection: $settings.selectedImageModel) {
                         ForEach(settings.availableImageModels) { model in
-                            VStack(alignment: .leading) {
-                                Text(model.name)
-                                Text(model.description)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(model.name)
+                                    Text(model.description)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                if model.isCustom {
+                                    Image(systemName: "star.fill")
+                                        .foregroundColor(.yellow)
+                                        .help("Custom model")
+                                }
                             }
                             .tag(model.id)
                         }
@@ -888,6 +983,38 @@ struct SettingsView: View {
 
             NSWorkspace.shared.open(mlxCodeFolder)
         }
+    }
+
+    /// Shows dialog to add custom image model
+    private func showAddCustomModelDialog() {
+        customModelName = ""
+        customModelHFId = ""
+        showingAddImageModel = true
+    }
+
+    /// Adds a custom image model
+    private func addCustomImageModel() {
+        guard !customModelName.isEmpty, !customModelHFId.isEmpty else {
+            return
+        }
+
+        let customModel = ImageModel(
+            id: UUID().uuidString,
+            name: customModelName,
+            description: "Custom model from Hugging Face",
+            speed: "Varies",
+            quality: "Unknown",
+            size: "Unknown",
+            huggingFaceId: customModelHFId,
+            isCustom: true
+        )
+
+        settings.availableImageModels.append(customModel)
+        settings.selectedImageModel = customModel.id
+        settings.saveSettings()
+
+        showingAddImageModel = false
+        logInfo("Added custom image model: \(customModelName)", category: "Settings")
     }
 
     /// Resets the available models list to default (all 9 models)
