@@ -43,6 +43,7 @@ class ToolRegistry: ObservableObject {
         register(NewsTool())
         register(ImageGenerationTool())  // Cloud-based (DALL-E) - requires API key
         register(LocalImageGenerationTool())  // LOCAL - Apple MLX Stable Diffusion (FREE)
+        // register(VideoGenerationTool())  // LOCAL - Image Sequence → Video with FFmpeg (FREE) - Direct keyword detection used instead
 
         // Text-to-Speech & Voice tools (NEW)
         register(NativeTTSTool())

@@ -11,13 +11,26 @@ import Combine
 import AppKit
 
 /// Image generation model configuration
-struct ImageModel: Identifiable {
+struct ImageModel: Identifiable, Codable {
     let id: String
     let name: String
     let description: String
     let speed: String
     let quality: String
     let size: String
+    let huggingFaceId: String
+    let isCustom: Bool
+
+    init(id: String, name: String, description: String, speed: String, quality: String, size: String, huggingFaceId: String, isCustom: Bool = false) {
+        self.id = id
+        self.name = name
+        self.description = description
+        self.speed = speed
+        self.quality = quality
+        self.size = size
+        self.huggingFaceId = huggingFaceId
+        self.isCustom = isCustom
+    }
 }
 
 /// Singleton class managing application settings
@@ -90,11 +103,13 @@ class AppSettings: ObservableObject {
     /// Selected image generation model
     @Published var selectedImageModel: String = "sdxl-turbo"
 
-    /// Available image generation models
-    let availableImageModels = [
-        ImageModel(id: "sdxl-turbo", name: "SDXL-Turbo", description: "Fast (2-5s), Good quality, 7GB", speed: "2-5s", quality: "Good", size: "7GB"),
-        ImageModel(id: "sd-2.1", name: "Stable Diffusion 2.1", description: "Balanced (5-15s), Excellent quality, 5GB", speed: "5-15s", quality: "Excellent", size: "5GB"),
-        ImageModel(id: "flux", name: "FLUX", description: "Best quality (10-30s), Professional, 24GB", speed: "10-30s", quality: "Professional", size: "24GB")
+    /// Available image generation models (mutable for custom models)
+    @Published var availableImageModels: [ImageModel] = [
+        ImageModel(id: "sdxl-turbo", name: "SDXL-Turbo ⭐", description: "Fast (2-5s), Good quality, 7GB", speed: "2-5s", quality: "Good", size: "7GB", huggingFaceId: "stabilityai/sdxl-turbo", isCustom: false),
+        ImageModel(id: "sd-2.1", name: "Stable Diffusion 2.1", description: "Balanced (5-15s), Excellent quality, 5GB", speed: "5-15s", quality: "Excellent", size: "5GB", huggingFaceId: "stabilityai/stable-diffusion-2-1", isCustom: false),
+        ImageModel(id: "flux", name: "FLUX", description: "Best quality (10-30s), Professional, 24GB", speed: "10-30s", quality: "Professional", size: "24GB", huggingFaceId: "black-forest-labs/FLUX.1-schnell", isCustom: false),
+        ImageModel(id: "sdxl-base", name: "SDXL Base", description: "High quality (8-15s), Detailed, 7GB", speed: "8-15s", quality: "Excellent", size: "7GB", huggingFaceId: "stabilityai/stable-diffusion-xl-base-1.0", isCustom: false),
+        ImageModel(id: "sd-1.5", name: "SD 1.5 Classic", description: "Fast (3-8s), Classic quality, 4GB", speed: "3-8s", quality: "Good", size: "4GB", huggingFaceId: "runwayml/stable-diffusion-v1-5", isCustom: false)
     ]
 
     // MARK: - Private Properties
