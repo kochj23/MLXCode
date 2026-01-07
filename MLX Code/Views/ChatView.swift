@@ -95,6 +95,28 @@ struct ChatView: View {
                             ThinkingOverlayView(message: "Preparing response...")
                                 .transition(.opacity)
                         }
+
+                        // Media generation progress overlay
+                        if viewModel.isGeneratingMedia {
+                            VStack(spacing: 16) {
+                                ProgressView(value: viewModel.generationProgress) {
+                                    Text(viewModel.generationStatus)
+                                        .font(.headline)
+                                }
+                                .progressViewStyle(.linear)
+                                .frame(width: 400)
+
+                                Text("\(Int(viewModel.generationProgress * 100))%")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .monospacedDigit()
+                            }
+                            .padding(30)
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(16)
+                            .shadow(radius: 20)
+                            .transition(.scale.combined(with: .opacity))
+                        }
                     }
 
                     Divider()

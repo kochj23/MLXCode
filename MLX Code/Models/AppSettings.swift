@@ -10,6 +10,37 @@ import Foundation
 import Combine
 import AppKit
 
+/// Image generation quality presets
+enum ImageQuality: String, CaseIterable, Codable {
+    case fast = "fast"
+    case balanced = "balanced"
+    case high = "high"
+
+    var displayName: String {
+        switch self {
+        case .fast: return "Fast (4 steps)"
+        case .balanced: return "Balanced (20 steps)"
+        case .high: return "High Quality (50 steps)"
+        }
+    }
+
+    var steps: Int {
+        switch self {
+        case .fast: return 4
+        case .balanced: return 20
+        case .high: return 50
+        }
+    }
+
+    var description: String {
+        switch self {
+        case .fast: return "Quick results, good for iteration (2-5s)"
+        case .balanced: return "Good quality, reasonable speed (5-15s)"
+        case .high: return "Best quality, slower (10-30s)"
+        }
+    }
+}
+
 /// Image generation model configuration
 struct ImageModel: Identifiable, Codable {
     let id: String
@@ -103,6 +134,9 @@ class AppSettings: ObservableObject {
     /// Selected image generation model
     @Published var selectedImageModel: String = "sdxl-turbo"
 
+    /// Image generation quality setting
+    @Published var imageQuality: ImageQuality = .balanced
+
     /// Available image generation models (mutable for custom models)
     @Published var availableImageModels: [ImageModel] = [
         ImageModel(id: "sdxl-turbo", name: "SDXL-Turbo ⭐", description: "Fast (2-5s), Good quality, 7GB", speed: "2-5s", quality: "Good", size: "7GB", huggingFaceId: "stabilityai/sdxl-turbo", isCustom: false),
@@ -137,6 +171,7 @@ class AppSettings: ObservableObject {
         static let templatesPath = "templatesPath"
         static let conversationsExportPath = "conversationsExportPath"
         static let selectedImageModel = "selectedImageModel"
+        static let imageQuality = "imageQuality"
     }
 
     // MARK: - Initialization
@@ -296,6 +331,11 @@ class AppSettings: ObservableObject {
             selectedImageModel = imageModel
         }
 
+        if let qualityRaw = userDefaults.string(forKey: Keys.imageQuality),
+           let loadedQuality = ImageQuality(rawValue: qualityRaw) {
+            imageQuality = loadedQuality
+        }
+
         // Load available models
         if let modelsData = userDefaults.data(forKey: Keys.availableModels),
            let models = try? JSONDecoder().decode([MLXModel].self, from: modelsData) {
@@ -335,6 +375,7 @@ class AppSettings: ObservableObject {
 
         // Save image generation settings
         userDefaults.set(selectedImageModel, forKey: Keys.selectedImageModel)
+        userDefaults.set(imageQuality.rawValue, forKey: Keys.imageQuality)
 
         // Save selected model ID
         if let modelId = selectedModel?.id.uuidString {

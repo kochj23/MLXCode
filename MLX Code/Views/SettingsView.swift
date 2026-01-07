@@ -526,6 +526,36 @@ struct SettingsView: View {
 
                 Divider()
 
+                // Quality Settings
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Image Quality")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+
+                    Picker("Quality", selection: $settings.imageQuality) {
+                        ForEach(ImageQuality.allCases, id: \.self) { quality in
+                            VStack(alignment: .leading) {
+                                Text(quality.displayName)
+                                Text(quality.description)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .tag(quality)
+                        }
+                    }
+                    .pickerStyle(.radioGroup)
+                    .labelsHidden()
+
+                    Text("Higher quality = more steps = slower generation but better results")
+                        .font(.caption)
+                        .foregroundColor(.orange)
+                        .padding(8)
+                        .background(Color.orange.opacity(0.1))
+                        .cornerRadius(6)
+                }
+
+                Divider()
+
                 // Usage Instructions
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Usage")
