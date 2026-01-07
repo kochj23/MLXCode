@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA696F3DD2353E5BF26E9463 /* LocalImageGenerationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86D6F52AC0498F1F751CCF0 /* LocalImageGenerationTool.swift */; };
 		E2FCF04057F99E48BF46CCF3 /* CommandValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB69700D48233E87937D2E3E /* CommandValidator.swift */; };
 		ACEB5A62FC2FF85D4DCE295E /* VoiceCloningTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F6F2D343A69759DB5987B6 /* VoiceCloningTool.swift */; };
 		1CCFD6A3BE131C984C3CF479 /* MLXAudioTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8B087E8CA724AAEDEAD476 /* MLXAudioTool.swift */; };
@@ -96,6 +97,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F86D6F52AC0498F1F751CCF0 /* LocalImageGenerationTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocalImageGenerationTool.swift; path = "Tools/LocalImageGenerationTool.swift"; sourceTree = "<group>"; };
 		BB69700D48233E87937D2E3E /* CommandValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CommandValidator.swift; path = "Utilities/CommandValidator.swift"; sourceTree = "<group>"; };
 		60F6F2D343A69759DB5987B6 /* VoiceCloningTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VoiceCloningTool.swift; path = "Tools/VoiceCloningTool.swift"; sourceTree = "<group>"; };
 		CC8B087E8CA724AAEDEAD476 /* MLXAudioTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MLXAudioTool.swift; path = "Tools/MLXAudioTool.swift"; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 		7D34E1B98B0D1BBD7FFBC41C /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				F86D6F52AC0498F1F751CCF0 /* LocalImageGenerationTool.swift */,
 				60F6F2D343A69759DB5987B6 /* VoiceCloningTool.swift */,
 				CC8B087E8CA724AAEDEAD476 /* MLXAudioTool.swift */,
 				0814555D11E7F6462B745795 /* NativeTTSTool.swift */,
@@ -490,6 +493,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA696F3DD2353E5BF26E9463 /* LocalImageGenerationTool.swift in Sources */,
 				E2FCF04057F99E48BF46CCF3 /* CommandValidator.swift in Sources */,
 				ACEB5A62FC2FF85D4DCE295E /* VoiceCloningTool.swift in Sources */,
 				1CCFD6A3BE131C984C3CF479 /* MLXAudioTool.swift in Sources */,

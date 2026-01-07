@@ -110,27 +110,49 @@ pip install f5-tts-mlx
 
 ---
 
-### **TIER 3: Optional Cloud Services (Internet Required)**
+### **TIER 3: Local Image Generation (FREE Alternative to Cloud)**
 
-#### **6. OpenAI API** (Optional - Only for Image Generation) 🎨
-- **What:** DALL-E 3 image generation
-- **Where:** ☁️ CLOUD (OpenAI servers)
-- **Cost:** $0.04 per image (standard), $0.08 (HD)
-- **Required for:** Image generation ONLY
-- **Everything else works without this**
+#### **6. MLX Stable Diffusion** (For Local Image Generation) 🎨
+- **What:** Generate images on your Mac (SDXL, SD 2.1, FLUX)
+- **Where:** 🏠 100% LOCAL (no cloud)
+- **Cost:** FREE
+- **Speed:** 2-30 seconds on M3 Ultra
+- **Quality:** Good to professional
+- **Alternative to:** DALL-E 3 (no API key needed!)
 
 **Setup:**
 ```bash
-# Get API key from: https://platform.openai.com/api-keys
+# Clone Apple's MLX examples
+git clone https://github.com/ml-explore/mlx-examples.git ~/mlx-examples
 
-# Set environment variable
-export OPENAI_API_KEY="sk-your-key-here"
-
-# Or add to ~/.zshrc for persistence:
-echo 'export OPENAI_API_KEY="sk-your-key-here"' >> ~/.zshrc
+# Install dependencies
+cd ~/mlx-examples/stable_diffusion
+pip3 install -r requirements.txt
 ```
 
-**Alternative:** Skip image generation, use everything else for FREE!
+**First use:** Downloads models (~7GB, 10 minutes)
+**Subsequent uses:** Fast (models cached)
+
+**See:** [LOCAL_IMAGE_GENERATION_SETUP.md](LOCAL_IMAGE_GENERATION_SETUP.md)
+
+---
+
+### **TIER 4: Optional Cloud Image Generation**
+
+#### **7. OpenAI API** (Optional - Cloud Image Generation) 🎨
+- **What:** DALL-E 3 image generation (cloud alternative)
+- **Where:** ☁️ CLOUD (OpenAI servers)
+- **Cost:** $0.04 per image (standard), $0.08 (HD)
+- **Speed:** 10-30 seconds
+- **Why use:** Slightly better quality than local
+- **Why skip:** Local is free and nearly as good!
+
+**Setup:**
+```bash
+export OPENAI_API_KEY="sk-your-key-here"
+```
+
+**Recommendation:** Use local image generation (TIER 3) - it's FREE!
 
 ---
 
@@ -546,7 +568,10 @@ If you installed MLX-Audio or F5-TTS, first use will download models:
 | **News** | None | LOCAL | Free | Fast |
 | **Intent Router** | None | LOCAL | Free | Instant |
 | **Multi-Model** | Optional | LOCAL/CLOUD | Free/Paid | Varies |
-| **Image Gen** | API Key | CLOUD | $0.04 | 10-30s |
+| **Image Gen (LOCAL)** | pip install | LOCAL | Free | 2-30s |
+| **Image Gen (Cloud)** | API Key | CLOUD | $0.04 | 10-30s |
+
+**✅ NEW: Image generation now available 100% locally with MLX Stable Diffusion!**
 
 ---
 
