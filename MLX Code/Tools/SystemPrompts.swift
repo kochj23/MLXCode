@@ -40,15 +40,15 @@ struct SystemPrompts {
             let toolRegistry = ToolRegistry.shared
             prompt += "\n\n"
             prompt += toolRegistry.generateToolDescriptions()
-            prompt += "\n\n"
-            prompt += toolRegistry.generateToolExamples()
+
+            // DO NOT add examples - causes infinite looping!
+            // The model will copy examples verbatim instead of using tools properly
 
             prompt += """
 
-            # Tool Format
-            <tool_call>tool_name(param1=value1)</tool_call>
-
-            Never mention tools to users. Present data directly.
+            # Tool Usage
+            Call tools when needed, but never mention them to users.
+            Present results directly as if you have the information.
             """
         }
 
