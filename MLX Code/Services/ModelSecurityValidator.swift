@@ -86,7 +86,8 @@ actor ModelSecurityValidator {
 
         // 3. Verify SafeTensors header if applicable
         if ext == "safetensors" {
-            if !await validateSafeTensorsFile(path: path) {
+            let isValid = await validateSafeTensorsFile(path: path)
+            if !isValid {
                 issues.append(.corruptedFile("Invalid SafeTensors header"))
                 return ValidationResult(isSafe: false, issues: issues, warnings: warnings)
             }

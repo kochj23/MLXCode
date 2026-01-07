@@ -64,8 +64,7 @@ class ImageGenerationTool: BaseTool {
         logInfo("[ImageGen] Generating: \(prompt)", category: "ImageGenerationTool")
 
         // Check for OpenAI API key
-        guard let apiKey = ProcessInfo.processInfo.environment["OPENAI_API_KEY"] ??
-                          context.settings.value(forKey: "openai_api_key") as? String else {
+        guard let apiKey = ProcessInfo.processInfo.environment["OPENAI_API_KEY"] else {
             return .failure("OpenAI API key not configured. Set OPENAI_API_KEY environment variable or configure in settings.")
         }
 
@@ -189,10 +188,4 @@ class ImageGenerationTool: BaseTool {
 }
 
 // MARK: - Models
-
-struct NewsHeadline: Codable {
-    let title: String
-    let url: String?
-    let source: String?
-    let date: Date?
-}
+// NewsHeadline is defined in NewsTool.swift

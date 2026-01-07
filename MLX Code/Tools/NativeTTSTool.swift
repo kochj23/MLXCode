@@ -7,6 +7,7 @@
 
 import Foundation
 import AVFoundation
+import AppKit
 
 /// Native macOS text-to-speech using AVSpeechSynthesizer
 ///

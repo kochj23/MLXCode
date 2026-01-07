@@ -256,12 +256,7 @@ actor MultiModelProvider {
 }
 
 // MARK: - Models
-
-struct IntentSuggestion {
-    let toolName: String
-    let confidence: Double
-    let reason: String
-}
+// IntentSuggestion is defined in IntentRouter.swift
 
 struct ModelResponse {
     let content: String
