@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E2FCF04057F99E48BF46CCF3 /* CommandValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB69700D48233E87937D2E3E /* CommandValidator.swift */; };
 		ACEB5A62FC2FF85D4DCE295E /* VoiceCloningTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F6F2D343A69759DB5987B6 /* VoiceCloningTool.swift */; };
 		1CCFD6A3BE131C984C3CF479 /* MLXAudioTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8B087E8CA724AAEDEAD476 /* MLXAudioTool.swift */; };
 		544C8C01020012294CF81AC5 /* NativeTTSTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0814555D11E7F6462B745795 /* NativeTTSTool.swift */; };
@@ -95,6 +96,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BB69700D48233E87937D2E3E /* CommandValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CommandValidator.swift; path = "Utilities/CommandValidator.swift"; sourceTree = "<group>"; };
 		60F6F2D343A69759DB5987B6 /* VoiceCloningTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VoiceCloningTool.swift; path = "Tools/VoiceCloningTool.swift"; sourceTree = "<group>"; };
 		CC8B087E8CA724AAEDEAD476 /* MLXAudioTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MLXAudioTool.swift; path = "Tools/MLXAudioTool.swift"; sourceTree = "<group>"; };
 		0814555D11E7F6462B745795 /* NativeTTSTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NativeTTSTool.swift; path = "Tools/NativeTTSTool.swift"; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 		7E5FCD73CEE595B2B243ACB7 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				BB69700D48233E87937D2E3E /* CommandValidator.swift */,
 				C1C6A5F77A186F5E418AC3C7 /* BuildErrorParser.swift */,
 				CF26AA705F097AAB5624397A /* RepetitionDetector.swift */,
 			);
@@ -487,6 +490,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2FCF04057F99E48BF46CCF3 /* CommandValidator.swift in Sources */,
 				ACEB5A62FC2FF85D4DCE295E /* VoiceCloningTool.swift in Sources */,
 				1CCFD6A3BE131C984C3CF479 /* MLXAudioTool.swift in Sources */,
 				544C8C01020012294CF81AC5 /* NativeTTSTool.swift in Sources */,

@@ -112,8 +112,8 @@ actor PythonService {
     /// - Returns: Command output
     /// - Throws: PythonServiceError if execution fails
     func executeCommand(_ command: String, timeout: TimeInterval = 30.0) async throws -> String {
-        // Validate command
-        let sanitizedCommand = SecurityUtils.sanitizeUserInput(command)
+        // 🔒 CRITICAL SECURITY: Validate Python code before execution
+        let validatedCommand = try CommandValidator.validatePythonCommand(command)
 
         // Get Python path
         let pythonPath = await AppSettings.shared.pythonPath
@@ -122,7 +122,7 @@ actor PythonService {
         // Create process
         let process = Process()
         process.executableURL = URL(fileURLWithPath: expandedPythonPath)
-        process.arguments = ["-c", sanitizedCommand]
+        process.arguments = ["-c", validatedCommand]
 
         // Setup pipes
         let outputPipe = Pipe()
