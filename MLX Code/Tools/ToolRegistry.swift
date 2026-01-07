@@ -43,6 +43,11 @@ class ToolRegistry: ObservableObject {
         register(NewsTool())
         register(ImageGenerationTool())
 
+        // Text-to-Speech & Voice tools (NEW)
+        register(NativeTTSTool())
+        register(MLXAudioTool())
+        register(VoiceCloningTool())
+
         // Advanced development tools (Batch 1)
         register(ErrorDiagnosisTool())
         register(TestGenerationTool())
