@@ -2,6 +2,8 @@
 
 > Local LLM-powered coding assistant for macOS using Apple's MLX framework
 
+![Voice Cloning Panel](Documentation/screenshots/voice-cloning-panel.png)
+
 ---
 
 ## Overview
