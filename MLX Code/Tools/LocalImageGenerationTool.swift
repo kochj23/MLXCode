@@ -42,8 +42,8 @@ class LocalImageGenerationTool: BaseTool {
                     ),
                     "model": ParameterProperty(
                         type: "string",
-                        description: "Model: 'sdxl-turbo' (fast, 2-5s), 'sd-2.1' (quality, 5-15s), 'flux' (best, 10-30s)",
-                        enum: ["sdxl-turbo", "sd-2.1", "flux"],
+                        description: "Model: 'sdxl-turbo' (fast, 2-5s), 'sd-2.1' (quality, 5-15s), 'flux' (best quality, 10-30s), 'flux-dev' (professional, 30-60s)",
+                        enum: ["sdxl-turbo", "sd-2.1", "flux", "flux-dev"],
                         default: "sdxl-turbo"
                     ),
                     "width": ParameterProperty(
@@ -130,36 +130,62 @@ class LocalImageGenerationTool: BaseTool {
             outputPath = tempDir.appendingPathComponent(filename).path
         }
 
-        // Build Python command
-        let mlxExamplesPath = NSHomeDirectory() + "/mlx-examples/stable_diffusion"
-
-        var command = "cd \(mlxExamplesPath) && python3 txt2image.py"
-        command += " \"\(prompt.replacingOccurrences(of: "\"", with: "\\\""))\""
-        command += " --output \(outputPath)"
-        command += " --w \(width) --h \(height)"
-        command += " --n_steps \(numSteps)"
-        command += " --cfg \(guidanceScale)"
-
-        if let seed = seed {
-            command += " --seed \(seed)"
-        }
-
-        // Model selection
+        // Build Python command - FLUX uses different script and parameters
+        let command: String
         let modelPath: String
-        switch model {
-        case "sdxl-turbo":
-            modelPath = "stabilityai/sdxl-turbo"
-        case "sd-2.1":
-            modelPath = "stabilityai/stable-diffusion-2-1"
-        case "flux":
-            modelPath = "black-forest-labs/FLUX.1-schnell"
-        default:
-            modelPath = "stabilityai/sdxl-turbo"
-        }
-        command += " --model \(modelPath)"
 
-        // Optional: Add quantization for faster inference
-        command += " --quantize"  // Uses 4-bit/8-bit quantization
+        if model == "flux" || model == "flux-dev" {
+            // FLUX: Use dedicated flux script with proper parameters
+            let fluxPath = NSHomeDirectory() + "/mlx-examples/flux"
+            let fluxModel = model == "flux-dev" ? "dev" : "schnell"
+            modelPath = "flux-\(fluxModel)"
+
+            // Adjust default steps based on FLUX model
+            let fluxSteps = model == "flux-dev" ? 50 : 4  // dev needs more steps
+
+            var cmd = "cd \(fluxPath) && python3 txt2image.py"
+            cmd += " \"\(prompt.replacingOccurrences(of: "\"", with: "\\\""))\""
+            cmd += " --model \(fluxModel)"  // 'schnell' (fast) or 'dev' (quality)
+            cmd += " --output \(outputPath)"
+            cmd += " --image-size \(width)x\(height)"  // Combined format for FLUX
+            cmd += " --steps \(numSteps > 0 ? numSteps : fluxSteps)"  // Use provided or default
+            cmd += " --guidance \(guidanceScale)"  // FLUX uses --guidance not --cfg
+            cmd += " --n-images 1"  // Generate single image
+            cmd += " --quantize"  // Enable quantization for speed
+
+            if let seed = seed {
+                cmd += " --seed \(seed)"
+            }
+
+            command = cmd
+        } else {
+            // Stable Diffusion: Use original stable_diffusion script
+            let sdPath = NSHomeDirectory() + "/mlx-examples/stable_diffusion"
+
+            switch model {
+            case "sdxl-turbo":
+                modelPath = "stabilityai/sdxl-turbo"
+            case "sd-2.1":
+                modelPath = "stabilityai/stable-diffusion-2-1"
+            default:
+                modelPath = "stabilityai/sdxl-turbo"
+            }
+
+            var cmd = "cd \(sdPath) && python3 txt2image.py"
+            cmd += " \"\(prompt.replacingOccurrences(of: "\"", with: "\\\""))\""
+            cmd += " --output \(outputPath)"
+            cmd += " --w \(width) --h \(height)"
+            cmd += " --n_steps \(numSteps)"
+            cmd += " --cfg \(guidanceScale)"
+            cmd += " --model \(modelPath)"
+            cmd += " --quantize"  // Enable quantization
+
+            if let seed = seed {
+                cmd += " --seed \(seed)"
+            }
+
+            command = cmd
+        }
 
         logInfo("[LocalImageGen] Executing: \(command)", category: "LocalImageGenerationTool")
 
