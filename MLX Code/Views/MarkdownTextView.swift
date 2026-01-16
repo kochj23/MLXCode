@@ -86,6 +86,7 @@ struct MarkdownTextView: View {
         let headingFontSize = fontSize * (2.0 - CGFloat(level) * 0.2)
         return Text(parseInlineMarkdown(text))
             .font(.system(size: headingFontSize, weight: .bold))
+            .foregroundColor(ModernColors.textPrimary)
             .padding(.top, level == 1 ? 8 : 4)
             .padding(.bottom, 4)
     }
@@ -96,6 +97,7 @@ struct MarkdownTextView: View {
     private func paragraphView(text: String) -> some View {
         Text(parseInlineMarkdown(text))
             .font(.system(size: fontSize))
+            .foregroundColor(ModernColors.textPrimary)
             .padding(.vertical, 2)
     }
 
@@ -197,10 +199,12 @@ struct MarkdownTextView: View {
                 HStack(alignment: .top, spacing: 8) {
                     Text(ordered ? "\(index + 1)." : "•")
                         .font(.system(size: fontSize))
+                        .foregroundColor(ModernColors.textPrimary)
                         .frame(width: 20, alignment: .trailing)
 
                     Text(parseInlineMarkdown(item))
                         .font(.system(size: fontSize))
+                        .foregroundColor(ModernColors.textPrimary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
