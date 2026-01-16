@@ -30,7 +30,7 @@ struct ModelSelectorView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 12) {
+            HStack(alignment: .center, spacing: 12) {
                 // Model picker with glass styling and visible text
                 Picker("Model", selection: $settings.selectedModel) {
                     Text("No Model Selected")
@@ -49,7 +49,8 @@ struct ModelSelectorView: View {
                         }
                     }
                 }
-                .frame(width: 250)
+                .labelsHidden()
+                .frame(width: 250, height: 28)
                 .disabled(isLoading || isDownloading)
                 .pickerStyle(.menu)
                 .tint(ModernColors.cyan)
