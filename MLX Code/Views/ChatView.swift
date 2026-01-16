@@ -90,15 +90,15 @@ struct ChatView: View {
                     ZStack {
                         messagesArea
 
-                        // Performance card overlay (floating in top-right)
-                        VStack {
+                        // Performance card overlay (floating in top-right, top-aligned)
+                        VStack(alignment: .trailing) {
                             HStack {
                                 Spacer()
                                 PerformanceCard(performanceMonitor: viewModel.performanceMonitor)
                                     .frame(width: 320)
                                     .padding()
                             }
-                            Spacer()
+                            Spacer(minLength: 0)
                         }
 
                         // Thinking overlay (shown during initial processing)
@@ -400,6 +400,10 @@ struct ChatView: View {
             .help("Settings")
         }
         .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.white.opacity(0.05))
+        )
     }
 
     /// Messages display area
@@ -417,20 +421,28 @@ struct ChatView: View {
                                     .id(message.id)
                             }
                         } else {
-                            // Welcome message
-                            VStack(spacing: 16) {
-                                Image(systemName: "message.circle")
-                                    .font(.system(size: 64))
-                                    .foregroundColor(ModernColors.textSecondary)
+                            // Welcome message - top aligned
+                            VStack(alignment: .leading, spacing: 20) {
+                                HStack {
+                                    Image(systemName: "message.circle.fill")
+                                        .font(.system(size: 64))
+                                        .foregroundColor(ModernColors.cyan)
+                                        .shadow(color: ModernColors.cyan.opacity(0.5), radius: 20)
+
+                                    Spacer()
+                                }
 
                                 Text("Welcome to MLX Code")
                                     .modernHeader(size: .large)
 
                                 Text("Start a conversation by typing a message below")
+                                    .font(.system(size: 16, design: .rounded))
                                     .foregroundColor(ModernColors.textSecondary)
+
+                                Spacer(minLength: 0)
                             }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                            .padding(40)
                         }
                     }
                     .padding()
