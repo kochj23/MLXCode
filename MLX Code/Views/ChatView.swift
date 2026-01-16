@@ -487,16 +487,16 @@ struct ChatView: View {
     private var inputArea: some View {
         VStack(spacing: 8) {
             HStack(alignment: .bottom, spacing: 12) {
-                // Text editor
+                // Text editor with dark background and white text
                 TextEditor(text: $viewModel.userInput)
                     .frame(minHeight: 60, maxHeight: 120)
                     .padding(8)
-                    .background(Color.white)
-                    .foregroundColor(.black)
+                    .background(Color(white: 0.12))
+                    .foregroundColor(ModernColors.textPrimary)
                     .cornerRadius(8)
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(ModernColors.cyan.opacity(0.3), lineWidth: 2)
+                            .stroke(ModernColors.cyan.opacity(0.5), lineWidth: 2)
                     )
                     .disabled(viewModel.isGenerating)
                     .onSubmit {
