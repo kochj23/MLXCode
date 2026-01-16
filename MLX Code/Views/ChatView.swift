@@ -363,6 +363,7 @@ struct ChatView: View {
                 }
             }) {
                 Label("Git", systemImage: "arrow.triangle.branch")
+                    .foregroundColor(ModernColors.textPrimary)
             }
             .buttonStyle(.plain)
             .help("Git helper")
@@ -370,6 +371,7 @@ struct ChatView: View {
             // GitHub panel button
             Button(action: { showingGitHubPanel = true }) {
                 Image(systemName: "globe")
+                    .foregroundColor(ModernColors.textPrimary)
             }
             .buttonStyle(.plain)
             .help("GitHub Operations (⌘G)")
@@ -391,7 +393,7 @@ struct ChatView: View {
                 }
             }) {
                 Image(systemName: showingLogViewer ? "list.bullet.rectangle.fill" : "list.bullet.rectangle")
-                    .foregroundColor(showingLogViewer ? .blue : .primary)
+                    .foregroundColor(showingLogViewer ? ModernColors.cyan : ModernColors.textPrimary)
             }
             .buttonStyle(.plain)
             .help("Toggle Log Viewer (⌘L)")
@@ -400,6 +402,7 @@ struct ChatView: View {
             // Image generation button
             Button(action: { showingImageGeneration = true }) {
                 Image(systemName: "photo.on.rectangle.angled")
+                    .foregroundColor(ModernColors.textPrimary)
             }
             .buttonStyle(.plain)
             .help("Image Generation (⌘I)")
@@ -408,6 +411,7 @@ struct ChatView: View {
             // Voice cloning button
             Button(action: { showingVoiceCloning = true }) {
                 Image(systemName: "waveform.and.mic")
+                    .foregroundColor(ModernColors.textPrimary)
             }
             .buttonStyle(.plain)
             .help("Voice Cloning (⌘V)")
@@ -416,6 +420,7 @@ struct ChatView: View {
             // Help button
             Button(action: { showingHelp = true }) {
                 Image(systemName: "questionmark.circle")
+                    .foregroundColor(ModernColors.textPrimary)
             }
             .buttonStyle(.plain)
             .help("Help & Documentation (⌘?)")
@@ -424,6 +429,7 @@ struct ChatView: View {
             // Settings button
             Button(action: { showingSettings = true }) {
                 Image(systemName: "gear")
+                    .foregroundColor(ModernColors.textPrimary)
             }
             .buttonStyle(.plain)
             .help("Settings")
@@ -431,7 +437,11 @@ struct ChatView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white.opacity(0.05))
+                .fill(Color(white: 0.15))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(ModernColors.cyan.opacity(0.3), lineWidth: 1)
+                )
         )
     }
 
