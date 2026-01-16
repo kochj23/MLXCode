@@ -31,10 +31,11 @@ struct ModelSelectorView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 12) {
-                // Model picker with glass styling
+                // Model picker with glass styling and visible text
                 Picker("Model", selection: $settings.selectedModel) {
                     Text("No Model Selected")
                         .tag(nil as MLXModel?)
+                        .foregroundColor(ModernColors.textSecondary)
 
                     if settings.availableModels.isEmpty {
                         Text("No models available - check Settings")
@@ -44,12 +45,15 @@ struct ModelSelectorView: View {
                         ForEach(settings.availableModels) { model in
                             Text(model.name + (model.isDownloaded ? "" : " ↓"))
                                 .tag(model as MLXModel?)
+                                .foregroundColor(ModernColors.textPrimary)
                         }
                     }
                 }
                 .frame(width: 250)
                 .disabled(isLoading || isDownloading)
                 .pickerStyle(.menu)
+                .tint(ModernColors.cyan)
+                .foregroundColor(ModernColors.textPrimary)
 
                 // Load/Unload/Download button
                 if let selectedModel = settings.selectedModel {
@@ -67,12 +71,16 @@ struct ModelSelectorView: View {
                                 Image(systemName: "icloud.and.arrow.down")
                                 Text("Download")
                             }
+                            .foregroundColor(ModernColors.cyan)
                         }
+                        .buttonStyle(.plain)
                     } else {
                         Button(action: toggleModelLoad) {
                             Text(isModelCurrentlyLoaded ? "Unload" : "Load")
                                 .frame(width: 60)
+                                .foregroundColor(ModernColors.cyan)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
             }
