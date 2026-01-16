@@ -279,23 +279,27 @@ struct ChatView: View {
             Section {
                 Button(action: { viewModel.newConversation() }) {
                     Label("New Conversation", systemImage: "plus.message")
+                        .foregroundColor(ModernColors.cyan)
                 }
+                .buttonStyle(.plain)
             }
 
-            Section("Recent Conversations") {
+            Section {
                 ForEach(viewModel.conversations) { conversation in
                     Button(action: { viewModel.loadConversation(conversation) }) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(conversation.title)
-                                .font(.headline)
+                                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                                .foregroundColor(ModernColors.textPrimary)
                                 .lineLimit(1)
 
                             Text(conversation.lastMessagePreview)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                                .font(.system(size: 11, design: .rounded))
+                                .foregroundColor(ModernColors.textSecondary)
                                 .lineLimit(2)
                         }
                     }
+                    .buttonStyle(.plain)
                     .contextMenu {
                         Button(role: .destructive) {
                             viewModel.deleteConversation(conversation)
@@ -304,9 +308,15 @@ struct ChatView: View {
                         }
                     }
                 }
+            } header: {
+                Text("Recent")
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    .foregroundColor(ModernColors.textTertiary)
             }
         }
         .listStyle(.sidebar)
+        .scrollContentBackground(.hidden)
+        .background(Color.black.opacity(0.2))
         .frame(minWidth: 200)
     }
 
@@ -321,12 +331,13 @@ struct ChatView: View {
             // Status indicator
             HStack(spacing: 8) {
                 Circle()
-                    .fill(viewModel.isModelLoaded ? Color.green : Color.gray)
+                    .fill(viewModel.isModelLoaded ? ModernColors.statusLow : ModernColors.textTertiary)
                     .frame(width: 8, height: 8)
+                    .shadow(color: viewModel.isModelLoaded ? ModernColors.statusLow : .clear, radius: 4)
 
                 Text(viewModel.statusMessage)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundColor(ModernColors.textSecondary)
             }
 
             Spacer()
