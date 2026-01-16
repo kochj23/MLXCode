@@ -95,6 +95,7 @@ struct ChatView: View {
                     VStack(spacing: 0) {
                         // Toolbar
                         toolbar
+                            .padding(.top, 8)
 
                         Divider()
 
@@ -335,10 +336,9 @@ struct ChatView: View {
 
     /// Toolbar
     private var toolbar: some View {
-        HStack(alignment: .center) {
+        HStack(alignment: .center, spacing: 16) {
             // Model selector
             ModelSelectorView()
-                .fixedSize(horizontal: false, vertical: true)
 
             Spacer()
 
@@ -435,9 +435,8 @@ struct ChatView: View {
             .buttonStyle(.plain)
             .help("Settings")
         }
-        .padding(.horizontal)
-        .padding(.vertical, 16)
-        .frame(minHeight: 60)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 20)
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color(white: 0.15))

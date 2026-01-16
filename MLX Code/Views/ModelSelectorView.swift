@@ -29,10 +29,10 @@ struct ModelSelectorView: View {
     @State private var errorMessage: String?
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(alignment: .leading, spacing: 4) {
             HStack(alignment: .center, spacing: 12) {
                 // Model picker with glass styling and visible text
-                Picker("Model", selection: $settings.selectedModel) {
+                Picker("", selection: $settings.selectedModel) {
                     Text("No Model Selected")
                         .tag(nil as MLXModel?)
                         .foregroundColor(ModernColors.textSecondary)
@@ -49,8 +49,8 @@ struct ModelSelectorView: View {
                         }
                     }
                 }
-                .labelsHidden()
-                .frame(width: 250, height: 28)
+                .frame(width: 250)
+                .padding(.vertical, 4)
                 .disabled(isLoading || isDownloading)
                 .pickerStyle(.menu)
                 .tint(ModernColors.cyan)
