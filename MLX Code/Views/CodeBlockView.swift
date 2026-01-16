@@ -21,42 +21,55 @@ struct CodeBlockView: View {
             // Header with language and copy button
             HStack {
                 Text(language.isEmpty ? "code" : language)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    .foregroundColor(ModernColors.cyan)
                     .textCase(.uppercase)
 
                 Spacer()
 
                 Button(action: copyCode) {
                     HStack(spacing: 4) {
-                        Image(systemName: copied ? "checkmark" : "doc.on.doc")
+                        Image(systemName: copied ? "checkmark.circle.fill" : "doc.on.doc")
                         Text(copied ? "Copied!" : "Copy")
                     }
-                    .font(.caption)
+                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .foregroundColor(copied ? ModernColors.accentGreen : ModernColors.textSecondary)
                 }
                 .buttonStyle(.borderless)
             }
             .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(Color(NSColor.controlBackgroundColor).opacity(0.5))
+            .padding(.vertical, 8)
+            .background(ModernColors.glassBackground)
 
             Divider()
+                .background(ModernColors.glassBorder)
 
             // Code content with syntax highlighting
             ScrollView([.horizontal, .vertical]) {
                 Text(highlightedCode)
                     .font(.system(size: 13, design: .monospaced))
+                    .foregroundColor(ModernColors.textPrimary)
                     .textSelection(.enabled)
                     .padding(12)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(NSColor.textBackgroundColor))
+            .background(Color.black.opacity(0.3))
         }
-        .cornerRadius(8)
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(ModernColors.glassBackground)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(.ultraThinMaterial)
+                        .opacity(0.7)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(ModernColors.glassBorder, lineWidth: 1.5)
+                )
+                .shadow(color: Color.black.opacity(0.3), radius: 8, y: 4)
         )
+        .cornerRadius(16)
     }
 
     private var highlightedCode: AttributedString {

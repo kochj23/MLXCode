@@ -90,6 +90,17 @@ struct ChatView: View {
                     ZStack {
                         messagesArea
 
+                        // Performance card overlay (floating in top-right)
+                        VStack {
+                            HStack {
+                                Spacer()
+                                PerformanceCard(performanceMonitor: viewModel.performanceMonitor)
+                                    .frame(width: 320)
+                                    .padding()
+                            }
+                            Spacer()
+                        }
+
                         // Thinking overlay (shown during initial processing)
                         if viewModel.isWaitingForFirstToken {
                             ThinkingOverlayView(message: "Preparing response...")
@@ -382,38 +393,43 @@ struct ChatView: View {
 
     /// Messages display area
     private var messagesArea: some View {
-        ScrollViewReader { proxy in
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 16) {
-                    if let conversation = viewModel.currentConversation {
-                        ForEach(conversation.messages) { message in
-                            MessageRowView(message: message)
-                                .id(message.id)
-                        }
-                    } else {
-                        // Welcome message
-                        VStack(spacing: 16) {
-                            Image(systemName: "message.circle")
-                                .font(.system(size: 64))
-                                .foregroundColor(.secondary)
+        ZStack {
+            // Glassmorphic animated background
+            GlassmorphicBackground()
 
-                            Text("Welcome to MLX Code")
-                                .font(.title)
+            ScrollViewReader { proxy in
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 16) {
+                        if let conversation = viewModel.currentConversation {
+                            ForEach(conversation.messages) { message in
+                                MessageRowView(message: message)
+                                    .id(message.id)
+                            }
+                        } else {
+                            // Welcome message
+                            VStack(spacing: 16) {
+                                Image(systemName: "message.circle")
+                                    .font(.system(size: 64))
+                                    .foregroundColor(ModernColors.textSecondary)
 
-                            Text("Start a conversation by typing a message below")
-                                .foregroundColor(.secondary)
+                                Text("Welcome to MLX Code")
+                                    .modernHeader(size: .large)
+
+                                Text("Start a conversation by typing a message below")
+                                    .foregroundColor(ModernColors.textSecondary)
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .padding()
                         }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .padding()
                     }
+                    .padding()
                 }
-                .padding()
-            }
-            .onChange(of: viewModel.currentConversation?.messages.count) {
-                // Scroll to bottom when new message added
-                if let lastMessage = viewModel.currentConversation?.messages.last {
-                    withAnimation {
-                        proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                .onChange(of: viewModel.currentConversation?.messages.count) {
+                    // Scroll to bottom when new message added
+                    if let lastMessage = viewModel.currentConversation?.messages.last {
+                        withAnimation {
+                            proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                        }
                     }
                 }
             }

@@ -96,14 +96,26 @@ struct MLXCodeApp: App {
                 .keyboardShortcut("s", modifiers: [.command, .control])
             }
 
-            CommandMenu("GitHub") {
+            CommandMenu("Tools") {
+                Button("Image Generation...") {
+                    // Opens image generation window
+                }
+                .keyboardShortcut("i", modifiers: [.command, .shift])
+
+                Button("Voice Cloning...") {
+                    // Opens voice cloning window
+                }
+                .keyboardShortcut("v", modifiers: [.command, .shift])
+
+                Divider()
+
                 Button("Open GitHub Panel") {
                     showingGitHub = true
                 }
                 .keyboardShortcut("g", modifiers: [.command])
+            }
 
-                Divider()
-
+            CommandMenu("GitHub") {
                 Link("View Repository", destination: URL(string: "https://github.com/kochj23/MLXCode")!)
                 Link("Create Issue", destination: URL(string: "https://github.com/kochj23/MLXCode/issues/new")!)
                 Link("View Pull Requests", destination: URL(string: "https://github.com/kochj23/MLXCode/pulls")!)
@@ -153,5 +165,22 @@ struct MLXCodeApp: App {
                 .frame(minWidth: 900, minHeight: 700)
         }
         .keyboardShortcut("g", modifiers: [.command])
+
+        // Image Generation Window
+        Window("Image Generation", id: "image-generation") {
+            ImageGenerationPanel()
+                .environmentObject(settings)
+                .frame(minWidth: 900, minHeight: 600)
+        }
+        .keyboardShortcut("i", modifiers: [.command, .shift])
+        .defaultPosition(.center)
+
+        // Voice Cloning Window
+        Window("Voice Cloning", id: "voice-cloning") {
+            VoiceCloningPanel()
+                .frame(minWidth: 900, minHeight: 600)
+        }
+        .keyboardShortcut("v", modifiers: [.command, .shift])
+        .defaultPosition(.center)
     }
 }

@@ -55,6 +55,9 @@ class ChatViewModel: ObservableObject {
     /// Whether to show performance metrics
     @Published var showPerformanceMetrics: Bool = true
 
+    /// Performance monitor for real-time metrics
+    @Published var performanceMonitor = PerformanceMonitor()
+
     /// Whether we're waiting for the first token (initial thinking phase)
     @Published var isWaitingForFirstToken: Bool = false
 

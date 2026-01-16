@@ -31,7 +31,7 @@ struct ModelSelectorView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 12) {
-                // Model picker
+                // Model picker with glass styling
                 Picker("Model", selection: $settings.selectedModel) {
                     Text("No Model Selected")
                         .tag(nil as MLXModel?)
@@ -39,7 +39,7 @@ struct ModelSelectorView: View {
                     if settings.availableModels.isEmpty {
                         Text("No models available - check Settings")
                             .tag(nil as MLXModel?)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(ModernColors.textSecondary)
                     } else {
                         ForEach(settings.availableModels) { model in
                             Text(model.name + (model.isDownloaded ? "" : " ↓"))
@@ -49,6 +49,7 @@ struct ModelSelectorView: View {
                 }
                 .frame(width: 250)
                 .disabled(isLoading || isDownloading)
+                .pickerStyle(.menu)
 
                 // Load/Unload/Download button
                 if let selectedModel = settings.selectedModel {

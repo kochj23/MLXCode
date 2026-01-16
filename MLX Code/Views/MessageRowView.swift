@@ -40,9 +40,21 @@ struct MessageRowView: View {
 
             Spacer()
         }
-        .padding()
-        .background(backgroundColor)
-        .cornerRadius(8)
+        .padding(20)
+        .background(
+            RoundedRectangle(cornerRadius: 24)
+                .fill(glassCardTint)
+                .background(
+                    RoundedRectangle(cornerRadius: 24)
+                        .fill(.ultraThinMaterial)
+                        .opacity(0.9)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24)
+                        .stroke(ModernColors.glassBorder, lineWidth: 2)
+                )
+                .shadow(color: glassCardShadow, radius: 10, y: 5)
+        )
     }
 
     // MARK: - Subviews
@@ -60,14 +72,14 @@ struct MessageRowView: View {
     private var header: some View {
         HStack {
             Text(message.role.displayName)
-                .font(.headline)
+                .font(.system(size: 16, weight: .bold, design: .rounded))
                 .foregroundColor(avatarColor)
 
             Spacer()
 
             Text(formatTimestamp(message.timestamp))
-                .font(.caption)
-                .foregroundColor(.secondary)
+                .font(.system(size: 12, weight: .medium, design: .rounded))
+                .foregroundColor(ModernColors.textSecondary)
         }
     }
 
@@ -137,22 +149,33 @@ struct MessageRowView: View {
     private var avatarColor: Color {
         switch message.role {
         case .user:
-            return .blue
+            return ModernColors.cyan
         case .assistant:
-            return .green
+            return ModernColors.purple
         case .system:
-            return .orange
+            return ModernColors.orange
         }
     }
 
-    private var backgroundColor: Color {
+    private var glassCardTint: Color {
         switch message.role {
         case .user:
-            return Color.blue.opacity(0.05)
+            return ModernColors.cyan.opacity(0.08)
         case .assistant:
-            return Color.green.opacity(0.05)
+            return ModernColors.purple.opacity(0.08)
         case .system:
-            return Color.orange.opacity(0.05)
+            return ModernColors.orange.opacity(0.08)
+        }
+    }
+
+    private var glassCardShadow: Color {
+        switch message.role {
+        case .user:
+            return ModernColors.cyan.opacity(0.3)
+        case .assistant:
+            return ModernColors.purple.opacity(0.3)
+        case .system:
+            return ModernColors.orange.opacity(0.3)
         }
     }
 

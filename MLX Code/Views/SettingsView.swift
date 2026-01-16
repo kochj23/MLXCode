@@ -36,38 +36,49 @@ struct SettingsView: View {
     @State private var customModelHFId = ""
 
     var body: some View {
-        VStack(spacing: 0) {
-            // Header with close button
-            HStack {
-                Text("Settings")
-                    .font(.title2)
-                    .fontWeight(.semibold)
+        ZStack {
+            // Glassmorphic background
+            GlassmorphicBackground()
 
-                Spacer()
+            VStack(spacing: 0) {
+                // Header with close button
+                HStack {
+                    Text("Settings")
+                        .modernHeader(size: .medium)
 
-                Button(action: {
-                    print("🔴🔴🔴 SETTINGS CLOSE BUTTON CLICKED")
-                    dismiss()
-                }) {
-                    HStack(spacing: 4) {
-                        Text("Close")
-                            .font(.body)
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.title3)
+                    Spacer()
+
+                    Button(action: {
+                        print("🔴🔴🔴 SETTINGS CLOSE BUTTON CLICKED")
+                        dismiss()
+                    }) {
+                        HStack(spacing: 6) {
+                            Text("Close")
+                                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.system(size: 16))
+                        }
+                        .foregroundColor(ModernColors.textPrimary)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(ModernColors.cyan.opacity(0.2))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(ModernColors.cyan.opacity(0.4), lineWidth: 1.5)
+                                )
+                        )
+                        .shadow(color: ModernColors.cyan.opacity(0.3), radius: 4)
                     }
-                    .foregroundColor(.blue)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(Color.blue.opacity(0.1))
-                    .cornerRadius(8)
+                    .buttonStyle(.plain)
+                    .keyboardShortcut(.cancelAction)
+                    .help("Close settings (ESC)")
                 }
-                .buttonStyle(.plain)
-                .keyboardShortcut(.cancelAction)
-                .help("Close settings (ESC)")
-            }
-            .padding()
+                .padding()
 
-            Divider()
+                Divider()
+                    .background(ModernColors.glassBorder)
 
             // Tab view with settings
             TabView {
@@ -123,8 +134,9 @@ struct SettingsView: View {
                     }
             }
             .padding(.horizontal)
+            }
         }
-        .frame(width: 650, height: 550)
+        .frame(width: 700, height: 600)
         .sheet(isPresented: $showingAddImageModel) {
             addCustomImageModelSheet
         }
