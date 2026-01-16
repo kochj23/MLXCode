@@ -79,18 +79,22 @@ struct ChatView: View {
         } detail: {
             // Main chat area with optional log viewer
             HSplitView {
-                // Main chat area
-                VStack(spacing: 0) {
-                    // Toolbar
-                    toolbar
+                // Main chat area - wrap entire VStack in ZStack with background
+                ZStack {
+                    // Glassmorphic background covering ENTIRE window
+                    GlassmorphicBackground()
 
-                    Divider()
+                    VStack(spacing: 0) {
+                        // Toolbar
+                        toolbar
 
-                    // Messages area
-                    ZStack {
-                        messagesArea
+                        Divider()
 
-                        // Performance card overlay (floating in top-right, top-aligned)
+                        // Messages area
+                        ZStack {
+                            messagesArea
+
+                            // Performance card overlay (floating in top-right, top-aligned)
                         VStack(alignment: .trailing) {
                             HStack {
                                 Spacer()
@@ -137,8 +141,9 @@ struct ChatView: View {
 
                     // Status bar
                     statusBar
+                    }
+                    .frame(minWidth: 400)
                 }
-                .frame(minWidth: 400)
 
                 // Right panel with metrics and logs
                 VStack(spacing: 0) {
@@ -408,11 +413,7 @@ struct ChatView: View {
 
     /// Messages display area
     private var messagesArea: some View {
-        ZStack {
-            // Glassmorphic animated background
-            GlassmorphicBackground()
-
-            ScrollViewReader { proxy in
+        ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 16) {
                         if let conversation = viewModel.currentConversation {
@@ -456,7 +457,6 @@ struct ChatView: View {
                     }
                 }
             }
-        }
     }
 
     /// Input area
