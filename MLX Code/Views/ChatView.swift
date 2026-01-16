@@ -37,6 +37,12 @@ struct ChatView: View {
     /// Whether help viewer is shown
     @State private var showingHelp = false
 
+    /// Whether image generation panel is shown
+    @State private var showingImageGeneration = false
+
+    /// Whether voice cloning panel is shown
+    @State private var showingVoiceCloning = false
+
     /// Current Git status
     @State private var gitStatus: GitStatus?
 
@@ -56,6 +62,8 @@ struct ChatView: View {
                 showingGitHubPanel: $showingGitHubPanel,
                 showingBuildErrors: $showingBuildErrors,
                 showingHelp: $showingHelp,
+                showingImageGeneration: $showingImageGeneration,
+                showingVoiceCloning: $showingVoiceCloning,
                 gitStatus: $gitStatus,
                 buildErrors: buildErrors
             ))
@@ -389,6 +397,22 @@ struct ChatView: View {
             .help("Toggle Log Viewer (⌘L)")
             .keyboardShortcut("l", modifiers: .command)
 
+            // Image generation button
+            Button(action: { showingImageGeneration = true }) {
+                Image(systemName: "photo.on.rectangle.angled")
+            }
+            .buttonStyle(.plain)
+            .help("Image Generation (⌘I)")
+            .keyboardShortcut("i", modifiers: .command)
+
+            // Voice cloning button
+            Button(action: { showingVoiceCloning = true }) {
+                Image(systemName: "waveform.and.mic")
+            }
+            .buttonStyle(.plain)
+            .help("Voice Cloning (⌘V)")
+            .keyboardShortcut("v", modifiers: .command)
+
             // Help button
             Button(action: { showingHelp = true }) {
                 Image(systemName: "questionmark.circle")
@@ -467,9 +491,22 @@ struct ChatView: View {
                 TextEditor(text: $viewModel.userInput)
                     .frame(minHeight: 60, maxHeight: 120)
                     .padding(8)
-                    .background(Color(NSColor.textBackgroundColor))
+                    .background(Color.white)
+                    .foregroundColor(.black)
                     .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(ModernColors.cyan.opacity(0.3), lineWidth: 2)
+                    )
                     .disabled(viewModel.isGenerating)
+                    .onSubmit {
+                        // Submit on Enter key
+                        if !viewModel.isGenerating && !sendButtonDisabled {
+                            Task {
+                                await viewModel.sendMessage()
+                            }
+                        }
+                    }
 
                 // Send/Stop button
                 Button(action: {
@@ -939,6 +976,8 @@ struct SheetsModifier: ViewModifier {
     @Binding var showingGitHubPanel: Bool
     @Binding var showingBuildErrors: Bool
     @Binding var showingHelp: Bool
+    @Binding var showingImageGeneration: Bool
+    @Binding var showingVoiceCloning: Bool
     @Binding var gitStatus: GitStatus?
     let buildErrors: [BuildIssue]
 
@@ -958,6 +997,15 @@ struct SheetsModifier: ViewModifier {
             }
             .sheet(isPresented: $showingHelp) {
                 HelpView()
+            }
+            .sheet(isPresented: $showingImageGeneration) {
+                ImageGenerationPanel()
+                    .environmentObject(AppSettings.shared)
+                    .frame(minWidth: 900, minHeight: 600)
+            }
+            .sheet(isPresented: $showingVoiceCloning) {
+                VoiceCloningPanel()
+                    .frame(minWidth: 900, minHeight: 600)
             }
     }
 }
