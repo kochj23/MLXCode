@@ -1,6 +1,6 @@
 # MLX Code
 
-> Local LLM-powered coding assistant for macOS using Apple's MLX framework
+> Local LLM-powered coding assistant for macOS using Apple's MLX framework (or TinyLLM by Jason Cox)
 
 ![Voice Cloning Panel](Documentation/screenshots/voice-cloning-panel.png)
 
@@ -13,11 +13,13 @@
 ### Key Features
 
 - 🤖 **Local LLM Execution** - Run code-focused models locally using Apple's MLX
+- 🔄 **Multi-Backend Support** - Can use MLX, TinyLLM (by Jason Cox), or Ollama
 - 🔧 **Xcode Integration** - Direct integration with Xcode projects (build, test, analyze)
 - 💬 **Chat Interface** - Claude Code-style conversational interface
 - 📁 **File Operations** - Read, write, edit, search files with AI assistance
 - 🔒 **Privacy First** - All processing happens locally, no data leaves your machine
 - ⚡ **Apple Silicon Optimized** - Leverages M-series chip capabilities via MLX
+- 🐳 **Lightweight Option** - TinyLLM by Jason Cox provides Docker-based alternative
 - 🛡️ **Security Focused** - Sandboxed execution, input validation, secure storage
 
 ---
@@ -29,6 +31,7 @@
 - **Language:** Swift 5.9+
 - **UI Framework:** SwiftUI
 - **ML Framework:** MLX (via Python subprocess)
+- **Alternative Backends:** TinyLLM by Jason Cox, Ollama (see Alternative Backends section)
 - **Pattern:** MVVM with Combine
 - **Deployment:** macOS 14.0+ (Apple Silicon recommended)
 
@@ -194,6 +197,101 @@ python -c "import mlx.core as mx; print(mx.__version__)"
 - Must be MLX-compatible format
 - Quantized models (4-bit/8-bit) recommended for speed
 - Minimum 8GB unified memory for 7B models
+
+---
+
+## Alternative Backends
+
+While MLX Code is optimized for Apple's MLX framework, it can be extended to support alternative AI backends for increased flexibility and performance options.
+
+### TinyLLM Integration
+
+**TinyLLM by Jason Cox** provides a lightweight, OpenAI-compatible LLM server that can be used as an alternative to MLX.
+
+**Project:** https://github.com/jasonacox/TinyLLM
+**Author:** Jason Cox
+**License:** MIT License
+
+#### Why TinyLLM?
+
+✅ **Lightweight:** Runs in Docker container with minimal resource usage
+✅ **OpenAI-Compatible:** Standard API format for easy integration
+✅ **Fast Setup:** Single `docker-compose up` command
+✅ **Flexible Models:** Configure models via docker-compose.yml
+✅ **Alternative Option:** Use when MLX setup is challenging or unavailable
+
+#### TinyLLM Setup
+
+```bash
+# Clone TinyLLM repository by Jason Cox
+git clone https://github.com/jasonacox/TinyLLM
+cd TinyLLM
+
+# Start TinyLLM server with Docker
+docker-compose up -d
+
+# Verify running
+curl http://localhost:8000/
+
+# TinyLLM is now available at http://localhost:8000
+```
+
+#### Integration with MLX Code
+
+To use TinyLLM with MLX Code, integrate the **AIBackendManager** component:
+
+**AIBackendManager Features:**
+- Supports Ollama, MLX Toolkit, and TinyLLM
+- User-selectable backend in Settings
+- Automatic availability detection
+- Graceful fallbacks
+- OpenAI-compatible API for TinyLLM
+
+**Example Implementation:**
+```swift
+// Universal backend manager supports all three:
+let response = try await AIBackendManager.shared.generate(
+    prompt: "Explain this code",
+    systemPrompt: "You are a helpful coding assistant",
+    temperature: 0.7
+)
+
+// Works with: Ollama, MLX, or TinyLLM by Jason Cox
+```
+
+**See Also:**
+- Universal AI backend integration in other projects:
+  - MBox Explorer: https://github.com/kochj23/MBox-Explorer
+  - GTNW: https://github.com/kochj23/GTNW
+  - NMAPScanner: https://github.com/kochj23/NMAPScanner
+
+#### Backend Comparison
+
+| Backend | Speed | Setup | Resource Usage | Best For |
+|---------|-------|-------|----------------|----------|
+| **MLX** | Fast | Moderate | Medium (local) | Apple Silicon optimization |
+| **TinyLLM** | Medium | Easy | Low (Docker) | Lightweight, easy setup |
+| **Ollama** | Fast | Easy | Medium (local) | Quick testing, many models |
+
+**TinyLLM Advantages:**
+- Easiest setup (Docker one-liner)
+- Lowest resource usage
+- OpenAI-compatible API
+- No Python environment needed
+- Portable across systems
+
+**MLX Advantages:**
+- Optimized for Apple Silicon
+- Direct hardware access
+- Custom model support
+- No additional server needed
+
+#### Future Enhancement
+
+MLX Code can be enhanced with multi-backend support similar to other projects in this repository family. This would allow users to choose between MLX (Apple-optimized), TinyLLM (lightweight by Jason Cox), or Ollama (fast inference) based on their preferences and system capabilities.
+
+**Interested in Multi-Backend Support?**
+See AIBackendManager.swift implementation in sister projects for reference on how to add backend switching to MLX Code.
 
 ---
 
@@ -505,6 +603,7 @@ Internal/Local use. Not for distribution.
 - **MLX Framework:** Apple ml-explore team
 - **UI Framework:** SwiftUI
 - **Models:** Various open-source projects (Deepseek, Meta, Alibaba)
+- **TinyLLM:** Jason Cox (https://github.com/jasonacox/TinyLLM) - Alternative backend option
 
 ---
 
