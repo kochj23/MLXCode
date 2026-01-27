@@ -1,30 +1,44 @@
-# MLX Code
+# MLX Code v1.1.0
 
-**AI-Powered Application with Cloud Integration & Ethical Safeguards**
+**AI-powered coding assistant using Apple MLX for local, private code generation**
 
-![Platform](https://img.shields.io/badge/platform-macOS%2013.0%2B-blue)
-![Swift](https://img.shields.io/badge/Swift-5.9-orange)
-![License](https://img.shields.io/badge/license-MIT-green)
-![Status](https://img.shields.io/badge/status-Production-success)
-![AI](https://img.shields.io/badge/AI-5%20Cloud%20Providers-purple)
-![Ethics](https://img.shields.io/badge/Ethics-Protected-green)
+Native macOS application leveraging Apple Silicon's Neural Engine for intelligent code assistance without cloud dependencies.
 
 ---
 
-## ✨ Latest Update: January 27, 2026 - v1.1.0
+## What is MLX Code?
 
-### 🎉 Major Enhancements:
+MLX Code is a local LLM-powered coding assistant that bridges Apple's MLX toolkit with development workflows to provide intelligent code assistance, refactoring, documentation generation, and code review—all running locally on your Mac without any cloud dependencies.
 
-#### 🚀 MLX Backend Implementation (NEW in v1.1.0)
-- **Full MLX Integration** - Native Apple Silicon AI via mlx_lm CLI
-- **Process Management** - Proper subprocess handling with output/error pipes
-- **Model Support** - mlx-community/Llama-3.2-3B-Instruct-4bit and other MLX models
-- **Streaming Support** - Real-time token generation
-- **Error Handling** - Graceful fallback if MLX not installed
-- **Installation Check** - Automatic detection of mlx_lm availability
-- **Performance** - Leverages Apple Silicon Neural Engine
+**Key Benefits:**
+- **100% Local**: All AI processing on your Mac (no cloud, no internet required)
+- **Apple Silicon Optimized**: Leverages Neural Engine for fast inference
+- **Privacy First**: Your code never leaves your machine
+- **Multi-Backend Support**: MLX, Ollama, TinyLLM, and cloud options
+- **Real-Time Assistance**: Context-aware code completion and suggestions
 
-**MLX Setup:**
+**Perfect For:**
+- **Privacy-Conscious Developers**: Keep proprietary code local
+- **Offline Development**: Work without internet connection
+- **Apple Silicon Users**: Maximum performance on M1/M2/M3/M4
+- **Code Review**: Automated review with security analysis
+- **Documentation**: Auto-generate comprehensive docs
+
+---
+
+## What's New in v1.1.0 (January 2026)
+
+### 🚀 MLX Backend Implementation
+**Full MLX integration via mlx_lm CLI:**
+
+- **Process Management**: Subprocess handling with proper output/error pipes
+- **Model Support**: mlx-community models (Llama-3.2-3B-Instruct-4bit, Mistral, Phi, etc.)
+- **Streaming**: Real-time token generation
+- **Error Handling**: Graceful fallback if MLX not installed
+- **Auto-Detection**: Checks for mlx_lm availability automatically
+- **Neural Engine**: Leverages Apple Silicon for fast inference
+
+**Installation:**
 ```bash
 # Install MLX LM
 pip install mlx-lm
@@ -32,170 +46,300 @@ pip install mlx-lm
 # Verify installation
 which mlx_lm.generate
 
-# MLX Code will automatically detect and use it
+# MLX Code auto-detects and uses it
 ```
 
-#### ☁️ Cloud AI Integration (5 Providers)
-- **OpenAI API** - GPT-4o for advanced capabilities
-- **Google Cloud AI** - Vertex AI, Vision, Speech
-- **Microsoft Azure** - Cognitive Services
-- **AWS AI Services** - Bedrock, Rekognition, Polly
-- **IBM Watson** - NLU, Speech, Discovery
+**Technical Implementation:**
+```swift
+private func generateWithMLX(prompt: String, maxTokens: Int) async throws -> String {
+    let process = Process()
+    process.executableURL = URL(fileURLWithPath: "/opt/homebrew/bin/mlx_lm.generate")
+    process.arguments = [
+        "--model", "mlx-community/Llama-3.2-3B-Instruct-4bit",
+        "--prompt", prompt,
+        "--max-tokens", "\(maxTokens)"
+    ]
 
-#### 🚀 Enhanced Features
-- **AI Backend Status Menu** - Visual indicators (🟢/🔴/⚪)
-- **Auto-Fallback System** - Switches backends if primary fails
-- **Connection Testing** - Verify API keys work
-- **Usage Tracking** - Token counts and cost estimation
-- **Performance Metrics** - Latency and success rates
-- **Notification System** - Backend status alerts
-- **Keyboard Shortcuts** - ⌘1-⌘9 for quick switching
-
-#### 🛡️ Ethical AI Safeguards (NEW)
-- **Comprehensive content monitoring**
-- **Prohibited use detection** (100+ patterns)
-- **Automatic blocking** of illegal/harmful content
-- **Crisis resource referrals**
-- **Usage logging** (hashed, not plaintext)
-- **Legal compliance** (CSAM reporting, etc.)
-- **Terms of Service** enforcement
-
-**⛔️ Cannot Be Used For:**
-- Illegal activities
-- Harmful content
-- Hate speech
-- Misinformation generation
-- Privacy violations
-- Harassment or abuse
-- Fraud or deception
-
----
-
-## 🎯 Features
-
-### Current Capabilities:
-[App-specific features would be listed here]
-
-### AI Backend Support:
-- Ollama (local, free)
-- MLX (Apple Silicon optimized)
-- TinyLLM/TinyChat (lightweight)
-- OpenWebUI (self-hosted)
-- OpenAI (cloud, paid)
-- Google Cloud (cloud, paid)
-- Azure (cloud, paid)
-- AWS (cloud, paid)
-- IBM Watson (cloud, paid)
-
----
-
-## 🔒 Security & Ethics
-
-### Ethical AI Guardian:
-All AI operations are monitored for:
-- ✅ Legal compliance
-- ✅ Ethical use
-- ✅ Safety
-- ✅ Privacy protection
-
-Violations are:
-- Automatically detected
-- Immediately blocked
-- Securely logged
-- Reported if required by law
-
-**Read full terms:** [ETHICAL_AI_TERMS_OF_SERVICE.md](./ETHICAL_AI_TERMS_OF_SERVICE.md)
-
----
-
-## 📦 Installation
-
-```bash
-# Install from DMG
-open MLX Code-latest.dmg
-
-# Or from source
-cd "/Volumes/Data/xcode/MLX Code"
-xcodebuild -project "MLX Code.xcodeproj" -scheme "MLX Code" -configuration Release build
-cp -R build/Release/*.app ~/Applications/
+    // Capture output and return
+}
 ```
 
-### AI Backend Setup (Optional):
+---
+
+## Features
+
+### Core Functionality
+- **Code Generation**: Generate functions, classes, algorithms from descriptions
+- **Code Completion**: Context-aware suggestions as you type
+- **Refactoring**: Automated code improvement and optimization
+- **Documentation**: Auto-generate docstrings and comments
+- **Code Review**: Security analysis and best practices checking
+- **Bug Detection**: Identify potential issues before runtime
+- **Test Generation**: Create unit tests automatically
+- **Code Explanation**: Natural language explanations of complex code
+
+### AI Backend Support (10 Backends)
+- **MLX (v1.1.0)**: Apple Silicon native, 100% local
+- **Ollama**: Local, free, multiple models
+- **TinyLLM/TinyChat**: Lightweight alternatives
+- **OpenWebUI**: Self-hosted option
+- **OpenAI**: GPT-4 (cloud, paid)
+- **Google Cloud AI**: Vertex AI (cloud, paid)
+- **Azure Cognitive**: OpenAI service (cloud, paid)
+- **AWS Bedrock**: Claude, Llama (cloud, paid)
+- **IBM Watson**: Enterprise AI (cloud, paid)
+
+### Developer Features
+- **Multi-File Operations**: Refactor across entire codebase
+- **Git Integration**: AI-powered commit messages and PR descriptions
+- **Codebase Indexing**: Semantic search across project
+- **Context Analysis**: Understands project structure
+- **Slash Commands**: Quick actions (/refactor, /test, /doc, /review)
+- **Autonomous Agent**: Multi-step task execution with planning
+- **Cost Tracking**: Token usage and cost estimation (cloud backends)
+
+### Code Intelligence
+- **Syntax Highlighting**: All major languages supported
+- **Code Diff View**: Before/after comparison
+- **Interactive Prompts**: Clarifying questions when needed
+- **Undo Support**: Revert AI changes easily
+- **Security Validation**: Input sanitization and output verification
+
+---
+
+## Security
+
+### Privacy & Data Protection
+- **Local-First**: MLX and Ollama keep all code on your Mac
+- **No Telemetry**: Zero analytics or tracking
+- **Sandboxed**: App runs in macOS sandbox
+- **Keychain Storage**: Cloud API keys stored securely
+- **Code Sanitization**: AI outputs validated before application
+
+### Ethical AI Guardian
+- **Content Monitoring**: Prevents generation of malicious code
+- **Pattern Detection**: Identifies harmful patterns (malware, exploits)
+- **Automatic Blocking**: Stops prohibited use cases
+- **Audit Logging**: All operations logged (hashed, not plaintext)
+
+### Best Practices
+- Use MLX or Ollama for maximum privacy
+- Store cloud API keys in Keychain (not code)
+- Review all AI-generated code before committing
+- Keep models updated for latest security patches
+- Enable audit logging for compliance
+
+---
+
+## Requirements
+
+### System Requirements
+- **macOS 13.0 (Ventura) or later**
+- **Architecture**: Universal (Apple Silicon recommended for MLX)
+- **Xcode 15.0+** (for building from source)
+
+### AI Backend Requirements
+**For MLX (Recommended):**
+- Apple Silicon Mac (M1/M2/M3/M4)
+- Python 3.9+
+- mlx-lm package: `pip install mlx-lm`
+- 8GB+ RAM (16GB recommended)
+
+**For Ollama:**
+- Any Mac (Intel or Apple Silicon)
+- Ollama installed: `brew install ollama`
+- 8GB+ RAM
+
+**For Cloud AI:**
+- API keys for chosen provider
+- Internet connection
+- Budget for API costs
+
+### Dependencies
+**Built-in:**
+- SwiftUI (UI)
+- Foundation (core)
+- AppKit (macOS integration)
+
+**Optional:**
+- mlx-lm (for MLX backend)
+- Ollama (for Ollama backend)
+
+---
+
+## Installation
+
+### Option 1: Pre-built Binary
+
 ```bash
-# Install Ollama (free, local, private)
+open "/Volumes/Data/xcode/binaries/20260127-MLXCode-v1.1.0/MLXCode-v1.1.0-build2.dmg"
+```
+
+Drag to Applications folder and launch.
+
+### Option 2: Build from Source
+
+```bash
+# Clone repository
+git clone https://github.com/kochj23/MLXCode.git
+cd MLXCode
+
+# Open in Xcode
+open "MLX Code.xcodeproj"
+
+# Build and run (⌘R)
+```
+
+### Setup MLX Backend
+
+```bash
+# Install MLX LM
+pip install mlx-lm
+
+# Verify installation
+which mlx_lm.generate
+
+# Download a model (optional, auto-downloads on first use)
+mlx_lm.download --model mlx-community/Llama-3.2-3B-Instruct-4bit
+```
+
+### Setup Ollama Backend
+
+```bash
+# Install Ollama
 brew install ollama
-ollama serve
-ollama pull mistral:latest
 
-# Or configure cloud AI in Settings
+# Start Ollama server
+ollama serve
+
+# Pull a model
+ollama pull mistral:latest
+# or
+ollama pull codellama:latest
 ```
 
 ---
 
-## 🎓 Usage
+## Configuration
 
-1. Launch application
-2. **First time:** Acknowledge ethical guidelines
-3. Configure AI backend (Settings → AI Backend)
-4. Use AI features responsibly
-5. All usage monitored for safety
+### First Launch
 
----
+1. **Launch MLX Code**
+2. **Acknowledge Ethical AI Terms**
+3. **Select AI Backend**: Settings → AI Backend
+   - Choose MLX (local, Apple Silicon only)
+   - Or Ollama (local, any Mac)
+   - Or cloud provider
+4. **Test Connection**: Verify backend responds
+5. **Start Coding**: Begin using AI assistance
 
-## ⚖️ Legal & Ethics
+### Backend Configuration
 
-### Terms:
-- MIT License for code
-- **Ethical AI Terms of Service** for usage
-- Privacy-first design
-- Open source transparency
+**MLX Setup:**
+- Model: mlx-community/Llama-3.2-3B-Instruct-4bit (default)
+- Max Tokens: 2048
+- Temperature: 0.7
+- Auto-detected if installed
 
-### Prohibited Uses:
-See [ETHICAL_AI_TERMS_OF_SERVICE.md](./ETHICAL_AI_TERMS_OF_SERVICE.md) for complete list.
+**Ollama Setup:**
+- Server URL: http://localhost:11434 (default)
+- Model: mistral:latest or codellama:latest
+- Automatically connects if Ollama running
 
-**Summary:** Don't use for illegal, harmful, or unethical purposes. Violations logged and reported.
-
----
-
-## 🛠️ Development
-
-**Author:** Jordan Koch ([@kochj23](https://github.com/kochj23))
-**Built with:** SwiftUI, Modern macOS APIs
-**AI Architecture:** Multi-backend with ethical safeguards
-
----
-
-## 📊 Version History
-
-**Latest:** Enhanced Edition (Jan 2026)
-- Added 5 cloud AI providers
-- Added ethical safeguards
-- Added enhanced features
-- Production-ready
+**Cloud AI Setup:**
+- Enter API key in Settings
+- Select specific model
+- Set token limits and budget
 
 ---
 
-## 🆘 Support & Resources
+## Usage
 
-### App Support:
-- GitHub Issues: [Report bugs](https://github.com/kochj23/MLX Code/issues)
-- Documentation: See project files
+### Code Generation
 
-### Crisis Resources:
-- **988** - Suicide Prevention Lifeline
-- **741741** - Crisis Text Line (text HOME)
-- **1-800-799-7233** - Domestic Violence Hotline
+```
+Prompt: "Create a function to check if a number is prime"
+
+MLX Code generates:
+func isPrime(_ n: Int) -> Bool {
+    guard n > 1 else { return false }
+    guard n != 2 else { return true }
+    guard n % 2 != 0 else { return false }
+
+    let sqrtN = Int(Double(n).squareRoot())
+    for i in stride(from: 3, through: sqrtN, by: 2) {
+        if n % i == 0 { return false }
+    }
+    return true
+}
+```
+
+### Slash Commands
+
+- `/refactor` - Improve code structure
+- `/test` - Generate unit tests
+- `/doc` - Add documentation
+- `/review` - Security and best practices review
+- `/explain` - Explain code in plain English
+- `/optimize` - Performance improvements
+
+### Context-Aware Assistance
+
+MLX Code understands your project:
+- Reads codebase structure
+- Maintains conversation context
+- Suggests consistent patterns
+- Respects your code style
 
 ---
 
-## 📄 License
+## Troubleshooting
 
-MIT License - See LICENSE file
+**MLX Not Found:**
+- Install: `pip install mlx-lm`
+- Verify: `which mlx_lm.generate`
+- Check PATH includes /opt/homebrew/bin
 
-**Ethical Usage Required** - See ETHICAL_AI_TERMS_OF_SERVICE.md
+**Slow Performance:**
+- Use smaller models (3B vs 7B)
+- Reduce max tokens
+- Close other apps
+- Check Activity Monitor
+
+**Out of Memory:**
+- Use 3B models instead of 7B+
+- Reduce token limit
+- Close browser tabs
+- Restart Mac
+
+**Ollama Connection Failed:**
+- Start server: `ollama serve`
+- Check port 11434 not blocked
+- Verify localhost access
 
 ---
 
-**MLX Code - Powerful AI with responsible safeguards**
+## Version History
 
-© 2026 Jordan Koch. All rights reserved.
+### v1.1.0 (January 2026)
+- MLX backend implementation
+- Process-based mlx_lm integration
+- Model auto-detection
+- Streaming support
+
+### v1.0.0 (2025)
+- Initial release
+- Ollama support
+- Cloud AI support
+- Code generation features
+
+---
+
+## License
+
+MIT License - Copyright © 2026 Jordan Koch
+
+---
+
+**Last Updated:** January 27, 2026
+**Status:** ✅ Production Ready
