@@ -11,9 +11,29 @@
 
 ---
 
-## ✨ Latest Update: January 26, 2026
+## ✨ Latest Update: January 27, 2026 - v1.1.0
 
 ### 🎉 Major Enhancements:
+
+#### 🚀 MLX Backend Implementation (NEW in v1.1.0)
+- **Full MLX Integration** - Native Apple Silicon AI via mlx_lm CLI
+- **Process Management** - Proper subprocess handling with output/error pipes
+- **Model Support** - mlx-community/Llama-3.2-3B-Instruct-4bit and other MLX models
+- **Streaming Support** - Real-time token generation
+- **Error Handling** - Graceful fallback if MLX not installed
+- **Installation Check** - Automatic detection of mlx_lm availability
+- **Performance** - Leverages Apple Silicon Neural Engine
+
+**MLX Setup:**
+```bash
+# Install MLX LM
+pip install mlx-lm
+
+# Verify installation
+which mlx_lm.generate
+
+# MLX Code will automatically detect and use it
+```
 
 #### ☁️ Cloud AI Integration (5 Providers)
 - **OpenAI API** - GPT-4o for advanced capabilities
