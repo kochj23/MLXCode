@@ -305,18 +305,75 @@ extension AIBackendManager {
         maxTokens: Int
     ) async throws -> String {
 
-        // MLX runs via Python subprocess
-        // For now, fallback to Ollama if available
-        if isOllamaAvailable {
-            return try await generateWithOllama(
-                prompt: prompt,
-                systemPrompt: systemPrompt,
-                temperature: 0.7,
-                maxTokens: maxTokens
-            )
+        // Check if mlx_lm is installed
+        let mlxPath = "/opt/homebrew/bin/mlx_lm.generate"
+        guard FileManager.default.fileExists(atPath: mlxPath) else {
+            let alternatePaths = ["/usr/local/bin/mlx_lm.generate", "\(NSHomeDirectory())/.local/bin/mlx_lm.generate"]
+            var found = false
+            for path in alternatePaths {
+                if FileManager.default.fileExists(atPath: path) { found = true; break }
+            }
+            if !found {
+                print("[AIBackend] MLX not installed. Install with: pip install mlx-lm")
+                throw AIError.mlxNotInstalled
+            }
         }
 
-        throw AIError.mlxNotImplemented
+        var fullPrompt = prompt
+        if let system = systemPrompt {
+            fullPrompt = "\(system)\n\n\(prompt)"
+        }
+
+        let model = mlxModel ?? "mlx-community/Llama-3.2-3B-Instruct-4bit"
+
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: mlxPath)
+        process.arguments = ["--model", model, "--prompt", fullPrompt, "--max-tokens", "\(maxTokens)", "--temp", "0.7"]
+
+        let outputPipe = Pipe()
+        let errorPipe = Pipe()
+        process.standardOutput = outputPipe
+        process.standardError = errorPipe
+
+        try process.run()
+        process.waitUntilExit()
+
+        let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+        let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+
+        if process.terminationStatus != 0 {
+            let errorMessage = String(data: errorData, encoding: .utf8) ?? "Unknown error"
+            throw AIError.mlxExecutionFailed(errorMessage)
+        }
+
+        guard let output = String(data: outputData, encoding: .utf8), !output.isEmpty else {
+            throw AIError.noResponse
+        }
+
+        let lines = output.components(separatedBy: .newlines)
+        var responseLines: [String] = []
+        var inResponse = false
+
+        for line in lines {
+            if line.hasPrefix("=====") || line.hasPrefix("Prompt:") || line.contains("tokens/s") { continue }
+            if line.contains("Response:") || inResponse {
+                inResponse = true
+                if !line.contains("Response:") { responseLines.append(line) }
+            }
+        }
+
+        let response = responseLines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+        return response.isEmpty ? output.trimmingCharacters(in: .whitespacesAndNewlines) : response
+    }
+}
+
+extension AIError {
+    static var mlxNotInstalled: AIError {
+        return .backendUnavailable("MLX not installed")
+    }
+
+    static func mlxExecutionFailed(_ message: String) -> AIError {
+        return .backendError("MLX failed: \(message)")
     }
 }
 
