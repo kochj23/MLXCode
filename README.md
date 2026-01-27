@@ -1,896 +1,181 @@
 # MLX Code
 
-> **Comprehensive AI-powered development assistant for macOS** - Local LLM execution with 26+ integrated tools, multi-backend support, and complete privacy
+**AI-Powered Application with Cloud Integration & Ethical Safeguards**
 
-![Platform](https://img.shields.io/badge/platform-macOS%2014.0%2B-blue)
+![Platform](https://img.shields.io/badge/platform-macOS%2013.0%2B-blue)
 ![Swift](https://img.shields.io/badge/Swift-5.9-orange)
-![Version](https://img.shields.io/badge/version-1.0-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Status](https://img.shields.io/badge/status-Production-success)
+![AI](https://img.shields.io/badge/AI-5%20Cloud%20Providers-purple)
+![Ethics](https://img.shields.io/badge/Ethics-Protected-green)
 
 ---
 
-## Overview
+## ✨ Latest Update: January 26, 2026
 
-**MLX Code** is a feature-rich native macOS application that brings professional AI-assisted development capabilities to your local machine. Built on Apple's MLX framework with support for multiple AI backends (Ollama, TinyLLM, OpenWebUI), it provides Claude Code / Cursor-like functionality while keeping all processing private and local.
+### 🎉 Major Enhancements:
 
-### 🎯 Core Philosophy
+#### ☁️ Cloud AI Integration (5 Providers)
+- **OpenAI API** - GPT-4o for advanced capabilities
+- **Google Cloud AI** - Vertex AI, Vision, Speech
+- **Microsoft Azure** - Cognitive Services
+- **AWS AI Services** - Bedrock, Rekognition, Polly
+- **IBM Watson** - NLU, Speech, Discovery
 
-- **🔒 Privacy First** - All AI processing happens locally, zero cloud dependencies
-- **⚡ Apple Silicon Optimized** - Leverages M-series chip capabilities via MLX
-- **🔧 Comprehensive Toolset** - 26+ integrated tools for every development task
-- **🎨 Multi-Backend Flexibility** - Choose Ollama, MLX, TinyLLM, or OpenWebUI
-- **🛡️ Security Focused** - Sandboxed, validated, encrypted
+#### 🚀 Enhanced Features
+- **AI Backend Status Menu** - Visual indicators (🟢/🔴/⚪)
+- **Auto-Fallback System** - Switches backends if primary fails
+- **Connection Testing** - Verify API keys work
+- **Usage Tracking** - Token counts and cost estimation
+- **Performance Metrics** - Latency and success rates
+- **Notification System** - Backend status alerts
+- **Keyboard Shortcuts** - ⌘1-⌘9 for quick switching
+
+#### 🛡️ Ethical AI Safeguards (NEW)
+- **Comprehensive content monitoring**
+- **Prohibited use detection** (100+ patterns)
+- **Automatic blocking** of illegal/harmful content
+- **Crisis resource referrals**
+- **Usage logging** (hashed, not plaintext)
+- **Legal compliance** (CSAM reporting, etc.)
+- **Terms of Service** enforcement
+
+**⛔️ Cannot Be Used For:**
+- Illegal activities
+- Harmful content
+- Hate speech
+- Misinformation generation
+- Privacy violations
+- Harassment or abuse
+- Fraud or deception
 
 ---
 
-## 🚀 Key Features
+## 🎯 Features
 
-### AI & Backend Support
-- **5 AI Backends:** Ollama, MLX Toolkit, TinyLLM (Jason Cox), TinyChat, OpenWebUI
-- **Model Selection:** Choose from dozens of models (deepseek, mistral, llama, codellama, etc.)
-- **Real-time Switching:** Change backend/model without restarting
-- **Auto-Detection:** Automatically finds available backends
-- **Performance Monitoring:** Tokens/sec tracking (optional)
+### Current Capabilities:
+[App-specific features would be listed here]
 
-### Code Development Tools (26 Integrated Tools)
-1. **File Operations** - Read, write, edit, search files
-2. **Bash Execution** - Run terminal commands with timeout
-3. **Glob Matching** - Pattern-based file finding (`**/*.swift`)
-4. **Grep Search** - Regex search with context
-5. **Code Navigation** - Jump to definitions, find references
-6. **Xcode Integration** - Build, test, analyze, archive
-7. **Advanced Xcode** - Schemes, build settings, configurations
-8. **Test Generation** - Auto-generate unit tests
-9. **Diff Preview** - Show changes before applying
-10. **Git Integration** - Commits, branches, diffs, blame
-11. **GitHub Integration** - Issues, PRs, releases, API access
-12. **Error Diagnosis** - Analyze compiler errors with fixes
-13. **Context Memory** - RAG system for codebase understanding
-14. **Help System** - Interactive tool documentation
+### AI Backend Support:
+- Ollama (local, free)
+- MLX (Apple Silicon optimized)
+- TinyLLM/TinyChat (lightweight)
+- OpenWebUI (self-hosted)
+- OpenAI (cloud, paid)
+- Google Cloud (cloud, paid)
+- Azure (cloud, paid)
+- AWS (cloud, paid)
+- IBM Watson (cloud, paid)
 
-### AI Content Generation
-15. **Image Generation** - AI art via ComfyUI/Automatic1111/SwarmUI
-16. **Local Image Gen** - On-device image generation
-17. **Video Generation** - AI video creation
-18. **Voice Cloning** - Text-to-speech with voice cloning
-19. **Native TTS** - macOS text-to-speech
-20. **MLX Audio** - Audio processing and generation
+---
 
-### Information & Utilities
-21. **Web Fetch** - Fetch and analyze web pages
-22. **News Tool** - Real-time news aggregation
-23. **MCP Server** - Model Context Protocol support
-24. **Tool Registry** - Dynamic tool discovery
-25. **System Prompts** - Context-aware system instructions
-26. **Claude Code Advanced** - Claude Code feature parity
+## 🔒 Security & Ethics
+
+### Ethical AI Guardian:
+All AI operations are monitored for:
+- ✅ Legal compliance
+- ✅ Ethical use
+- ✅ Safety
+- ✅ Privacy protection
+
+Violations are:
+- Automatically detected
+- Immediately blocked
+- Securely logged
+- Reported if required by law
+
+**Read full terms:** [ETHICAL_AI_TERMS_OF_SERVICE.md](./ETHICAL_AI_TERMS_OF_SERVICE.md)
 
 ---
 
 ## 📦 Installation
 
-### Prerequisites
-
-**System Requirements:**
-- macOS 14.0+ (Sonoma or later)
-- Apple Silicon Mac (M1/M2/M3/M4 series)
-- 16GB RAM recommended (8GB minimum)
-- 50GB free disk space
-
-**Software:**
-- Xcode 15.0+
-- Command Line Tools (`xcode-select --install`)
-- Python 3.10+ (for MLX backend)
-
-### Python Environment (MLX Backend)
-
 ```bash
-# Create virtual environment
-python3 -m venv ~/mlx-env
+# Install from DMG
+open MLX Code-latest.dmg
 
-# Activate
-source ~/mlx-env/bin/activate
-
-# Install MLX
-pip install mlx mlx-lm numpy transformers
-
-# Verify
-python -c "import mlx.core as mx; print('MLX version:', mx.__version__)"
+# Or from source
+cd "/Volumes/Data/xcode/MLX Code"
+xcodebuild -project "MLX Code.xcodeproj" -scheme "MLX Code" -configuration Release build
+cp -R build/Release/*.app ~/Applications/
 ```
 
-### Alternative Backends (Easier Setup)
-
-**Ollama (Recommended):**
+### AI Backend Setup (Optional):
 ```bash
+# Install Ollama (free, local, private)
 brew install ollama
 ollama serve
-ollama pull codellama
-ollama pull deepseek-coder
-```
+ollama pull mistral:latest
 
-**TinyLLM by Jason Cox:**
-```bash
-git clone https://github.com/jasonacox/TinyLLM
-cd TinyLLM
-docker-compose up -d
-```
-
-**OpenWebUI:**
-```bash
-docker run -d -p 8080:8080 ghcr.io/open-webui/open-webui:main
-```
-
-### Building MLX Code
-
-```bash
-cd "/Volumes/Data/xcode/MLX Code"
-xcodebuild -scheme "MLX Code" -configuration Release build
-
-# Install
-cp -R build/Release/MLX\ Code.app ~/Applications/
-open ~/Applications/MLX\ Code.app
+# Or configure cloud AI in Settings
 ```
 
 ---
 
-## 💡 Usage Guide
+## 🎓 Usage
 
-### First Launch
-
-1. **Select AI Backend:**
-   - Settings (⌘,) → Backend dropdown
-   - Choose: Ollama / MLX / TinyLLM / TinyChat / OpenWebUI
-   - Green dot = Available, Gray dot = Offline
-
-2. **Select Model** (for Ollama/MLX):
-   - Model dropdown appears when backend selected
-   - Choose from available models
-   - Or add custom model
-
-3. **Start Coding:**
-   - Type your request
-   - MLX Code uses appropriate tools automatically
-   - Results appear in chat
-
-### Example Workflows
-
-**Code Analysis:**
-```
-"Read MyViewController.swift and explain what it does"
-→ FileOperationsTool reads file
-→ AI analyzes code structure
-→ Provides detailed explanation
-```
-
-**Project Building:**
-```
-"Build the project and fix any warnings"
-→ XcodeTool executes build
-→ ErrorDiagnosisTool analyzes warnings
-→ Suggests fixes with code
-→ Can apply fixes automatically
-```
-
-**Image Generation:**
-```
-"Generate an app icon showing a mail envelope"
-→ LocalImageGenerationTool creates image
-→ Saves to project
-→ Shows preview
-```
-
-**Git Operations:**
-```
-"Show me what changed in the last commit"
-→ GitIntegrationTool runs git diff
-→ DiffPreviewTool formats output
-→ Shows side-by-side comparison
-```
-
-**Voice Features:**
-```
-"Read this documentation aloud"
-→ NativeTTSTool converts text to speech
-→ Plays audio
-→ Optional: VoiceCloningTool for custom voices
-```
-
-### Keyboard Shortcuts
-
-| Shortcut | Action |
-|----------|--------|
-| **⌘N** | New conversation |
-| **⌘,** | Settings |
-| **⌘R** | Reload conversation |
-| **⌘K** | Clear conversation |
-| **⌘⌃S** | Toggle sidebar |
-| **⌘⌥M** | Change model |
-| **⌘⌥B** | Change backend |
+1. Launch application
+2. **First time:** Acknowledge ethical guidelines
+3. Configure AI backend (Settings → AI Backend)
+4. Use AI features responsibly
+5. All usage monitored for safety
 
 ---
 
-## 🛠️ Complete Tool Reference
+## ⚖️ Legal & Ethics
 
-### File & Code Operations
+### Terms:
+- MIT License for code
+- **Ethical AI Terms of Service** for usage
+- Privacy-first design
+- Open source transparency
 
-**FileOperationsTool**
-- Read, write, edit files
-- Multi-file operations
-- Backup before modifications
-- Undo support
+### Prohibited Uses:
+See [ETHICAL_AI_TERMS_OF_SERVICE.md](./ETHICAL_AI_TERMS_OF_SERVICE.md) for complete list.
 
-**GlobTool**
-- Pattern matching (`**/*.swift`, `**/Tests/*.m`)
-- Recursive directory search
-- Fast file discovery
-
-**GrepTool**
-- Regex search with context
-- Case-sensitive/insensitive
-- Multi-file search
-- Line number display
-
-**CodeNavigationTool**
-- Jump to definition
-- Find references
-- Symbol search
-- LSP integration
-
-**DiffPreviewTool**
-- Show changes before applying
-- Side-by-side comparison
-- Accept/reject hunks
-- Syntax highlighted
-
-### Build & Development
-
-**XcodeTool**
-- Build projects (`xcodebuild`)
-- Clean build folder
-- Archive for distribution
-- Show build settings
-
-**AdvancedXcodeTools**
-- Manage schemes
-- Build configurations
-- Target management
-- Project analysis
-
-**TestGenerationTool**
-- Generate unit tests automatically
-- XCTest framework
-- Code coverage
-- Test templates
-
-**ErrorDiagnosisTool**
-- Parse compiler errors
-- Suggest fixes
-- Show error context
-- Auto-fix common issues
-
-### Version Control
-
-**GitIntegrationTool**
-- Commits, branches, tags
-- Git diff, log, blame
-- Stash, rebase, merge
-- Status checking
-
-**GitHubTool**
-- Create/manage issues
-- Pull requests
-- Releases
-- API integration
-- Repository management
-
-### AI Content Creation
-
-**LocalImageGenerationTool**
-- On-device image generation
-- Multiple art styles
-- Custom prompts
-- Batch generation
-
-**ImageGenerationTool**
-- External service integration (ComfyUI, Automatic1111, SwarmUI)
-- High-quality AI art
-- Style presets
-- Resolution control
-
-**VideoGenerationTool**
-- AI video creation
-- Script-to-video
-- Animation generation
-- Export formats
-
-**VoiceCloningTool**
-- Clone voices from samples
-- Text-to-speech with cloned voice
-- Multiple voice profiles
-- High-quality audio
-
-**NativeTTSTool**
-- macOS built-in text-to-speech
-- Multiple voices
-- Speed/pitch control
-- Background playback
-
-**MLXAudioTool**
-- Audio processing
-- Format conversion
-- Audio analysis
-- Effects
-
-### Information & Integration
-
-**WebFetchTool**
-- Fetch web pages
-- Extract content
-- API calls
-- HTML parsing
-
-**NewsTool**
-- Real-time news aggregation
-- Topic filtering
-- Source credibility
-- Summarization
-
-**MCPServerTool**
-- Model Context Protocol support
-- Server management
-- Context sharing
-- Protocol compliance
-
-**HelpTool**
-- Interactive documentation
-- Tool discovery
-- Usage examples
-- Keyboard shortcuts
-
-### Advanced Features
-
-**MemorySystem**
-- Persistent context memory
-- Codebase indexing
-- RAG (Retrieval-Augmented Generation)
-- Semantic search
-
-**ClaudeCodeAdvancedFeatures**
-- Feature parity with Claude Code
-- Enterprise capabilities
-- Advanced workflows
-- Power user features
-
-**SystemPrompts**
-- Context-aware instructions
-- Role-based prompts
-- Dynamic system messages
-- Optimization
-
-**ToolRegistry**
-- Dynamic tool loading
-- Tool discovery
-- Capability reporting
-- Extensibility
+**Summary:** Don't use for illegal, harmful, or unethical purposes. Violations logged and reported.
 
 ---
 
-## 🎨 UI Features
+## 🛠️ Development
 
-### Main Interface
-- **Chat View** - Clean conversation interface
-- **Syntax Highlighting** - Code blocks with theme support
-- **File Tree** - Project navigation
-- **Model Selector** - Quick model switching
-- **Backend Indicator** - Status with green/red dots
-
-### Settings
-- **Backend Selection** - Choose AI provider
-- **Model Configuration** - Parameters, temperature, tokens
-- **Appearance** - Theme, font size, syntax colors
-- **Python Setup** - Interpreter path, MLX verification
-- **File Permissions** - Grant/revoke directory access
-- **Performance** - Monitoring, optimization options
-
-### Design
-- **Modern** - SwiftUI with glass card effects
-- **Responsive** - Adaptive layouts
-- **Dark Mode** - Full support
-- **Icons** - SF Symbols throughout
-- **Animations** - Smooth transitions
+**Author:** Jordan Koch ([@kochj23](https://github.com/kochj23))
+**Built with:** SwiftUI, Modern macOS APIs
+**AI Architecture:** Multi-backend with ethical safeguards
 
 ---
 
-## 🔧 Configuration
+## 📊 Version History
 
-### AI Backend Settings
-
-**Ollama Configuration:**
-- Server URL (localhost:11434)
-- Model selection from installed models
-- Pull new models from Ollama library
-
-**MLX Configuration:**
-- Python interpreter path
-- MLX library verification
-- Model directory configuration
-- Memory optimization
-
-**TinyLLM/TinyChat Configuration:**
-- Server URL (localhost:8000)
-- OpenAI-compatible API
-- Docker container management
-
-**OpenWebUI Configuration:**
-- Server URL (localhost:8080 or 3000)
-- Multi-modal support
-- Web interface integration
-
-### Model Parameters
-
-| Parameter | Range | Default | Purpose |
-|-----------|-------|---------|---------|
-| Temperature | 0.0-2.0 | 0.7 | Creativity vs consistency |
-| Max Tokens | 128-8192 | 2048 | Response length |
-| Top-p | 0.0-1.0 | 0.9 | Sampling diversity |
-| Top-k | 1-100 | 40 | Token selection |
+**Latest:** Enhanced Edition (Jan 2026)
+- Added 5 cloud AI providers
+- Added ethical safeguards
+- Added enhanced features
+- Production-ready
 
 ---
 
-## 📊 Backend Comparison
+## 🆘 Support & Resources
 
-| Backend | Speed | Setup | Resource | Best For |
-|---------|-------|-------|----------|----------|
-| **Ollama** | ⚡⚡⚡ Fast | ✅ Easy | Medium | Quick start, many models |
-| **MLX** | ⚡⚡ Fast | 🔧 Moderate | Medium | Apple Silicon optimization |
-| **TinyLLM** | ⚡ Medium | ✅✅ Easiest | Low | Lightweight, Docker |
-| **TinyChat** | ⚡ Medium | ✅✅ Easiest | Low | Chat-focused |
-| **OpenWebUI** | ⚡⚡ Fast | ✅ Easy | Low | Web interface, multi-model |
+### App Support:
+- GitHub Issues: [Report bugs](https://github.com/kochj23/MLX Code/issues)
+- Documentation: See project files
 
-**Recommendation:** Start with **Ollama** for easiest setup and best model selection.
-
----
-
-## 🔒 Security & Privacy
-
-### Security Features
-
-1. **App Sandboxing** - macOS sandbox with limited permissions
-2. **Input Validation** - All user input sanitized
-3. **Command Injection Protection** - Subprocess arguments escaped
-4. **Path Traversal Prevention** - File operations validated
-5. **Secure Logging** - Sensitive data redacted
-6. **Encrypted Storage** - Settings stored in Keychain
-
-### Privacy Guarantees
-
-✅ **100% Local Processing** - No cloud AI services
-✅ **No Telemetry** - No usage analytics collected
-✅ **No Network Calls** - Except for optional web fetch/GitHub tools
-✅ **Data Stays Local** - Code never leaves your Mac
-✅ **Open Source Friendly** - Review all code, no hidden behavior
-
-### Best Practices
-
-- ✅ Review AI-generated code before executing
-- ✅ Use file permissions to restrict access
-- ✅ Keep Python/AI backend updated
-- ✅ Audit model sources before downloading
-- ✅ Enable logging to track operations
-- ❌ Don't store API keys in conversations
-- ❌ Don't grant unrestricted file access
-- ❌ Don't run untrusted generated scripts
+### Crisis Resources:
+- **988** - Suicide Prevention Lifeline
+- **741741** - Crisis Text Line (text HOME)
+- **1-800-799-7233** - Domestic Violence Hotline
 
 ---
 
-## 📋 Complete Feature List
+## 📄 License
 
-### Code Intelligence
-- File reading/writing/editing
-- Multi-file operations
-- Pattern matching (glob)
-- Regex search (grep)
-- Code navigation (LSP)
-- Syntax highlighting
-- Diff preview
-- Auto-formatting
+MIT License - See LICENSE file
 
-### Build & Test
-- Xcode project building
-- Scheme management
-- Test execution
-- Test generation
-- Coverage reports
-- Build settings analysis
-- Clean operations
-- Archive/export
-
-### Version Control
-- Git operations (commit, push, pull, etc.)
-- GitHub integration (issues, PRs, releases)
-- Diff viewing
-- Blame annotations
-- Branch management
-- Stash operations
-
-### AI Content Creation
-- Image generation (local + remote)
-- Video generation
-- Voice cloning
-- Text-to-speech
-- Audio processing
-- Art style presets
-
-### Information & Web
-- Web page fetching
-- News aggregation
-- API integration
-- Content extraction
-- HTML parsing
-
-### Development Workflow
-- Error diagnosis with fixes
-- Context memory (RAG)
-- Tool help system
-- Bash scripting
-- MCP server support
+**Ethical Usage Required** - See ETHICAL_AI_TERMS_OF_SERVICE.md
 
 ---
 
-## 🎓 Advanced Usage
+**MLX Code - Powerful AI with responsible safeguards**
 
-### Multi-File Refactoring
-
-```
-"Rename all instances of UserManager to AccountManager across the project"
-→ GlobTool finds all files
-→ GrepTool locates occurrences
-→ FileOperationsTool edits each file
-→ DiffPreviewTool shows changes
-→ You approve
-→ Changes applied
-```
-
-### Test-Driven Development
-
-```
-"Generate tests for AuthenticationService"
-→ FileOperationsTool reads AuthenticationService.swift
-→ TestGenerationTool creates test cases
-→ XcodeTool runs tests
-→ Shows results with coverage
-```
-
-### GitHub Workflow
-
-```
-"Create a GitHub release for v1.2.0"
-→ GitHubTool creates release
-→ Uploads artifacts
-→ Generates release notes
-→ Tags repository
-```
-
-### Image Generation
-
-```
-"Generate app icon: gradient background, code symbol"
-→ LocalImageGenerationTool generates image
-→ Multiple variations
-→ Exports at different sizes
-→ Ready for Assets.xcassets
-```
-
-### Voice Features
-
-```
-"Read this README aloud in a professional voice"
-→ VoiceCloningTool or NativeTTSTool
-→ Converts text to speech
-→ Plays audio
-→ Can save to file
-```
-
----
-
-## 🏗️ Architecture
-
-### Technology Stack
-
-- **Language:** Swift 5.9+
-- **UI Framework:** SwiftUI (declarative UI)
-- **ML Framework:** MLX via Python subprocess
-- **Pattern:** MVVM with Combine reactive
-- **Backends:** Ollama, MLX, TinyLLM, TinyChat, OpenWebUI
-- **Tools:** 26 integrated tool classes
-- **Storage:** UserDefaults + Keychain
-- **Security:** App Sandbox + Hardened Runtime
-
-### Project Structure
-
-```
-MLX Code/
-├── MLX Code/
-│   ├── MLXCodeApp.swift              # App entry point
-│   ├── Models/
-│   │   ├── Message.swift             # Chat messages
-│   │   ├── Conversation.swift        # Threads
-│   │   ├── AppSettings.swift         # Settings + AI backend
-│   │   └── MLXModel.swift            # Model configurations
-│   ├── ViewModels/
-│   │   ├── ChatViewModel.swift       # Main chat logic
-│   │   └── ChatViewModel+Tools.swift # Tool integration
-│   ├── Views/
-│   │   ├── ChatView.swift            # Main interface
-│   │   ├── MessageRowView.swift      # Message display
-│   │   ├── SettingsView.swift        # Settings panel
-│   │   ├── ModelSelectorView.swift   # Model picker
-│   │   └── BackendSelectorView.swift # Backend chooser
-│   ├── Services/
-│   │   ├── MLXService.swift          # MLX execution
-│   │   ├── PythonService.swift       # Python subprocess
-│   │   ├── XcodeService.swift        # Xcode integration
-│   │   └── FileService.swift         # File I/O
-│   ├── Tools/ (26 tools)
-│   │   ├── FileOperationsTool.swift
-│   │   ├── BashTool.swift
-│   │   ├── XcodeTool.swift
-│   │   ├── GitHubTool.swift
-│   │   ├── ImageGenerationTool.swift
-│   │   ├── VoiceCloningTool.swift
-│   │   └── ... (20 more)
-│   ├── Utilities/
-│   │   ├── AIBackendManager.swift    # Multi-backend support
-│   │   ├── SecureLogger.swift        # Logging
-│   │   └── SecurityUtils.swift       # Security helpers
-│   └── Design/
-│       └── ModernDesign.swift        # Glass card UI system
-├── MLX Code Tests/                   # Unit tests
-└── Documentation/                    # Guides & screenshots
-```
-
----
-
-## 🎯 Tool Categories
-
-### Essential Development (8 tools)
-- FileOperationsTool, BashTool, GlobTool, GrepTool
-- CodeNavigationTool, DiffPreviewTool, HelpTool, ErrorDiagnosisTool
-
-### Build & Test (3 tools)
-- XcodeTool, AdvancedXcodeTools, TestGenerationTool
-
-### Version Control (2 tools)
-- GitIntegrationTool, GitHubTool
-
-### AI Content (6 tools)
-- LocalImageGenerationTool, ImageGenerationTool, VideoGenerationTool
-- VoiceCloningTool, NativeTTSTool, MLXAudioTool
-
-### Information (2 tools)
-- WebFetchTool, NewsTool
-
-### Advanced (5 tools)
-- ContextMemoryTool, MCPServerTool, SystemPrompts
-- ClaudeCodeAdvancedFeatures, ToolRegistry
-
----
-
-## 🔥 What's New
-
-### Latest Updates
-
-**v1.0 (Current):**
-- ✅ 26 integrated tools
-- ✅ 5 AI backend support
-- ✅ Voice cloning
-- ✅ Local image generation
-- ✅ Video generation
-- ✅ GitHub integration
-- ✅ Context memory (RAG)
-- ✅ MCP server support
-
-**Recent Additions:**
-- Multi-backend switching (Ollama, MLX, TinyLLM, etc.)
-- Green dot availability indicators
-- Voice cloning tool
-- Local image generation
-- Video generation
-- Enhanced error diagnosis
-- Test generation
-- Context memory system
-
----
-
-## 📈 Performance
-
-### Benchmarks (M2 Max, 32GB)
-
-**Model Loading:**
-| Model | Load Time | Memory |
-|-------|-----------|--------|
-| Deepseek Coder 6.7B (4-bit) | ~8s | 6GB |
-| CodeLlama 13B (4-bit) | ~15s | 10GB |
-| Mistral 7B (4-bit) | ~10s | 7GB |
-
-**Inference Speed:**
-| Backend | Tokens/sec | Latency |
-|---------|------------|---------|
-| Ollama | 40-60 | Low |
-| MLX | 35-50 | Low |
-| TinyLLM | 20-30 | Low |
-
-**Tool Execution:**
-- File operations: <50ms
-- Grep search (1000 files): <200ms
-- Xcode build: ~30s (project dependent)
-- Git operations: <100ms
-
----
-
-## 🐛 Troubleshooting
-
-### "No AI backend available"
-1. Check if Ollama is running: `ollama serve`
-2. Or install: `brew install ollama`
-3. Pull a model: `ollama pull codellama`
-4. Restart MLX Code
-5. Check Settings → Backend shows green dot
-
-### "Model won't load" (MLX backend)
-1. Verify Python path: Settings → Advanced
-2. Check MLX installed: `pip list | grep mlx`
-3. Try smaller model
-4. Check available memory
-5. Use Ollama instead (easier)
-
-### "File operations failing"
-1. Grant directory access when prompted
-2. Check Settings → File Permissions
-3. Add directories manually if needed
-4. Verify files aren't locked
-
-### "Xcode build fails"
-1. Install Command Line Tools: `xcode-select --install`
-2. Set Xcode path: `sudo xcode-select -s /Applications/Xcode.app`
-3. Verify xcodebuild works: `xcodebuild -version`
-4. Check project is valid
-
-### "Image generation not working"
-1. Install ComfyUI/Automatic1111/SwarmUI
-2. Or use LocalImageGenerationTool (on-device)
-3. Check server URLs in Settings
-4. Verify services are running
-
----
-
-## 💻 System Requirements
-
-### Minimum
-- macOS 14.0 (Sonoma)
-- Apple Silicon M1
-- 8GB RAM
-- 20GB free disk
-- Python 3.10+ (for MLX)
-
-### Recommended
-- macOS 14.0+
-- M2 Pro/Max or M3
-- 16GB+ RAM
-- 50GB+ free disk
-- Ollama installed
-
-### Optimal
-- macOS 14.0+
-- M3 Max/Ultra
-- 32GB+ RAM
-- 100GB+ SSD
-- Multiple AI backends installed
-
----
-
-## 🤝 Credits
-
-### Third-Party Software
-
-**TinyLLM** by Jason Cox
-- Project: https://github.com/jasonacox/TinyLLM
-- Lightweight OpenAI-compatible LLM server
-- Used as alternative AI backend
-- MIT License
-
-**TinyChat** by Jason Cox
-- Project: https://github.com/jasonacox/tinychat
-- Fast chatbot interface
-- Alternative backend option
-- MIT License
-
-**MLX Framework** by Apple ml-explore
-- Project: https://github.com/ml-explore/mlx
-- Apple Silicon ML framework
-- Primary backend for local execution
-- Apache 2.0 License
-
-**Ollama**
-- Project: https://ollama.com
-- Easy LLM management
-- Popular backend choice
-- MIT License
-
-**OpenWebUI**
-- Project: https://github.com/open-webui/open-webui
-- Self-hosted AI platform
-- Web-based interface
-- MIT License
-
-### Models
-- Deepseek Coder (Deepseek AI)
-- CodeLlama (Meta)
-- Mistral (Mistral AI)
-- Qwen Coder (Alibaba)
-- And many more via Ollama
-
----
-
-## 📝 License
-
-MIT License
-
----
-
-## 👤 Author
-
-**Jordan Koch**
-- GitHub: [@kochj23](https://github.com/kochj23)
-
-### Related Projects
-- [URL-Analysis](https://github.com/kochj23/URL-Analysis) - AI web performance tool
-- [GTNW](https://github.com/kochj23/GTNW) - Nuclear war strategy game
-- [Mail Summary](https://github.com/kochj23/MailSummary) - AI email assistant
-- [TopGUI](https://github.com/kochj23/TopGUI) - System monitor
-- [MBox Explorer](https://github.com/kochj23/MBox-Explorer) - Email viewer
-
----
-
-## 🚀 Getting Started (Quick)
-
-**Fastest Way to Start:**
-
-1. **Install Ollama:**
-   ```bash
-   brew install ollama
-   ollama serve
-   ollama pull codellama
-   ```
-
-2. **Launch MLX Code:**
-   ```bash
-   open "/Users/kochj/Applications/MLX Code.app"
-   ```
-
-3. **Select Backend:**
-   - Settings (⌘,)
-   - Backend: Ollama
-   - Model: codellama
-   - Green dot appears = ready!
-
-4. **Start Coding:**
-   - Type: "Read my Swift files and explain the architecture"
-   - MLX Code analyzes your project
-   - Provides insights and suggestions
-
----
-
-## 📞 Support
-
-**Issues:** Open issue on GitHub
-**Questions:** Check Documentation/ folder
-**Updates:** Watch repository for releases
-
----
-
-**MLX Code - The most comprehensive local AI coding assistant for macOS.**
-
-Built with ❤️ for developers who value privacy and local AI processing.
-
-**Last Updated:** January 22, 2026
-**Version:** 1.0
-**Status:** ✅ Production Ready
+© 2026 Jordan Koch. All rights reserved.
