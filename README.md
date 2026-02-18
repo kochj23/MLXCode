@@ -1,5 +1,7 @@
 # MLX Code v1.2.0
 
+![Build](https://github.com/kochj23/MLXCode/actions/workflows/build.yml/badge.svg)
+
 **AI-powered coding assistant using Apple MLX for local, private code generation**
 
 Native macOS application leveraging Apple Silicon's Neural Engine for intelligent code assistance without cloud dependencies.
