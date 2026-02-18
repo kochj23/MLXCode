@@ -1,8 +1,37 @@
-# MLX Code v1.1.0
+# MLX Code v1.2.0
 
 **AI-powered coding assistant using Apple MLX for local, private code generation**
 
 Native macOS application leveraging Apple Silicon's Neural Engine for intelligent code assistance without cloud dependencies.
+
+---
+
+## Screenshots
+
+*Screenshots coming soon — showing code completion, chat assistant, and model management interfaces.*
+
+---
+
+## Download
+
+Download the latest release: [MLX Code v1.3.0](https://github.com/kochj23/MLXCode/releases/latest)
+
+Or build from source (see below).
+
+---
+
+## How MLX Code Compares
+
+| Feature | MLX Code | GitHub Copilot | Cursor | Continue.dev |
+|---------|----------|---------------|--------|-------------|
+| Runs 100% Locally | Yes | No | No | Partial |
+| No Cloud/Telemetry | Yes | No | No | Partial |
+| macOS Native (SwiftUI) | Yes | VS Code extension | Electron | VS Code extension |
+| Apple Silicon Optimized | Yes (MLX) | No | No | No |
+| Free & Open Source | Yes (MIT) | $10/mo | $20/mo | Yes |
+| Multiple LLM Backends | 10 backends | OpenAI only | Multiple | Multiple |
+| Works Offline | Yes | No | No | Partial |
+| No Account Required | Yes | GitHub account | Account | Optional |
 
 ---
 
@@ -26,9 +55,37 @@ MLX Code is a local LLM-powered coding assistant that bridges Apple's MLX toolki
 
 ---
 
+## What's New in v1.2.0 (February 2026)
+
+### macOS Widget Extension
+**Desktop widget for monitoring MLX Code status:**
+
+- **Small Widget**: Compact view showing model status and name
+- **Medium Widget**: Status, metrics, and quick action buttons
+- **Large Widget**: Full dashboard with memory usage, token speed, and all quick actions
+
+**Widget Features:**
+- Real-time model status (Idle/Loading/Ready/Generating)
+- Token generation speed (tokens/second)
+- Memory usage with visual progress bar
+- Quick action deep links:
+  - New Chat
+  - Generate Code
+  - Review Code
+  - Explain Code
+- Auto-refresh every 5 minutes or on app state change
+
+**Technical Details:**
+- App Group: `group.com.jkoch.mlxcode`
+- Uses WidgetKit for native macOS widget support
+- Shared data via UserDefaults in App Group container
+- Deep link URL scheme: `mlxcode://`
+
+---
+
 ## What's New in v1.1.0 (January 2026)
 
-### 🚀 MLX Backend Implementation
+### MLX Backend Implementation
 **Full MLX integration via mlx_lm CLI:**
 
 - **Process Management**: Subprocess handling with proper output/error pipes
@@ -97,6 +154,7 @@ private func generateWithMLX(prompt: String, maxTokens: Int) async throws -> Str
 - **Slash Commands**: Quick actions (/refactor, /test, /doc, /review)
 - **Autonomous Agent**: Multi-step task execution with planning
 - **Cost Tracking**: Token usage and cost estimation (cloud backends)
+- **Desktop Widget**: Monitor status from desktop (v1.2.0)
 
 ### Code Intelligence
 - **Syntax Highlighting**: All major languages supported
@@ -321,6 +379,14 @@ MLX Code understands your project:
 
 ## Version History
 
+### v1.2.0 (February 2026)
+- macOS WidgetKit widget extension
+- Small, Medium, and Large widget sizes
+- Real-time model status monitoring
+- Token speed and memory usage display
+- Quick action deep links
+- App Group data sharing
+
 ### v1.1.0 (January 2026)
 - MLX backend implementation
 - Process-based mlx_lm integration
@@ -341,5 +407,5 @@ MIT License - Copyright © 2026 Jordan Koch
 
 ---
 
-**Last Updated:** January 27, 2026
-**Status:** ✅ Production Ready
+**Last Updated:** February 4, 2026
+**Status:** Production Ready
