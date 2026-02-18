@@ -8,7 +8,7 @@ Native macOS application leveraging Apple Silicon's Neural Engine for intelligen
 
 ## Screenshots
 
-*Screenshots coming soon — showing code completion, chat assistant, and model management interfaces.*
+![MLX Code Interface](Screenshots/main-window.png)
 
 ---
 
