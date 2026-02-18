@@ -1,0 +1,3 @@
+theme: jekyll-theme-cayman
+title: "MLXCode"
+description: "Local LLM-powered coding assistant for macOS using Apple MLX framework — privacy-first alternative to GitHub Copilot. No cloud, no telemetry, runs entirely on Apple Silicon."
