@@ -409,3 +409,18 @@ MIT License - Copyright © 2026 Jordan Koch
 
 **Last Updated:** February 4, 2026
 **Status:** Production Ready
+
+---
+
+## More Apps by Jordan Koch
+
+| App | Description |
+|-----|-------------|
+| [NewsSummary](https://github.com/kochj23/NewsSummary) | AI-powered news aggregation and summarization |
+| [MailSummary](https://github.com/kochj23/MailSummary) | AI-powered email categorization and summarization |
+| [JiraSummary](https://github.com/kochj23/JiraSummary) | AI-powered Jira dashboard with sprint analytics |
+| [Blompie](https://github.com/kochj23/Blompie) | AI-powered text adventure game engine |
+| [NMAPScanner](https://github.com/kochj23/NMAPScanner) | Network security scanner with AI threat detection |
+| [TopGUI](https://github.com/kochj23/TopGUI) | macOS system monitor with real-time metrics |
+
+> **[View all projects](https://github.com/kochj23?tab=repositories)**
