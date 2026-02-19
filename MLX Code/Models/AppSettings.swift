@@ -10,60 +10,6 @@ import Foundation
 import Combine
 import AppKit
 
-/// Image generation quality presets
-enum ImageQuality: String, CaseIterable, Codable {
-    case fast = "fast"
-    case balanced = "balanced"
-    case high = "high"
-
-    var displayName: String {
-        switch self {
-        case .fast: return "Fast (4 steps)"
-        case .balanced: return "Balanced (20 steps)"
-        case .high: return "High Quality (50 steps)"
-        }
-    }
-
-    var steps: Int {
-        switch self {
-        case .fast: return 4
-        case .balanced: return 20
-        case .high: return 50
-        }
-    }
-
-    var description: String {
-        switch self {
-        case .fast: return "Quick results, good for iteration (2-5s)"
-        case .balanced: return "Good quality, reasonable speed (5-15s)"
-        case .high: return "Best quality, slower (10-30s)"
-        }
-    }
-}
-
-/// Image generation model configuration
-struct ImageModel: Identifiable, Codable {
-    let id: String
-    let name: String
-    let description: String
-    let speed: String
-    let quality: String
-    let size: String
-    let huggingFaceId: String
-    let isCustom: Bool
-
-    init(id: String, name: String, description: String, speed: String, quality: String, size: String, huggingFaceId: String, isCustom: Bool = false) {
-        self.id = id
-        self.name = name
-        self.description = description
-        self.speed = speed
-        self.quality = quality
-        self.size = size
-        self.huggingFaceId = huggingFaceId
-        self.isCustom = isCustom
-    }
-}
-
 /// Singleton class managing application settings
 /// Thread-safe using @MainActor annotation
 @MainActor
@@ -129,23 +75,6 @@ class AppSettings: ObservableObject {
     /// Conversation export directory
     @Published var conversationsExportPath: String = "~/Documents"
 
-    // MARK: - Image Generation Settings
-
-    /// Selected image generation model
-    @Published var selectedImageModel: String = "sdxl-turbo"
-
-    /// Image generation quality setting
-    @Published var imageQuality: ImageQuality = .balanced
-
-    /// Available image generation models (mutable for custom models)
-    @Published var availableImageModels: [ImageModel] = [
-        ImageModel(id: "sdxl-turbo", name: "SDXL-Turbo ⭐", description: "Fast (2-5s), Good quality, 7GB", speed: "2-5s", quality: "Good", size: "7GB", huggingFaceId: "stabilityai/sdxl-turbo", isCustom: false),
-        ImageModel(id: "sd-2.1", name: "Stable Diffusion 2.1", description: "Balanced (5-15s), Excellent quality, 5GB", speed: "5-15s", quality: "Excellent", size: "5GB", huggingFaceId: "stabilityai/stable-diffusion-2-1", isCustom: false),
-        ImageModel(id: "flux", name: "FLUX", description: "Best quality (10-30s), Professional, 24GB", speed: "10-30s", quality: "Professional", size: "24GB", huggingFaceId: "black-forest-labs/FLUX.1-schnell", isCustom: false),
-        ImageModel(id: "sdxl-base", name: "SDXL Base", description: "High quality (8-15s), Detailed, 7GB", speed: "8-15s", quality: "Excellent", size: "7GB", huggingFaceId: "stabilityai/stable-diffusion-xl-base-1.0", isCustom: false),
-        ImageModel(id: "sd-1.5", name: "SD 1.5 Classic", description: "Fast (3-8s), Classic quality, 4GB", speed: "3-8s", quality: "Good", size: "4GB", huggingFaceId: "runwayml/stable-diffusion-v1-5", isCustom: false)
-    ]
-
     // MARK: - Private Properties
 
     private let userDefaults = UserDefaults.standard
@@ -170,8 +99,6 @@ class AppSettings: ObservableObject {
         static let modelsPath = "modelsPath"
         static let templatesPath = "templatesPath"
         static let conversationsExportPath = "conversationsExportPath"
-        static let selectedImageModel = "selectedImageModel"
-        static let imageQuality = "imageQuality"
     }
 
     // MARK: - Initialization
@@ -326,16 +253,6 @@ class AppSettings: ObservableObject {
             conversationsExportPath = path
         }
 
-        // Load image generation settings
-        if let imageModel = userDefaults.string(forKey: Keys.selectedImageModel), !imageModel.isEmpty {
-            selectedImageModel = imageModel
-        }
-
-        if let qualityRaw = userDefaults.string(forKey: Keys.imageQuality),
-           let loadedQuality = ImageQuality(rawValue: qualityRaw) {
-            imageQuality = loadedQuality
-        }
-
         // Load available models
         if let modelsData = userDefaults.data(forKey: Keys.availableModels),
            let models = try? JSONDecoder().decode([MLXModel].self, from: modelsData) {
@@ -373,10 +290,6 @@ class AppSettings: ObservableObject {
         userDefaults.set(templatesPath, forKey: Keys.templatesPath)
         userDefaults.set(conversationsExportPath, forKey: Keys.conversationsExportPath)
 
-        // Save image generation settings
-        userDefaults.set(selectedImageModel, forKey: Keys.selectedImageModel)
-        userDefaults.set(imageQuality.rawValue, forKey: Keys.imageQuality)
-
         // Save selected model ID
         if let modelId = selectedModel?.id.uuidString {
             userDefaults.set(modelId, forKey: Keys.selectedModelId)
@@ -410,7 +323,7 @@ class AppSettings: ObservableObject {
         conversationsExportPath = "~/Documents"
 
         availableModels = MLXModel.commonModels()
-        selectedModel = availableModels.first
+        selectedModel = availableModels.first(where: { $0.name.contains("Qwen 2.5 7B") }) ?? availableModels.first
 
         saveSettings()
     }

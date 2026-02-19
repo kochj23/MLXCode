@@ -208,16 +208,17 @@ extension MLXModel {
 extension MLXModel {
     /// Creates a default model configuration
     /// - Parameter basePath: Base directory for models (uses smart default if not provided)
-    /// - Returns: A new MLXModel with default settings
+    /// - Returns: A new MLXModel with default settings (Qwen 2.5 7B — best for coding)
     static func `default`(basePath: String? = nil) -> MLXModel {
         let modelBasePath = basePath ?? AppSettings.detectWritableModelsPath()
         return MLXModel(
-            name: "Llama 3.2 3B (Default)",
-            path: "\(modelBasePath)/llama-3.2-3b",
+            name: "Qwen 2.5 7B",
+            path: "\(modelBasePath)/qwen-2.5-7b",
             parameters: ModelParameters(),
             isDownloaded: false,
-            huggingFaceId: "mlx-community/Llama-3.2-3B-Instruct-4bit",
-            description: "Meta's Llama 3.2 3B - Fast and efficient default model"
+            huggingFaceId: "mlx-community/Qwen2.5-7B-Instruct-4bit",
+            description: "Alibaba's Qwen 2.5 7B — Best for coding tasks. ~4GB",
+            contextWindowSize: 32768
         )
     }
 

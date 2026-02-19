@@ -159,28 +159,5 @@ struct MLXCodeApp: App {
         }
         .keyboardShortcut("?", modifiers: [.command])
 
-        // GitHub Panel Window
-        Window("GitHub Operations", id: "github") {
-            GitHubPanelView()
-                .frame(minWidth: 900, minHeight: 700)
-        }
-        .keyboardShortcut("g", modifiers: [.command])
-
-        // Image Generation Window
-        Window("Image Generation", id: "image-generation") {
-            ImageGenerationPanel()
-                .environmentObject(settings)
-                .frame(minWidth: 900, minHeight: 600)
-        }
-        .keyboardShortcut("i", modifiers: [.command, .shift])
-        .defaultPosition(.center)
-
-        // Voice Cloning Window
-        Window("Voice Cloning", id: "voice-cloning") {
-            VoiceCloningPanel()
-                .frame(minWidth: 900, minHeight: 600)
-        }
-        .keyboardShortcut("v", modifiers: [.command, .shift])
-        .defaultPosition(.center)
     }
 }
