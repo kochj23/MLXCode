@@ -31,59 +31,24 @@ class ToolRegistry: ObservableObject {
 
     /// Register built-in tools
     private func registerBuiltInTools() {
-        // Core tools
+        // Core tools (always available)
         register(FileOperationsTool())
         register(BashTool())
         register(GrepTool())
         register(GlobTool())
+
+        // Development tools (when project is open)
         register(XcodeTool())
-
-        // External data & content tools (NEW from TinyLLM)
-        register(WebFetchTool())
-        register(NewsTool())
-        register(ImageGenerationTool())  // Cloud-based (DALL-E) - requires API key
-        register(LocalImageGenerationTool())  // LOCAL - Apple MLX Stable Diffusion (FREE)
-        // register(VideoGenerationTool())  // LOCAL - Image Sequence → Video with FFmpeg (FREE) - Direct keyword detection used instead
-
-        // Text-to-Speech & Voice tools (NEW)
-        register(NativeTTSTool())
-        register(MLXAudioTool())
-        register(VoiceCloningTool())
-
-        // Advanced development tools (Batch 1)
         register(ErrorDiagnosisTool())
         register(TestGenerationTool())
         register(CodeNavigationTool())
         register(GitIntegrationTool())
-        register(GitHubTool())
-        register(RefactoringTool())
-        register(DocumentationTool())
-        register(DependencyManagementTool())
-        register(SimulatorManagementTool())
-        register(AssetManagementTool())
-        register(SchemeManagementTool())
-
-        // Claude Code Advanced Features (Batch 2)
-        register(MCPServerTool())
         register(DiffPreviewTool())
-        register(ContextMemoryTool())
-        register(DebuggerTool())
-        register(CodeReviewTool())
-        register(CodeCompletionTool())
-        register(TemplateGenerationTool())
-        register(TaskPlanningTool())
-        register(WorkspaceAnalysisTool())
-        register(CollaborationTool())
-        register(ProfilingTool())
-        register(RegressionTestingTool())
-        register(SecurityScanningTool())
-        register(CICDTool())
-        register(NL2CodeTool())
 
         // Help System
         register(HelpTool())
 
-        logInfo("Registered \(tools.count) built-in tools (including WebFetch, News, ImageGen)", category: "ToolRegistry")
+        logInfo("Registered \(tools.count) tools", category: "ToolRegistry")
     }
 
     /// Register a tool

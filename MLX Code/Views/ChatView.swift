@@ -25,9 +25,6 @@ struct ChatView: View {
     /// Whether Git helper panel is shown
     @State private var showingGitHelper = false
 
-    /// Whether GitHub panel is shown
-    @State private var showingGitHubPanel = false
-
     /// Whether build errors panel is shown
     @State private var showingBuildErrors = false
 
@@ -36,12 +33,6 @@ struct ChatView: View {
 
     /// Whether help viewer is shown
     @State private var showingHelp = false
-
-    /// Whether image generation panel is shown
-    @State private var showingImageGeneration = false
-
-    /// Whether voice cloning panel is shown
-    @State private var showingVoiceCloning = false
 
     /// Current Git status
     @State private var gitStatus: GitStatus?
@@ -59,11 +50,8 @@ struct ChatView: View {
             .modifier(SheetsModifier(
                 showingSettings: $showingSettings,
                 showingGitHelper: $showingGitHelper,
-                showingGitHubPanel: $showingGitHubPanel,
                 showingBuildErrors: $showingBuildErrors,
                 showingHelp: $showingHelp,
-                showingImageGeneration: $showingImageGeneration,
-                showingVoiceCloning: $showingVoiceCloning,
                 gitStatus: $gitStatus,
                 buildErrors: buildErrors
             ))
@@ -103,43 +91,19 @@ struct ChatView: View {
                         ZStack {
                             messagesArea
 
-                            // Performance card overlay (floating in top-right, top-aligned)
-                        VStack(alignment: .trailing) {
-                            HStack {
-                                Spacer()
-                                PerformanceCard(performanceMonitor: viewModel.performanceMonitor)
-                                    .frame(width: 320)
-                                    .padding()
-                            }
-                            Spacer(minLength: 0)
-                        }
-
                         // Thinking overlay (shown during initial processing)
                         if viewModel.isWaitingForFirstToken {
-                            ThinkingOverlayView(message: "Preparing response...")
-                                .transition(.opacity)
-                        }
-
-                        // Media generation progress overlay
-                        if viewModel.isGeneratingMedia {
-                            VStack(spacing: 16) {
-                                ProgressView(value: viewModel.generationProgress) {
-                                    Text(viewModel.generationStatus)
-                                        .font(.headline)
-                                }
-                                .progressViewStyle(.linear)
-                                .frame(width: 400)
-
-                                Text("\(Int(viewModel.generationProgress * 100))%")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .monospacedDigit()
+                            VStack(spacing: 12) {
+                                ProgressView()
+                                    .scaleEffect(1.2)
+                                Text("Preparing response...")
+                                    .font(.system(size: 14, weight: .medium, design: .rounded))
+                                    .foregroundColor(ModernColors.textSecondary)
                             }
-                            .padding(30)
+                            .padding(24)
                             .background(.ultraThinMaterial)
-                            .cornerRadius(16)
-                            .shadow(radius: 20)
-                            .transition(.scale.combined(with: .opacity))
+                            .cornerRadius(12)
+                            .transition(.opacity)
                         }
                     }
 
@@ -154,20 +118,13 @@ struct ChatView: View {
                     .frame(minWidth: 400)
                 }
 
-                // Right panel with metrics and logs
-                VStack(spacing: 0) {
-                    // Token metrics panel (visible by default, opposite of logs)
-                    TokenMetricsView(viewModel: viewModel)
-                        .padding(8)
-
-                    Divider()
-
-                    // Log viewer panel (collapsible)
-                    if showingLogViewer {
+                // Right panel with logs
+                if showingLogViewer {
+                    VStack(spacing: 0) {
                         LogViewerPanel()
                     }
+                    .frame(minWidth: 300, idealWidth: 400, maxWidth: 600)
                 }
-                .frame(minWidth: 300, idealWidth: 400, maxWidth: 600)
             }
             .onChange(of: viewModel.isGenerating) { _, newValue in
                 // Auto-open log viewer when generation starts
@@ -187,83 +144,22 @@ struct ChatView: View {
         if viewModel.isGenerating {
             return false // Stop button is always enabled
         }
-
         let hasText = !viewModel.userInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-
-        // Check if this is a direct tool command (doesn't need LLM loaded)
-        let lowercased = viewModel.userInput.lowercased()
-        let isDirectToolCommand = lowercased.contains("generate image") ||
-                                  lowercased.contains("create image") ||
-                                  lowercased.contains("make an image") ||
-                                  lowercased.contains("generate video") ||
-                                  lowercased.contains("create video") ||
-                                  lowercased.contains("make a video") ||
-                                  lowercased.contains("create animation") ||
-                                  lowercased.hasPrefix("speak:") ||
-                                  lowercased.hasPrefix("say:")
-
-        // Button is enabled if:
-        // - Has text AND (model is loaded OR is a direct tool command)
-        return !hasText || (!viewModel.isModelLoaded && !isDirectToolCommand)
+        return !hasText || !viewModel.isModelLoaded
     }
 
     /// Color for the send button
     private var sendButtonColor: Color {
-        if viewModel.isGenerating {
-            return .red
-        }
-
-        // Check if this is a direct tool command
-        let lowercased = viewModel.userInput.lowercased()
-        let isDirectToolCommand = lowercased.contains("generate image") ||
-                                  lowercased.contains("create image") ||
-                                  lowercased.contains("make an image") ||
-                                  lowercased.contains("generate video") ||
-                                  lowercased.contains("create video") ||
-                                  lowercased.contains("make a video") ||
-                                  lowercased.contains("create animation") ||
-                                  lowercased.hasPrefix("speak:") ||
-                                  lowercased.hasPrefix("say:")
-
-        // Use purple for direct tool commands (no LLM needed)
-        if isDirectToolCommand && !viewModel.isModelLoaded {
-            return .purple
-        }
-
-        if !viewModel.isModelLoaded {
-            return Color.gray
-        }
-
+        if viewModel.isGenerating { return .red }
+        if !viewModel.isModelLoaded { return Color.gray }
         let hasText = !viewModel.userInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         return hasText ? Color.blue : Color.gray
     }
 
     /// Tooltip for the send button
     private var sendButtonTooltip: String {
-        if viewModel.isGenerating {
-            return "Stop generation"
-        }
-
-        // Check if this is a direct tool command
-        let lowercased = viewModel.userInput.lowercased()
-        let isDirectToolCommand = lowercased.contains("generate image") ||
-                                  lowercased.contains("create image") ||
-                                  lowercased.contains("make an image") ||
-                                  lowercased.contains("generate video") ||
-                                  lowercased.contains("create video") ||
-                                  lowercased.contains("make a video") ||
-                                  lowercased.contains("create animation") ||
-                                  lowercased.hasPrefix("speak:") ||
-                                  lowercased.hasPrefix("say:")
-
-        if isDirectToolCommand && !viewModel.isModelLoaded {
-            return "Execute tool (no model needed) (⌘↩)"
-        }
-
-        if !viewModel.isModelLoaded {
-            return "Load a model first (or use tool commands)"
-        }
-
+        if viewModel.isGenerating { return "Stop generation" }
+        if !viewModel.isModelLoaded { return "Load a model first" }
         let hasText = !viewModel.userInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         return hasText ? "Send message (⌘↩)" : "Type a message"
     }
@@ -369,14 +265,6 @@ struct ChatView: View {
             .buttonStyle(.plain)
             .help("Git helper")
 
-            // GitHub panel button
-            Button(action: { showingGitHubPanel = true }) {
-                Image(systemName: "globe")
-                    .foregroundColor(ModernColors.textPrimary)
-            }
-            .buttonStyle(.plain)
-            .help("GitHub Operations (⌘G)")
-
             // Build errors button
             if !buildErrors.isEmpty {
                 Button(action: { showingBuildErrors = true }) {
@@ -399,24 +287,6 @@ struct ChatView: View {
             .buttonStyle(.plain)
             .help("Toggle Log Viewer (⌘L)")
             .keyboardShortcut("l", modifiers: .command)
-
-            // Image generation button
-            Button(action: { showingImageGeneration = true }) {
-                Image(systemName: "photo.on.rectangle.angled")
-                    .foregroundColor(ModernColors.textPrimary)
-            }
-            .buttonStyle(.plain)
-            .help("Image Generation (⌘I)")
-            .keyboardShortcut("i", modifiers: .command)
-
-            // Voice cloning button
-            Button(action: { showingVoiceCloning = true }) {
-                Image(systemName: "waveform.and.mic")
-                    .foregroundColor(ModernColors.textPrimary)
-            }
-            .buttonStyle(.plain)
-            .help("Voice Cloning (⌘V)")
-            .keyboardShortcut("v", modifiers: .command)
 
             // Help button
             Button(action: { showingHelp = true }) {
@@ -623,27 +493,18 @@ struct ChatView: View {
                 )
             }
 
-            // Performance metrics with speedometer gauges
+            // Performance metrics (text-based)
             if viewModel.isGenerating && viewModel.showPerformanceMetrics && !viewModel.isWaitingForFirstToken {
-                HStack(spacing: 16) {
-                    // Token count gauge
-                    SpeedometerGaugeView(
-                        value: Double(viewModel.currentTokenCount),
-                        maxValue: Double(viewModel.maxTokens),
-                        label: "Tokens",
-                        valueText: formatTokenCount(viewModel.currentTokenCount),
-                        size: 70
-                    )
+                HStack(spacing: 12) {
+                    Text("\(formatTokenCount(viewModel.currentTokenCount)) tokens")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
 
-                    // Tokens per second gauge
                     if viewModel.tokensPerSecond > 0 {
-                        SpeedometerGaugeView(
-                            value: viewModel.tokensPerSecond,
-                            maxValue: 200, // Reasonable max speed
-                            label: "t/s",
-                            valueText: String(format: "%.0f", viewModel.tokensPerSecond),
-                            size: 70
-                        )
+                        Text("\(String(format: "%.0f", viewModel.tokensPerSecond)) t/s")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.green)
                     }
                 }
                 .padding(.horizontal, 8)
@@ -998,11 +859,8 @@ struct BuildIssueRow: View {
 struct SheetsModifier: ViewModifier {
     @Binding var showingSettings: Bool
     @Binding var showingGitHelper: Bool
-    @Binding var showingGitHubPanel: Bool
     @Binding var showingBuildErrors: Bool
     @Binding var showingHelp: Bool
-    @Binding var showingImageGeneration: Bool
-    @Binding var showingVoiceCloning: Bool
     @Binding var gitStatus: GitStatus?
     let buildErrors: [BuildIssue]
 
@@ -1014,23 +872,11 @@ struct SheetsModifier: ViewModifier {
             .sheet(isPresented: $showingGitHelper) {
                 GitHelperView(gitStatus: $gitStatus)
             }
-            .sheet(isPresented: $showingGitHubPanel) {
-                GitHubPanelView()
-            }
             .sheet(isPresented: $showingBuildErrors) {
                 BuildErrorsView(errors: buildErrors)
             }
             .sheet(isPresented: $showingHelp) {
                 HelpView()
-            }
-            .sheet(isPresented: $showingImageGeneration) {
-                ImageGenerationPanel()
-                    .environmentObject(AppSettings.shared)
-                    .frame(minWidth: 900, minHeight: 600)
-            }
-            .sheet(isPresented: $showingVoiceCloning) {
-                VoiceCloningPanel()
-                    .frame(minWidth: 900, minHeight: 600)
             }
     }
 }

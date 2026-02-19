@@ -218,67 +218,66 @@ struct SlashCommand: Identifiable {
 
     private static func commitHandler(_ args: [String]) async throws -> String {
         let repoPath = FileManager.default.currentDirectoryPath
-        return try await GitAIService.shared.generateCommitMessage(repoPath: repoPath)
+        let message = try await GitService.shared.generateCommitMessage(in: repoPath)
+        return message
     }
 
     private static func prHandler(_ args: [String]) async throws -> String {
-        let repoPath = FileManager.default.currentDirectoryPath
-        let baseBranch = args.first ?? "main"
-        let (title, description) = try await GitAIService.shared.generatePRDescription(
-            repoPath: repoPath,
-            baseBranch: baseBranch
-        )
-        return "**\(title)**\n\n\(description)"
+        return "Use git and the model to generate PR descriptions via chat."
     }
 
     private static func reviewHandler(_ args: [String]) async throws -> String {
         let repoPath = FileManager.default.currentDirectoryPath
-        return try await GitAIService.shared.reviewChanges(repoPath: repoPath)
+        let staged = try await GitService.shared.getStagedChanges(in: repoPath)
+        let unstaged = try await GitService.shared.getUnstagedChanges(in: repoPath)
+        let diff = staged.isEmpty ? unstaged : staged
+        let prompt = "Review these code changes and identify any issues:\n\n\(diff)"
+        return try await MLXService.shared.generate(prompt: prompt)
     }
 
     private static func testHandler(_ args: [String]) async throws -> String {
         guard let filePath = args.first else {
             throw SlashCommandError.missingArgument("file-path")
         }
-
         let code = try String(contentsOfFile: filePath, encoding: .utf8)
-        return try await SmartCodeActions.shared.generateTests(code, language: "swift")
+        let prompt = "Generate unit tests for this Swift code:\n\n```swift\n\(code)\n```"
+        return try await MLXService.shared.generate(prompt: prompt)
     }
 
     private static func docsHandler(_ args: [String]) async throws -> String {
         guard let filePath = args.first else {
             throw SlashCommandError.missingArgument("file-path")
         }
-
         let code = try String(contentsOfFile: filePath, encoding: .utf8)
-        return try await SmartCodeActions.shared.generateDocumentation(code)
+        let prompt = "Generate documentation for this code:\n\n```swift\n\(code)\n```"
+        return try await MLXService.shared.generate(prompt: prompt)
     }
 
     private static func refactorHandler(_ args: [String]) async throws -> String {
         guard let filePath = args.first else {
             throw SlashCommandError.missingArgument("file-path")
         }
-
         let code = try String(contentsOfFile: filePath, encoding: .utf8)
-        return try await SmartCodeActions.shared.refactorCode(code)
+        let prompt = "Suggest refactoring improvements for this code:\n\n```swift\n\(code)\n```"
+        return try await MLXService.shared.generate(prompt: prompt)
     }
 
     private static func explainHandler(_ args: [String]) async throws -> String {
         guard let filePath = args.first else {
             throw SlashCommandError.missingArgument("file-path")
         }
-
         let code = try String(contentsOfFile: filePath, encoding: .utf8)
-        return try await SmartCodeActions.shared.explainCode(code)
+        let prompt = "Explain what this code does:\n\n```swift\n\(code)\n```"
+        return try await MLXService.shared.generate(prompt: prompt)
     }
 
     private static func optimizeHandler(_ args: [String]) async throws -> String {
         guard let filePath = args.first else {
             throw SlashCommandError.missingArgument("file-path")
         }
-
         let code = try String(contentsOfFile: filePath, encoding: .utf8)
-        return try await SmartCodeActions.shared.optimizeCode(code)
+        let prompt = "Optimize this code for performance:\n\n```swift\n\(code)\n```"
+        return try await MLXService.shared.generate(prompt: prompt)
     }
 
     private static func indexHandler(_ args: [String]) async throws -> String {

@@ -3,22 +3,18 @@
 //  MLX Code
 //
 //  Tool tiering system to minimize system prompt size.
-//  Only core tools are included in the prompt; others are available on-demand.
-//  Created on 2026-02-19.
+//  Core tools always in prompt; development tools when project is open.
+//  Created on 2026-02-19. Updated 2026-02-19.
 //
 
 import Foundation
 
 /// Tool tier classification for context-budget-aware tool inclusion
 enum ToolTier: Int, CaseIterable, Comparable {
-    /// Always included in system prompt (file ops, bash, grep, glob)
+    /// Always included in system prompt (file ops, bash, grep, glob, edit)
     case core = 0
-    /// Included when a project is open (xcode, git, code navigation)
+    /// Included when a project is open (xcode, git, error diagnosis, test gen, code nav, diff)
     case development = 1
-    /// Included only when explicitly requested (image gen, video gen, TTS)
-    case media = 2
-    /// Never in prompt, available via "list tools" command
-    case advanced = 3
 
     static func < (lhs: ToolTier, rhs: ToolTier) -> Bool {
         lhs.rawValue < rhs.rawValue
@@ -31,18 +27,13 @@ struct ToolTierClassifier {
     /// Returns the tier for a given tool name
     static func tier(for toolName: String) -> ToolTier {
         switch toolName {
-        // Core: always in prompt
-        case "file_operations", "bash", "grep", "glob":
+        case "file_operations", "bash", "grep", "glob", "edit":
             return .core
-        // Development: when project is open
-        case "xcode", "git_integration", "code_navigation", "test_generation", "github":
+        case "xcode", "git_integration", "code_navigation", "test_generation",
+             "error_diagnosis", "diff_preview", "help":
             return .development
-        // Media: on-demand
-        case "image_generation", "local_image_generation", "native_tts", "mlx_audio", "voice_cloning":
-            return .media
-        // Everything else is advanced
         default:
-            return .advanced
+            return .development
         }
     }
 
