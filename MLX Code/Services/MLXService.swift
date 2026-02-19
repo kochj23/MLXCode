@@ -44,6 +44,12 @@ actor MLXService {
     /// Daemon health check task
     private var healthCheckTask: Task<Void, Never>?
 
+    /// Context window size reported by loaded model (nil if unknown)
+    private(set) var loadedModelContextWindow: Int?
+
+    /// Whether the loaded model's tokenizer supports chat templates
+    private(set) var hasChatTemplateSupport: Bool = false
+
     private init() {
         // Start daemon on init
         Task {
@@ -172,8 +178,15 @@ actor MLXService {
         loadedModel = model
         isModelLoaded = true
 
+        // Store context window and chat template info from daemon
+        if let contextWindow = response.context_window {
+            loadedModelContextWindow = contextWindow
+            await SecureLogger.shared.info("📐 Model context window: \(contextWindow) tokens", category: "MLXService")
+        }
+        hasChatTemplateSupport = response.has_chat_template ?? false
+
         await LogManager.shared.info("Model loaded successfully: \(model.name)", category: "MLX")
-        await SecureLogger.shared.info("✅ MLX model loaded successfully: \(model.name)", category: "MLXService")
+        await SecureLogger.shared.info("✅ MLX model loaded successfully: \(model.name) (context: \(loadedModelContextWindow ?? 8192), chat_template: \(hasChatTemplateSupport))", category: "MLXService")
     }
 
     /// Unloads the currently loaded model
@@ -312,7 +325,9 @@ actor MLXService {
         return fullResponse
     }
 
-    /// Generates a chat completion
+    /// Generates a chat completion using structured messages
+    /// Uses tokenizer's chat template via chat_generate for proper role formatting.
+    /// Falls back to legacy prompt formatting if chat_generate isn't supported.
     /// - Parameters:
     ///   - messages: Array of chat messages
     ///   - parameters: Generation parameters
@@ -326,21 +341,92 @@ actor MLXService {
     ) async throws -> String {
         await SecureLogger.shared.info("🔵 chatCompletion() called with \(messages.count) messages", category: "MLXService")
 
-        // Convert messages to prompt format
+        // Ensure model is loaded
+        guard isModelLoaded, let model = loadedModel else {
+            await SecureLogger.shared.error("❌ No model loaded", category: "MLXService")
+            throw MLXServiceError.noModelLoaded
+        }
+
+        guard !isInferenceRunning else {
+            await SecureLogger.shared.warning("⚠️ Inference already in progress", category: "MLXService")
+            throw MLXServiceError.inferenceInProgress
+        }
+
+        isInferenceRunning = true
+        defer { isInferenceRunning = false }
+
+        let genParams = parameters ?? model.parameters
+        guard genParams.isValid() else {
+            await SecureLogger.shared.error("❌ Invalid parameters", category: "MLXService")
+            throw MLXServiceError.invalidParameters
+        }
+
+        // Convert messages to JSON-serializable dicts for daemon
+        let messageDicts: [[String: String]] = messages.map { msg in
+            [
+                "role": msg.role.rawValue,
+                "content": SecurityUtils.sanitizeUserInput(msg.content)
+            ]
+        }
+
+        await SecureLogger.shared.info("📤 Sending chat_generate with \(messageDicts.count) messages", category: "MLXService")
+
+        // Send chat_generate command (uses tokenizer's chat template on Python side)
+        let chatCommand: [String: Any] = [
+            "type": "chat_generate",
+            "messages": messageDicts,
+            "max_tokens": genParams.maxTokens,
+            "temperature": genParams.temperature,
+            "top_p": genParams.topP,
+            "repetition_penalty": genParams.repetitionPenalty
+        ]
+
+        try await sendDaemonCommand(chatCommand)
+
+        var fullResponse = ""
+
+        // Read streaming responses
+        while true {
+            let response = try await readDaemonResponse()
+
+            if response.type == "token" {
+                if let token = response.token {
+                    fullResponse += token
+                    streamHandler?(token)
+                }
+            } else if response.type == "complete" || response.type == "done" {
+                await SecureLogger.shared.info("✅ chat_generate complete, response length: \(fullResponse.count)", category: "MLXService")
+                break
+            } else if response.type == "debug" {
+                // Log debug messages from daemon
+                if let message = response.message {
+                    await SecureLogger.shared.info("🐛 Daemon: \(message)", category: "MLXService")
+                }
+            } else if response.type == "error" {
+                // If chat_generate fails (e.g., old daemon), fall back to legacy
+                let errorMsg = response.error ?? "Unknown error"
+                if errorMsg.contains("Unknown command type") {
+                    await SecureLogger.shared.warning("⚠️ Daemon doesn't support chat_generate, falling back to legacy", category: "MLXService")
+                    isInferenceRunning = false
+                    return try await legacyChatCompletion(messages: messages, parameters: parameters, streamHandler: streamHandler)
+                }
+                throw MLXServiceError.generationFailed(errorMsg)
+            }
+        }
+
+        await SecureLogger.shared.info("✅ chatCompletion() returning response (length: \(fullResponse.count))", category: "MLXService")
+        return fullResponse
+    }
+
+    /// Legacy chat completion using flat prompt format (fallback)
+    private func legacyChatCompletion(
+        messages: [Message],
+        parameters: ModelParameters? = nil,
+        streamHandler: ((String) -> Void)? = nil
+    ) async throws -> String {
+        await SecureLogger.shared.info("🔶 legacyChatCompletion() fallback with \(messages.count) messages", category: "MLXService")
         let prompt = formatMessagesAsPrompt(messages)
-        await SecureLogger.shared.info("✅ Formatted prompt (length: \(prompt.count) chars)", category: "MLXService")
-        await SecureLogger.shared.info("📝 Prompt preview: \(prompt.prefix(200))...", category: "MLXService")
-
-        // Generate response
-        await SecureLogger.shared.info("🔄 Calling generate() with prompt...", category: "MLXService")
-        let result = try await generate(
-            prompt: prompt,
-            parameters: parameters,
-            streamHandler: streamHandler
-        )
-
-        await SecureLogger.shared.info("✅ chatCompletion() returning response (length: \(result.count))", category: "MLXService")
-        return result
+        return try await generate(prompt: prompt, parameters: parameters, streamHandler: streamHandler)
     }
 
     // MARK: - Model Discovery
@@ -757,6 +843,8 @@ private struct PythonResponse: Codable {
     let size_gb: Double?  // Model size in GB
     let quantization: String?  // Quantization level
     let converted_to_mlx: Bool?  // Whether model was converted
+    let context_window: Int?  // Context window size from model config
+    let has_chat_template: Bool?  // Whether tokenizer supports chat templates
 }
 
 // MARK: - Error Types

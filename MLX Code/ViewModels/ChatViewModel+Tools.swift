@@ -32,27 +32,40 @@ extension ChatViewModel {
 
     // MARK: - Tool Call Detection
 
-    /// Check if response contains tool calls
+    /// Check if response contains tool calls (new JSON or legacy format)
     func containsToolCalls(_ text: String) -> Bool {
-        return text.contains("<tool_call>")
+        return text.contains("<tool>") || text.contains("<tool_call>")
     }
 
-    /// Extract tool calls from text
+    /// Extract tool calls from text (supports both new JSON and legacy formats)
     func extractToolCalls(_ text: String) -> [String] {
         var toolCalls: [String] = []
 
-        let pattern = "<tool_call>\\s*(.+?)\\s*</tool_call>"
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.dotMatchesLineSeparators]) else {
-            return toolCalls
+        // New format: <tool>JSON</tool>
+        let newPattern = "<tool>\\s*(.+?)\\s*</tool>"
+        if let regex = try? NSRegularExpression(pattern: newPattern, options: [.dotMatchesLineSeparators]) {
+            let nsString = text as NSString
+            let matches = regex.matches(in: text, range: NSRange(location: 0, length: nsString.length))
+            for match in matches {
+                if let range = Range(match.range(at: 1), in: text) {
+                    let toolCall = String(text[range]).trimmingCharacters(in: .whitespacesAndNewlines)
+                    toolCalls.append(toolCall)
+                }
+            }
         }
 
-        let nsString = text as NSString
-        let matches = regex.matches(in: text, range: NSRange(location: 0, length: nsString.length))
-
-        for match in matches {
-            if let range = Range(match.range(at: 1), in: text) {
-                let toolCall = String(text[range]).trimmingCharacters(in: .whitespacesAndNewlines)
-                toolCalls.append(toolCall)
+        // Also check legacy format: <tool_call>...</tool_call>
+        if toolCalls.isEmpty {
+            let legacyPattern = "<tool_call>\\s*(.+?)\\s*</tool_call>"
+            if let regex = try? NSRegularExpression(pattern: legacyPattern, options: [.dotMatchesLineSeparators]) {
+                let nsString = text as NSString
+                let matches = regex.matches(in: text, range: NSRange(location: 0, length: nsString.length))
+                for match in matches {
+                    if let range = Range(match.range(at: 1), in: text) {
+                        let toolCall = String(text[range]).trimmingCharacters(in: .whitespacesAndNewlines)
+                        toolCalls.append(toolCall)
+                    }
+                }
             }
         }
 
@@ -61,7 +74,7 @@ extension ChatViewModel {
 
     // MARK: - Tool Execution
 
-    /// Execute tool calls from LLM response
+    /// Execute tool calls from LLM response (supports JSON and legacy formats)
     func executeToolCalls(_ toolCalls: [String]) async -> [ToolResult] {
         var results: [ToolResult] = []
 
@@ -70,8 +83,16 @@ extension ChatViewModel {
 
             do {
                 let context = createToolContext()
-                let result = try await toolRegistry.parseAndExecuteToolCall(toolCall, context: context)
-                results.append(result)
+
+                // Try JSON format first, then fall back to legacy
+                if let (name, params) = toolRegistry.parseToolCallJSON(toolCall) {
+                    let result = try await toolRegistry.executeTool(name: name, parameters: params, context: context)
+                    results.append(result)
+                } else {
+                    // Direct legacy parse
+                    let result = try await toolRegistry.parseAndExecuteToolCall(toolCall, context: context)
+                    results.append(result)
+                }
 
                 logInfo("Tool execution succeeded: \(toolCall)", category: "ChatViewModel+Tools")
             } catch {
@@ -146,36 +167,89 @@ extension ChatViewModel {
         }
     }
 
-    /// Handle tool calls found in assistant response
+    /// Handle tool calls found in assistant response (with approval flow)
     func handleToolCallsInResponse(_ response: String) async {
-        let toolCalls = extractToolCalls(response)
+        let toolCallStrings = extractToolCalls(response)
+        guard !toolCallStrings.isEmpty else { return }
 
-        guard !toolCalls.isEmpty else { return }
+        logInfo("Found \(toolCallStrings.count) tool call(s) in response", category: "ChatViewModel+Tools")
 
-        logInfo("Found \(toolCalls.count) tool call(s) in response", category: "ChatViewModel+Tools")
-
-        // Execute tool calls
-        let results = await executeToolCalls(toolCalls)
-
-        // Format results as user message
-        var resultText = "# Tool Execution Results\n\n"
-        for (index, result) in results.enumerated() {
-            resultText += "## Tool Call \(index + 1)\n"
-            resultText += result.toJSON()
-            resultText += "\n\n"
+        // Parse tool calls into PendingToolCall structs
+        var pending: [PendingToolCall] = []
+        for rawCall in toolCallStrings {
+            if let (name, params) = toolRegistry.parseToolCallJSON(rawCall) {
+                var call = PendingToolCall(toolName: name, parameters: params, rawJSON: rawCall)
+                // Check approval policy
+                call.approved = toolApprovalPolicy.shouldAutoApprove(toolName: name, parameters: params)
+                pending.append(call)
+            } else {
+                // Legacy format — try to parse it
+                var call = PendingToolCall(toolName: rawCall, parameters: [:], rawJSON: rawCall)
+                call.approved = toolApprovalPolicy == .autoApproveAll
+                pending.append(call)
+            }
         }
 
-        // Add results as system message with collapsible metadata
+        // If any calls need approval, show the approval UI and wait
+        let needsApproval = pending.contains { !$0.approved }
+        if needsApproval {
+            logInfo("Tool calls need user approval", category: "ChatViewModel+Tools")
+            pendingToolCalls = pending
+            // UI will display ToolApprovalView; user calls approvePendingTools() or denyPendingTools()
+            return
+        }
+
+        // All auto-approved, execute immediately
+        await executePendingToolCalls(pending)
+    }
+
+    /// Called by UI when user approves pending tool calls
+    func approvePendingTools() async {
+        var approved = pendingToolCalls
+        for i in approved.indices {
+            approved[i].approved = true
+        }
+        pendingToolCalls = []
+        await executePendingToolCalls(approved)
+    }
+
+    /// Called by UI when user denies pending tool calls
+    func denyPendingTools() {
+        let deniedNames = pendingToolCalls.map(\.toolName).joined(separator: ", ")
+        var deniedMessage = Message.system("Tool calls denied by user: \(deniedNames)")
+        deniedMessage.metadata = ["collapsible": "true", "collapsed": "true"]
+        currentConversation?.addMessage(deniedMessage)
+        pendingToolCalls = []
+    }
+
+    /// Execute approved tool calls and continue the agentic loop
+    private func executePendingToolCalls(_ calls: [PendingToolCall]) async {
+        let approvedCalls = calls.filter(\.approved)
+        guard !approvedCalls.isEmpty else { return }
+
+        let results = await executeToolCalls(approvedCalls.map(\.rawJSON))
+
+        // Format results compactly for the model
+        var resultText = ""
+        for (index, result) in results.enumerated() {
+            resultText += "<tool_result>\n"
+            resultText += result.toJSON()
+            resultText += "\n</tool_result>\n"
+            if index < results.count - 1 { resultText += "\n" }
+        }
+
+        // Add results as system message
         var resultMessage = Message.system(resultText)
         resultMessage.metadata = ["collapsible": "true", "collapsed": "true"]
         currentConversation?.addMessage(resultMessage)
 
-        // Trigger another generation to process results
+        // Continue the agentic loop — generate follow-up response
         if !results.isEmpty && results.allSatisfy({ $0.success }) {
-            logInfo("All tools succeeded, generating follow-up response", category: "ChatViewModel+Tools")
+            logInfo("All tools succeeded, continuing agentic loop", category: "ChatViewModel+Tools")
             await generateResponse()
         } else if !results.isEmpty {
-            logInfo("Some tools failed, results added to conversation but not regenerating", category: "ChatViewModel+Tools")
+            logInfo("Some tools failed, generating follow-up with error context", category: "ChatViewModel+Tools")
+            await generateResponse()
         }
     }
 

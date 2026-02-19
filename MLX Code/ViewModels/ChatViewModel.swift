@@ -76,6 +76,12 @@ class ChatViewModel: ObservableObject {
     /// Whether video/image is generating
     @Published var isGeneratingMedia: Bool = false
 
+    /// Pending tool calls awaiting user approval
+    @Published var pendingToolCalls: [PendingToolCall] = []
+
+    /// Tool approval policy (default: auto-approve read-only tools)
+    @Published var toolApprovalPolicy: ToolApprovalPolicy = .autoApproveRead
+
     // MARK: - Private Properties
 
     private var cancellables = Set<AnyCancellable>()
@@ -809,13 +815,28 @@ class ChatViewModel: ObservableObject {
         var shouldStopGeneration = false
 
         do {
-            logInfo("🔵 Calling MLXService.shared.chatCompletion()...", category: "ChatViewModel")
-            logInfo("📤 Sending \(conversation.messages.count) messages to MLX service", category: "ChatViewModel")
+            logInfo("🔵 Assembling context and calling MLXService...", category: "ChatViewModel")
+
+            // Build context budget from loaded model
+            let selectedModel = AppSettings.shared.selectedModel
+            let daemonContextWindow = await MLXService.shared.loadedModelContextWindow
+            let budget = ContextBudget.forModel(selectedModel, daemonContextWindow: daemonContextWindow)
+            logInfo("📐 Context budget: total=\(budget.totalBudget), recent=\(budget.recentMessagesBudget), project=\(budget.projectContextBudget), summary=\(budget.summaryBudget)", category: "ChatViewModel")
+
+            // Assemble optimized context within budget
+            let systemPrompt = generateSystemPrompt()
+            let optimizedMessages = await ContextManager.shared.assembleContext(
+                messages: conversation.messages,
+                systemPrompt: systemPrompt,
+                projectPath: AppSettings.shared.projectPath,
+                budget: budget
+            )
+            logInfo("📤 Sending \(optimizedMessages.count) optimized messages (from \(conversation.messages.count) total)", category: "ChatViewModel")
 
             // Get response from MLX service with streaming
             let response = try await MLXService.shared.chatCompletion(
-                messages: conversation.messages,
-                parameters: AppSettings.shared.selectedModel?.parameters,
+                messages: optimizedMessages,
+                parameters: selectedModel?.parameters,
                 streamHandler: { [weak self] token in
                     Task { @MainActor [weak self] in
                         guard let self = self else { return }
@@ -848,7 +869,8 @@ class ChatViewModel: ObservableObject {
                         }
 
                         // Check for tool calls - stop generation if complete tool call detected
-                        if accumulatedResponse.contains("</tool_call>") {
+                        // Support both new <tool> and legacy <tool_call> formats
+                        if accumulatedResponse.contains("</tool>") || accumulatedResponse.contains("</tool_call>") {
                             logInfo("🔧 Tool call detected in response! Stopping generation to execute tools.", category: "ChatViewModel")
                             shouldStopGeneration = true
                             await PythonService.shared.terminate()

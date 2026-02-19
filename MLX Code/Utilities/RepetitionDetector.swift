@@ -165,8 +165,8 @@ class RepetitionDetector {
 /// Extension to ChatViewModel for repetition detection
 extension ChatViewModel {
     /// Maximum response length in characters
-    static let maxResponseLength = 8000
+    static let maxResponseLength = 16000
 
     /// Maximum response length in tokens (approximate)
-    static let maxResponseTokens = 2000
+    static let maxResponseTokens = 4096
 }

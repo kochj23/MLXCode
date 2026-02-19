@@ -13,5 +13,9 @@
 			<string>com.apple.dt.Xcode</string>
 		</array>
 	</dict>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.jkoch.mlxcode</string>
+	</array>
 </dict>
 </plist>

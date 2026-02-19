@@ -84,7 +84,7 @@ struct SystemPrompts {
     - Act as if you directly have all information
     """
 
-    /// Generate full system prompt with tools
+    /// Generate full system prompt with tools (compact format for small context windows)
     @MainActor
     static func generateSystemPrompt(includeTools: Bool = true) -> String {
         var prompt = baseSystemPrompt
@@ -92,36 +92,61 @@ struct SystemPrompts {
         if includeTools {
             let toolRegistry = ToolRegistry.shared
             prompt += "\n\n"
-            prompt += toolRegistry.generateToolDescriptions()
 
-            // Add clear tool calling instructions
+            // Use compact tiered tool descriptions instead of dumping all 40+ tools
+            let maxTier: ToolTier = AppSettings.shared.projectPath != nil ? .development : .core
+            let compactTools = ToolTierClassifier.compactDescriptions(
+                maxTier: maxTier,
+                tools: toolRegistry.getAllTools()
+            )
+            prompt += "# Tools\n\n"
+            prompt += "To use a tool, respond with:\n"
+            prompt += "<tool>\n{\"name\": \"tool_name\", \"args\": {\"param\": \"value\"}}\n</tool>\n\n"
+            prompt += "Available tools:\n"
+            prompt += compactTools
+            prompt += "\n\n"
+
+            // Few-shot examples (critical for local models)
+            prompt += toolCallingExamples
+
+            // Media keywords
             prompt += """
 
-            # CRITICAL: Tool Usage is OPTIONAL - Use KEYWORDS Instead
-
-            For images/videos/speech, DO NOT use <tool_call> tags.
-            Instead, just tell the user to use KEYWORDS:
+            For images/videos/speech, use KEYWORDS (not tools):
             - "Generate image: sunset" (for images)
             - "Generate video: rotating cube" (for videos)
             - "Speak: Hello" (for speech)
 
-            These keywords are detected automatically - NO tools needed!
-
-            For file/bash operations, you CAN use tools IF ASKED:
-            <tool_call>file_operations(operation="read", path="/path/to/file.swift")</tool_call>
-            <tool_call>bash(command="ls -la")</tool_call>
-
-            IMPORTANT RULES:
-            - NEVER make up fake tools (no "security_scanner", "dependencies", "scheme")
-            - NEVER hallucinate tool results
-            - If you don't have a tool, say so honestly
-            - For images/videos/speech: Tell user to use keywords (they work better!)
-            - ONLY use tools that exist in the tool list above
+            Rules:
+            - Only use tools listed above. Never invent tools.
+            - Call one tool at a time. Wait for results before calling another.
+            - Never hallucinate tool results.
             """
         }
 
         return prompt
     }
+
+    /// Few-shot examples for tool calling (compact, ~150 tokens)
+    static let toolCallingExamples = """
+    Examples:
+
+    User: Read main.swift
+    Assistant: <tool>
+    {"name": "file_operations", "args": {"operation": "read", "path": "main.swift"}}
+    </tool>
+
+    User: List files in src/
+    Assistant: <tool>
+    {"name": "bash", "args": {"command": "ls -la src/"}}
+    </tool>
+
+    User: Find TODO comments
+    Assistant: <tool>
+    {"name": "grep", "args": {"pattern": "TODO", "path": "."}}
+    </tool>
+
+    """
 
     /// Prompt for specific coding tasks
     static func taskPrompt(task: String, context: String = "") -> String {

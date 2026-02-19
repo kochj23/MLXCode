@@ -287,6 +287,73 @@ class ToolRegistry: ObservableObject {
         // Return empty - examples cause LLM to copy verbatim
         return ""
     }
+
+    // MARK: - JSON Tool Call Parsing
+
+    /// Parse a JSON-format tool call: {"name": "tool_name", "args": {...}}
+    func parseToolCallJSON(_ text: String) -> (name: String, parameters: [String: Any])? {
+        // Try to parse as JSON
+        guard let data = text.data(using: .utf8),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let name = json["name"] as? String else {
+            // Fall back to legacy format
+            return parseToolCallLegacy(text)
+        }
+
+        let args = json["args"] as? [String: Any]
+            ?? json["parameters"] as? [String: Any]
+            ?? [:]
+
+        // Convert all values to strings for compatibility with existing tool implementations
+        var stringParams: [String: Any] = [:]
+        for (key, value) in args {
+            if let stringValue = value as? String {
+                stringParams[key] = stringValue
+            } else if let intValue = value as? Int {
+                stringParams[key] = String(intValue)
+            } else if let boolValue = value as? Bool {
+                stringParams[key] = String(boolValue)
+            } else {
+                stringParams[key] = "\(value)"
+            }
+        }
+
+        return (name, stringParams)
+    }
+
+    /// Legacy tool call parser: tool_name(param1=value1, param2="value2")
+    private func parseToolCallLegacy(_ text: String) -> (name: String, parameters: [String: Any])? {
+        let pattern = #"(\w+)\((.*?)\)"#
+        guard let regex = try? NSRegularExpression(pattern: pattern),
+              let match = regex.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)) else {
+            return nil
+        }
+
+        guard let nameRange = Range(match.range(at: 1), in: text) else {
+            return nil
+        }
+        let toolName = String(text[nameRange])
+
+        var parameters: [String: Any] = [:]
+        if let paramsRange = Range(match.range(at: 2), in: text) {
+            let paramsText = String(text[paramsRange])
+            let paramPairs = paramsText.components(separatedBy: ",")
+            for pair in paramPairs {
+                let trimmed = pair.trimmingCharacters(in: .whitespaces)
+                let components = trimmed.components(separatedBy: "=")
+                if components.count == 2 {
+                    let key = components[0].trimmingCharacters(in: .whitespaces)
+                    var value = components[1].trimmingCharacters(in: .whitespaces)
+                    if value.hasPrefix("\"") && value.hasSuffix("\"") {
+                        value = String(value.dropFirst().dropLast())
+                    }
+                    parameters[key] = value
+                }
+            }
+        }
+
+        return (toolName, parameters)
+    }
 }
 
 /// Summary of tool execution
