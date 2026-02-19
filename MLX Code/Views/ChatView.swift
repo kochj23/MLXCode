@@ -457,6 +457,19 @@ struct ChatView: View {
                                 MessageRowView(message: message)
                                     .id(message.id)
                             }
+
+                            // Tool approval inline view
+                            if !viewModel.pendingToolCalls.isEmpty {
+                                ToolApprovalView(
+                                    pendingCalls: viewModel.pendingToolCalls,
+                                    onApprove: {
+                                        Task { await viewModel.approvePendingTools() }
+                                    },
+                                    onDeny: {
+                                        viewModel.denyPendingTools()
+                                    }
+                                )
+                            }
                         } else {
                             // Welcome message - top aligned
                             VStack(alignment: .leading, spacing: 20) {

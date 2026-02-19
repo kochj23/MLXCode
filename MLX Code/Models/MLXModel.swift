@@ -35,6 +35,9 @@ struct MLXModel: Identifiable, Codable, Equatable, Hashable {
     /// Model description
     var description: String?
 
+    /// Maximum context window size in tokens (detected from model config)
+    var contextWindowSize: Int?
+
     /// Initializes a new MLX model configuration
     /// - Parameters:
     ///   - id: Unique identifier (defaults to new UUID)
@@ -53,7 +56,8 @@ struct MLXModel: Identifiable, Codable, Equatable, Hashable {
         isDownloaded: Bool = false,
         sizeInBytes: Int64? = nil,
         huggingFaceId: String? = nil,
-        description: String? = nil
+        description: String? = nil,
+        contextWindowSize: Int? = nil
     ) {
         self.id = id
         self.name = name
@@ -63,6 +67,7 @@ struct MLXModel: Identifiable, Codable, Equatable, Hashable {
         self.sizeInBytes = sizeInBytes
         self.huggingFaceId = huggingFaceId
         self.description = description
+        self.contextWindowSize = contextWindowSize
     }
 }
 
@@ -96,11 +101,11 @@ struct ModelParameters: Codable, Equatable, Hashable {
     ///   - repetitionContextSize: Context size for repetition (default: 64, look back farther)
     init(
         temperature: Double = 0.7,
-        maxTokens: Int = 512,  // Reduced from 2048 to prevent infinite generation
+        maxTokens: Int = 2048,  // Restored: chat templates + RepetitionDetector prevent loops
         topP: Double = 0.9,
         topK: Int = 40,
-        repetitionPenalty: Double = 1.8,  // Increased from 1.2 to heavily penalize repetition
-        repetitionContextSize: Int = 256  // Increased from 64 to look back farther for repetition
+        repetitionPenalty: Double = 1.8,  // Keep high to penalize repetition
+        repetitionContextSize: Int = 256  // Keep wide lookback for repetition detection
     ) {
         self.temperature = temperature
         self.maxTokens = maxTokens
@@ -227,86 +232,95 @@ extension MLXModel {
             MLXModel(
                 name: "Qwen 2.5 7B ⭐ RECOMMENDED",
                 path: "\(modelBasePath)/qwen-2.5-7b",
-                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                parameters: ModelParameters(),
                 isDownloaded: false,
                 huggingFaceId: "mlx-community/Qwen2.5-7B-Instruct-4bit",
-                description: "Alibaba's Qwen 2.5 - Excellent quality, good instruction following. Best for coding. ~4GB"
+                description: "Alibaba's Qwen 2.5 - Excellent quality, good instruction following. Best for coding. ~4GB",
+                contextWindowSize: 32768
             ),
 
             MLXModel(
                 name: "Mistral 7B v0.3 ⭐ POPULAR",
                 path: "\(modelBasePath)/mistral-7b",
-                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                parameters: ModelParameters(),
                 isDownloaded: false,
                 huggingFaceId: "mlx-community/Mistral-7B-Instruct-v0.3-4bit",
-                description: "Mistral AI's 7B - Very popular, versatile, good for code. ~4GB"
+                description: "Mistral AI's 7B - Very popular, versatile, good for code. ~4GB",
+                contextWindowSize: 32768
             ),
 
             // Larger Models (Better Quality)
             MLXModel(
                 name: "Qwen 2.5 14B (Best Quality)",
                 path: "\(modelBasePath)/qwen-2.5-14b",
-                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                parameters: ModelParameters(),
                 isDownloaded: false,
                 huggingFaceId: "mlx-community/Qwen2.5-14B-Instruct-4bit",
-                description: "Qwen 2.5 14B - Best quality, slower but excellent results. ~8GB"
+                description: "Qwen 2.5 14B - Best quality, slower but excellent results. ~8GB",
+                contextWindowSize: 32768
             ),
 
             MLXModel(
                 name: "Llama 3.1 8B",
                 path: "\(modelBasePath)/llama-3.1-8b",
-                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                parameters: ModelParameters(),
                 isDownloaded: false,
                 huggingFaceId: "mlx-community/Meta-Llama-3.1-8B-Instruct-4bit",
-                description: "Meta's Llama 3.1 8B - Solid performance, good for general use. ~5GB"
+                description: "Meta's Llama 3.1 8B - Solid performance, good for general use. ~5GB",
+                contextWindowSize: 131072
             ),
 
             // Specialized Models
             MLXModel(
                 name: "DeepSeek Coder 6.7B",
                 path: "\(modelBasePath)/deepseek-coder",
-                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                parameters: ModelParameters(),
                 isDownloaded: false,
                 huggingFaceId: "mlx-community/deepseek-coder-6.7b-instruct",
-                description: "DeepSeek Coder - Specialized for code, excellent for programming tasks. ~4GB"
+                description: "DeepSeek Coder - Specialized for code, excellent for programming tasks. ~4GB",
+                contextWindowSize: 16384
             ),
 
             MLXModel(
                 name: "CodeLlama 7B",
                 path: "\(modelBasePath)/codellama-7b",
-                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                parameters: ModelParameters(),
                 isDownloaded: false,
                 huggingFaceId: "mlx-community/CodeLlama-7b-Instruct-hf-4bit-MLX",
-                description: "Meta's CodeLlama - Trained specifically for code generation. ~4GB"
+                description: "Meta's CodeLlama - Trained specifically for code generation. ~4GB",
+                contextWindowSize: 16384
             ),
 
             // Compact Models (Faster)
             MLXModel(
                 name: "Phi-3.5 Mini (Fast)",
                 path: "\(modelBasePath)/phi-3.5-mini",
-                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                parameters: ModelParameters(),
                 isDownloaded: false,
                 huggingFaceId: "mlx-community/Phi-3.5-mini-instruct-4bit",
-                description: "Microsoft's Phi-3.5 - Small but capable, very fast. ~2GB"
+                description: "Microsoft's Phi-3.5 - Small but capable, very fast. ~2GB",
+                contextWindowSize: 4096
             ),
 
             MLXModel(
                 name: "Gemma 2 9B",
                 path: "\(modelBasePath)/gemma-2-9b",
-                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                parameters: ModelParameters(),
                 isDownloaded: false,
                 huggingFaceId: "mlx-community/gemma-2-9b-it-4bit",
-                description: "Google's Gemma 2 9B - Excellent quality, good instruction following. ~5GB"
+                description: "Google's Gemma 2 9B - Excellent quality, good instruction following. ~5GB",
+                contextWindowSize: 8192
             ),
 
             // Keep original for backwards compatibility
             MLXModel(
                 name: "Llama 3.2 3B (Small - NOT RECOMMENDED)",
                 path: "\(modelBasePath)/llama-3.2-3b",
-                parameters: ModelParameters(temperature: 0.7, maxTokens: 512, topP: 0.9, topK: 40, repetitionPenalty: 1.8, repetitionContextSize: 256),
+                parameters: ModelParameters(),
                 isDownloaded: false,
                 huggingFaceId: "mlx-community/Llama-3.2-3B-Instruct-4bit",
-                description: "Meta's Llama 3.2 3B - Too small, causes loops. Use Qwen or Mistral instead. ~2GB"
+                description: "Meta's Llama 3.2 3B - Too small, causes loops. Use Qwen or Mistral instead. ~2GB",
+                contextWindowSize: 8192
             )
         ]
     }
