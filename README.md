@@ -1,431 +1,161 @@
-# MLX Code v1.2.0
+# MLX Code
 
 ![Build](https://github.com/kochj23/MLXCode/actions/workflows/build.yml/badge.svg)
+![Platform](https://img.shields.io/badge/platform-macOS%2014%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-**AI-powered coding assistant using Apple MLX for local, private code generation**
+**Local AI coding assistant for macOS, powered by Apple MLX.**
 
-Native macOS application leveraging Apple Silicon's Neural Engine for intelligent code assistance without cloud dependencies.
-
----
-
-## Screenshots
-
-![MLX Code Interface](Screenshots/main-window.png)
+MLX Code runs language models directly on your Mac using Apple Silicon. No cloud, no API keys, no subscriptions. Your code stays on your machine.
 
 ---
 
-## Download
+## What It Does
 
-Download the latest release: [MLX Code v1.3.0](https://github.com/kochj23/MLXCode/releases/latest)
+MLX Code is a chat-based coding assistant with tool calling. You describe what you need, and the model reads files, searches code, runs commands, and builds your project — all locally.
 
-Or build from source (see below).
+**11 built-in tools:**
 
----
+| Tool | What it does |
+|------|-------------|
+| **File Operations** | Read, write, edit, list, delete files |
+| **Bash** | Run shell commands |
+| **Grep** | Search file contents with regex |
+| **Glob** | Find files by pattern |
+| **Xcode** | Build, test, clean Xcode projects |
+| **Git** | Status, diff, commit, branch, log |
+| **Code Navigation** | Jump to definitions, find symbols |
+| **Error Diagnosis** | Analyze and explain build errors |
+| **Test Generation** | Create unit tests from source files |
+| **Diff Preview** | Show before/after file changes |
+| **Help** | List available commands and usage |
 
-## How MLX Code Compares
-
-| Feature | MLX Code | GitHub Copilot | Cursor | Continue.dev |
-|---------|----------|---------------|--------|-------------|
-| Runs 100% Locally | Yes | No | No | Partial |
-| No Cloud/Telemetry | Yes | No | No | Partial |
-| macOS Native (SwiftUI) | Yes | VS Code extension | Electron | VS Code extension |
-| Apple Silicon Optimized | Yes (MLX) | No | No | No |
-| Free & Open Source | Yes (MIT) | $10/mo | $20/mo | Yes |
-| Multiple LLM Backends | 10 backends | OpenAI only | Multiple | Multiple |
-| Works Offline | Yes | No | No | Partial |
-| No Account Required | Yes | GitHub account | Account | Optional |
-
----
-
-## What is MLX Code?
-
-MLX Code is a local LLM-powered coding assistant that bridges Apple's MLX toolkit with development workflows to provide intelligent code assistance, refactoring, documentation generation, and code review—all running locally on your Mac without any cloud dependencies.
-
-**Key Benefits:**
-- **100% Local**: All AI processing on your Mac (no cloud, no internet required)
-- **Apple Silicon Optimized**: Leverages Neural Engine for fast inference
-- **Privacy First**: Your code never leaves your machine
-- **Multi-Backend Support**: MLX, Ollama, TinyLLM, and cloud options
-- **Real-Time Assistance**: Context-aware code completion and suggestions
-
-**Perfect For:**
-- **Privacy-Conscious Developers**: Keep proprietary code local
-- **Offline Development**: Work without internet connection
-- **Apple Silicon Users**: Maximum performance on M1/M2/M3/M4
-- **Code Review**: Automated review with security analysis
-- **Documentation**: Auto-generate comprehensive docs
+**Slash commands:** `/commit`, `/review`, `/test`, `/docs`, `/refactor`, `/explain`, `/optimize`, `/fix`, `/search`, `/plan`, `/help`, `/clear`
 
 ---
 
-## What's New in v1.2.0 (February 2026)
+## How It Works
 
-### macOS Widget Extension
-**Desktop widget for monitoring MLX Code status:**
+1. You type a message (e.g., "Find all TODO comments in the project")
+2. The model generates a tool call: `<tool>{"name": "grep", "args": {"pattern": "TODO", "path": "."}}</tool>`
+3. MLX Code executes the tool and feeds results back to the model
+4. The model responds with findings or takes the next action
 
-- **Small Widget**: Compact view showing model status and name
-- **Medium Widget**: Status, metrics, and quick action buttons
-- **Large Widget**: Full dashboard with memory usage, token speed, and all quick actions
-
-**Widget Features:**
-- Real-time model status (Idle/Loading/Ready/Generating)
-- Token generation speed (tokens/second)
-- Memory usage with visual progress bar
-- Quick action deep links:
-  - New Chat
-  - Generate Code
-  - Review Code
-  - Explain Code
-- Auto-refresh every 5 minutes or on app state change
-
-**Technical Details:**
-- App Group: `group.com.jkoch.mlxcode`
-- Uses WidgetKit for native macOS widget support
-- Shared data via UserDefaults in App Group container
-- Deep link URL scheme: `mlxcode://`
+Read-only tools (grep, glob, file read, code navigation) auto-approve. Write/execute tools (bash, file write, xcode build) ask for confirmation.
 
 ---
 
-## What's New in v1.1.0 (January 2026)
+## Models
 
-### MLX Backend Implementation
-**Full MLX integration via mlx_lm CLI:**
+MLX Code uses [mlx-community](https://huggingface.co/mlx-community) models from Hugging Face, quantized for Apple Silicon.
 
-- **Process Management**: Subprocess handling with proper output/error pipes
-- **Model Support**: mlx-community models (Llama-3.2-3B-Instruct-4bit, Mistral, Phi, etc.)
-- **Streaming**: Real-time token generation
-- **Error Handling**: Graceful fallback if MLX not installed
-- **Auto-Detection**: Checks for mlx_lm availability automatically
-- **Neural Engine**: Leverages Apple Silicon for fast inference
+**Recommended:**
 
-**Installation:**
-```bash
-# Install MLX LM
-pip install mlx-lm
+| Model | Size | Context | Best for |
+|-------|------|---------|----------|
+| **Qwen 2.5 7B** (default) | ~4 GB | 32K | General coding, tool calling |
+| Mistral 7B v0.3 | ~4 GB | 32K | Versatile, good at instructions |
+| DeepSeek Coder 6.7B | ~4 GB | 16K | Code-specific tasks |
+| Qwen 2.5 14B | ~8 GB | 32K | Best quality (needs 16GB+ RAM) |
 
-# Verify installation
-which mlx_lm.generate
-
-# MLX Code auto-detects and uses it
-```
-
-**Technical Implementation:**
-```swift
-private func generateWithMLX(prompt: String, maxTokens: Int) async throws -> String {
-    let process = Process()
-    process.executableURL = URL(fileURLWithPath: "/opt/homebrew/bin/mlx_lm.generate")
-    process.arguments = [
-        "--model", "mlx-community/Llama-3.2-3B-Instruct-4bit",
-        "--prompt", prompt,
-        "--max-tokens", "\(maxTokens)"
-    ]
-
-    // Capture output and return
-}
-```
-
----
-
-## Features
-
-### Core Functionality
-- **Code Generation**: Generate functions, classes, algorithms from descriptions
-- **Code Completion**: Context-aware suggestions as you type
-- **Refactoring**: Automated code improvement and optimization
-- **Documentation**: Auto-generate docstrings and comments
-- **Code Review**: Security analysis and best practices checking
-- **Bug Detection**: Identify potential issues before runtime
-- **Test Generation**: Create unit tests automatically
-- **Code Explanation**: Natural language explanations of complex code
-
-### AI Backend Support (10 Backends)
-- **MLX (v1.1.0)**: Apple Silicon native, 100% local
-- **Ollama**: Local, free, multiple models
-- **TinyLLM/TinyChat**: Lightweight alternatives
-- **OpenWebUI**: Self-hosted option
-- **OpenAI**: GPT-4 (cloud, paid)
-- **Google Cloud AI**: Vertex AI (cloud, paid)
-- **Azure Cognitive**: OpenAI service (cloud, paid)
-- **AWS Bedrock**: Claude, Llama (cloud, paid)
-- **IBM Watson**: Enterprise AI (cloud, paid)
-
-### Developer Features
-- **Multi-File Operations**: Refactor across entire codebase
-- **Git Integration**: AI-powered commit messages and PR descriptions
-- **Codebase Indexing**: Semantic search across project
-- **Context Analysis**: Understands project structure
-- **Slash Commands**: Quick actions (/refactor, /test, /doc, /review)
-- **Autonomous Agent**: Multi-step task execution with planning
-- **Cost Tracking**: Token usage and cost estimation (cloud backends)
-- **Desktop Widget**: Monitor status from desktop (v1.2.0)
-
-### Code Intelligence
-- **Syntax Highlighting**: All major languages supported
-- **Code Diff View**: Before/after comparison
-- **Interactive Prompts**: Clarifying questions when needed
-- **Undo Support**: Revert AI changes easily
-- **Security Validation**: Input sanitization and output verification
-
----
-
-## Security
-
-### Privacy & Data Protection
-- **Local-First**: MLX and Ollama keep all code on your Mac
-- **No Telemetry**: Zero analytics or tracking
-- **Sandboxed**: App runs in macOS sandbox
-- **Keychain Storage**: Cloud API keys stored securely
-- **Code Sanitization**: AI outputs validated before application
-
-### Ethical AI Guardian
-- **Content Monitoring**: Prevents generation of malicious code
-- **Pattern Detection**: Identifies harmful patterns (malware, exploits)
-- **Automatic Blocking**: Stops prohibited use cases
-- **Audit Logging**: All operations logged (hashed, not plaintext)
-
-### Best Practices
-- Use MLX or Ollama for maximum privacy
-- Store cloud API keys in Keychain (not code)
-- Review all AI-generated code before committing
-- Keep models updated for latest security patches
-- Enable audit logging for compliance
+Models download automatically on first use. You can also add custom models from any mlx-community repo.
 
 ---
 
 ## Requirements
 
-### System Requirements
-- **macOS 13.0 (Ventura) or later**
-- **Architecture**: Universal (Apple Silicon recommended for MLX)
-- **Xcode 15.0+** (for building from source)
-
-### AI Backend Requirements
-**For MLX (Recommended):**
-- Apple Silicon Mac (M1/M2/M3/M4)
-- Python 3.9+
-- mlx-lm package: `pip install mlx-lm`
-- 8GB+ RAM (16GB recommended)
-
-**For Ollama:**
-- Any Mac (Intel or Apple Silicon)
-- Ollama installed: `brew install ollama`
-- 8GB+ RAM
-
-**For Cloud AI:**
-- API keys for chosen provider
-- Internet connection
-- Budget for API costs
-
-### Dependencies
-**Built-in:**
-- SwiftUI (UI)
-- Foundation (core)
-- AppKit (macOS integration)
-
-**Optional:**
-- mlx-lm (for MLX backend)
-- Ollama (for Ollama backend)
+- **macOS 14.0** (Sonoma) or later
+- **Apple Silicon** (M1, M2, M3, M4)
+- **8 GB RAM** minimum (16 GB recommended for 7B models)
+- **Python 3.9+** with `mlx-lm` installed
 
 ---
 
 ## Installation
 
-### Option 1: Pre-built Binary
+### From DMG
+
+Download the latest release from [Releases](https://github.com/kochj23/MLXCode/releases), open the DMG, and drag to Applications.
+
+### From Source
 
 ```bash
-open "/Volumes/Data/xcode/binaries/20260127-MLXCode-v1.1.0/MLXCode-v1.1.0-build2.dmg"
-```
-
-Drag to Applications folder and launch.
-
-### Option 2: Build from Source
-
-```bash
-# Clone repository
 git clone https://github.com/kochj23/MLXCode.git
 cd MLXCode
-
-# Open in Xcode
 open "MLX Code.xcodeproj"
-
-# Build and run (⌘R)
+# Build and run (Cmd+R)
 ```
 
-### Setup MLX Backend
+### Python Setup
 
 ```bash
-# Install MLX LM
 pip install mlx-lm
-
-# Verify installation
-which mlx_lm.generate
-
-# Download a model (optional, auto-downloads on first use)
-mlx_lm.download --model mlx-community/Llama-3.2-3B-Instruct-4bit
 ```
 
-### Setup Ollama Backend
-
-```bash
-# Install Ollama
-brew install ollama
-
-# Start Ollama server
-ollama serve
-
-# Pull a model
-ollama pull mistral:latest
-# or
-ollama pull codellama:latest
-```
+MLX Code uses a Python daemon (`mlx_daemon.py`) for model inference. It applies the model's native chat template automatically (ChatML for Qwen, Llama format for Llama, etc.).
 
 ---
 
-## Configuration
+## Architecture
 
-### First Launch
+```
+MLX Code (SwiftUI)
+  |
+  |-- ChatViewModel         # Conversation management, tool execution loop
+  |-- MLXService            # Talks to Python daemon via stdin/stdout JSON
+  |-- ContextManager        # Token budgeting, message compaction
+  |-- ToolRegistry          # 11 registered tools
+  |-- SystemPrompts         # Compact prompt with few-shot examples
+  |
+  `-- Python/mlx_daemon.py  # mlx-lm model loading, chat_generate with templates
+```
 
-1. **Launch MLX Code**
-2. **Acknowledge Ethical AI Terms**
-3. **Select AI Backend**: Settings → AI Backend
-   - Choose MLX (local, Apple Silicon only)
-   - Or Ollama (local, any Mac)
-   - Or cloud provider
-4. **Test Connection**: Verify backend responds
-5. **Start Coding**: Begin using AI assistance
-
-### Backend Configuration
-
-**MLX Setup:**
-- Model: mlx-community/Llama-3.2-3B-Instruct-4bit (default)
-- Max Tokens: 2048
-- Temperature: 0.7
-- Auto-detected if installed
-
-**Ollama Setup:**
-- Server URL: http://localhost:11434 (default)
-- Model: mistral:latest or codellama:latest
-- Automatically connects if Ollama running
-
-**Cloud AI Setup:**
-- Enter API key in Settings
-- Select specific model
-- Set token limits and budget
+**Key design decisions:**
+- Chat templates applied by the Python tokenizer (not hand-rolled in Swift)
+- Tool prompt is ~500 tokens (not 4000) — leaves room for actual conversation
+- Context budget system allocates tokens: system prompt, messages, project context, output reservation
+- Two tool tiers: core (always available) and development (when project is open)
 
 ---
 
-## Usage
+## What It Doesn't Do
 
-### Code Generation
+Being honest about limitations:
 
-```
-Prompt: "Create a function to check if a number is prime"
-
-MLX Code generates:
-func isPrime(_ n: Int) -> Bool {
-    guard n > 1 else { return false }
-    guard n != 2 else { return true }
-    guard n % 2 != 0 else { return false }
-
-    let sqrtN = Int(Double(n).squareRoot())
-    for i in stride(from: 3, through: sqrtN, by: 2) {
-        if n % i == 0 { return false }
-    }
-    return true
-}
-```
-
-### Slash Commands
-
-- `/refactor` - Improve code structure
-- `/test` - Generate unit tests
-- `/doc` - Add documentation
-- `/review` - Security and best practices review
-- `/explain` - Explain code in plain English
-- `/optimize` - Performance improvements
-
-### Context-Aware Assistance
-
-MLX Code understands your project:
-- Reads codebase structure
-- Maintains conversation context
-- Suggests consistent patterns
-- Respects your code style
-
----
-
-## Troubleshooting
-
-**MLX Not Found:**
-- Install: `pip install mlx-lm`
-- Verify: `which mlx_lm.generate`
-- Check PATH includes /opt/homebrew/bin
-
-**Slow Performance:**
-- Use smaller models (3B vs 7B)
-- Reduce max tokens
-- Close other apps
-- Check Activity Monitor
-
-**Out of Memory:**
-- Use 3B models instead of 7B+
-- Reduce token limit
-- Close browser tabs
-- Restart Mac
-
-**Ollama Connection Failed:**
-- Start server: `ollama serve`
-- Check port 11434 not blocked
-- Verify localhost access
+- **No internet access** — can't browse, fetch URLs, or call APIs
+- **No image/video/audio generation** — this is a code assistant, not a media tool
+- **Small model constraints** — 3-8B parameter models make mistakes, especially with complex multi-step reasoning
+- **No IDE integration** — standalone app, not an Xcode plugin (yet)
+- **Tool calling is imperfect** — local models sometimes format tool calls incorrectly
 
 ---
 
 ## Version History
 
-### v1.2.0 (February 2026)
-- macOS WidgetKit widget extension
-- Small, Medium, and Large widget sizes
-- Real-time model status monitoring
-- Token speed and memory usage display
-- Quick action deep links
-- App Group data sharing
+### v5.0.0 (February 2026) — Current
+- Major simplification: deleted 41 files (~16,000 lines) of unused features
+- Removed image generation, video generation, voice cloning, TTS, GitHub panel, RAG, autonomous agent, multi-model comparison, cost tracker, prompt library, performance dashboard
+- Rewrote system prompt to be honest and compact
+- Default model: Qwen 2.5 7B
+- 11 focused tools instead of 40+
 
-### v1.1.0 (January 2026)
-- MLX backend implementation
-- Process-based mlx_lm integration
-- Model auto-detection
-- Streaming support
+### v4.0.0 (February 2026)
+- Phase 1: Chat template support, structured message passing, tool tier system
+- Phase 2: Context budget system, smart token estimation, project context auto-include
+- Tool approval flow with auto-approve for read-only operations
 
-### v1.0.0 (2025)
-- Initial release
-- Ollama support
-- Cloud AI support
-- Code generation features
+### v1.x (January-February 2026)
+- Initial release with MLX backend
+- Desktop widget extension
+- Basic chat interface
 
 ---
 
 ## License
 
-MIT License - Copyright © 2026 Jordan Koch
+MIT License - Copyright 2026 Jordan Koch
 
----
-
-**Last Updated:** February 4, 2026
-**Status:** Production Ready
-
----
-
-## More Apps by Jordan Koch
-
-| App | Description |
-|-----|-------------|
-| [NewsSummary](https://github.com/kochj23/NewsSummary) | AI-powered news aggregation and summarization |
-| [MailSummary](https://github.com/kochj23/MailSummary) | AI-powered email categorization and summarization |
-| [JiraSummary](https://github.com/kochj23/JiraSummary) | AI-powered Jira dashboard with sprint analytics |
-| [Blompie](https://github.com/kochj23/Blompie) | AI-powered text adventure game engine |
-| [NMAPScanner](https://github.com/kochj23/NMAPScanner) | Network security scanner with AI threat detection |
-| [TopGUI](https://github.com/kochj23/TopGUI) | macOS system monitor with real-time metrics |
-
-> **[View all projects](https://github.com/kochj23?tab=repositories)**
+See [LICENSE](LICENSE) for details.
 
 ---
 
