@@ -30,7 +30,8 @@ struct ToolTierClassifier {
         case "file_operations", "bash", "grep", "glob", "edit":
             return .core
         case "xcode", "git_integration", "code_navigation", "test_generation",
-             "error_diagnosis", "diff_preview", "help":
+             "error_diagnosis", "diff_preview", "help",
+             "github", "code_analysis":
             return .development
         default:
             return .development

@@ -87,6 +87,18 @@
 		EE5F6A7B8C9D0E1F2A3B4C5D /* ToolApprovalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6A7B8C9D0E1F2A3B4C5D6E /* ToolApprovalView.swift */; };
 		117B8C9D0E1F2A3B4C5D6E7F /* ContextBudget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228C9D0E1F2A3B4C5D6E7F81 /* ContextBudget.swift */; };
 		339D0E1F2A3B4C5D6E7F8192 /* ContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D005E0D461771E49D839C575 /* ContextManager.swift */; };
+		C1D2E3F4A5B6071829304C5D /* ContextAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E2F3A4B5C60718293A4B5C /* ContextAnalysisService.swift */; };
+		E2F3A4B5C6D7081929304C5D /* UserMemories.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A3B4C5D6E7081929304C5D /* UserMemories.swift */; };
+		B1C2D3E4F5A60718293B4C5D /* GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B5C /* GitHubService.swift */; };
+		B2C3D4E5F6A70829304C5D6E /* GitHubTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3C4D5E6F70829304B5C6D /* GitHubTool.swift */; };
+		B3C4D5E6F7A8093A415D6E7F /* CodeAnalysisTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B4C5D6E7F8093A415C6D7E /* CodeAnalysisTool.swift */; };
+		B4C5D6E7F8A90A4B526E7F80 /* ProjectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B5C6D7E8F90A4B526D7E8F /* ProjectViewModel.swift */; };
+		B5C6D7E8F9AA1B5C637F8091 /* GitHubViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B6C7D8E9FA1B5C637E8F90 /* GitHubViewModel.swift */; };
+		B6C7D8E9FAAB2C6D74809102 /* CodeAnalysisViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B7C8D9EAFB2C6D748F9001 /* CodeAnalysisViewModel.swift */; };
+		B7C8D9EAFBAC3D7E859102A3 /* ProjectDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8C9DAEBFC3D7E859001A2 /* ProjectDashboardView.swift */; };
+		B8C9DAEBFBAD4E8F960213B4 /* BuildPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B9CADBECED4E8F960112B3 /* BuildPanelView.swift */; };
+		B9CADBECEBBE5F900A1324C5 /* GitHubPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BACBDCEDFE5F900A1223C4 /* GitHubPanelView.swift */; };
+		BACBDCEDDCBF60011B2435D6 /* CodeAnalysisPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCCDDEEAF60011B2334D5 /* CodeAnalysisPanelView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +127,8 @@
 
 /* Begin PBXFileReference section */
 		0095C89C8F1E4539863AE74D96B702F4 /* MLXService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLXService.swift; sourceTree = "<group>"; };
+		D1E2F3A4B5C60718293A4B5C /* ContextAnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextAnalysisService.swift; sourceTree = "<group>"; };
+		F2A3B4C5D6E7081929304C5D /* UserMemories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMemories.swift; sourceTree = "<group>"; };
 		01A056387C5D6883F0932FA4 /* GitService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GitService.swift; path = "MLX Code/Services/GitService.swift"; sourceTree = "<group>"; };
 		0674F2D9E84C4AC3AC8ED170619E99EA /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
 		07F3CD889AF1A1B378575B71 /* PathsSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PathsSettingsView.swift; sourceTree = "<group>"; };
@@ -202,6 +216,16 @@
 		DD4E5F6A7B8C9D0E1F2A3B4C /* ToolApproval.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolApproval.swift; path = "MLX Code/Models/ToolApproval.swift"; sourceTree = SOURCE_ROOT; };
 		FF6A7B8C9D0E1F2A3B4C5D6E /* ToolApprovalView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolApprovalView.swift; path = "MLX Code/Views/ToolApprovalView.swift"; sourceTree = SOURCE_ROOT; };
 		228C9D0E1F2A3B4C5D6E7F81 /* ContextBudget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ContextBudget.swift; path = "MLX Code/Services/ContextBudget.swift"; sourceTree = SOURCE_ROOT; };
+		A1B2C3D4E5F60718293A4B5C /* GitHubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubService.swift; sourceTree = "<group>"; };
+		A2B3C4D5E6F70829304B5C6D /* GitHubTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GitHubTool.swift; path = Tools/GitHubTool.swift; sourceTree = "<group>"; };
+		A3B4C5D6E7F8093A415C6D7E /* CodeAnalysisTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CodeAnalysisTool.swift; path = Tools/CodeAnalysisTool.swift; sourceTree = "<group>"; };
+		A4B5C6D7E8F90A4B526D7E8F /* ProjectViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProjectViewModel.swift; sourceTree = "<group>"; };
+		A5B6C7D8E9FA1B5C637E8F90 /* GitHubViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GitHubViewModel.swift; sourceTree = "<group>"; };
+		A6B7C8D9EAFB2C6D748F9001 /* CodeAnalysisViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CodeAnalysisViewModel.swift; sourceTree = "<group>"; };
+		A7B8C9DAEBFC3D7E859001A2 /* ProjectDashboardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProjectDashboardView.swift; sourceTree = "<group>"; };
+		A8B9CADBECED4E8F960112B3 /* BuildPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BuildPanelView.swift; sourceTree = "<group>"; };
+		A9BACBDCEDFE5F900A1223C4 /* GitHubPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GitHubPanelView.swift; sourceTree = "<group>"; };
+		AABBCCDDEEAF60011B2334D5 /* CodeAnalysisPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CodeAnalysisPanelView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -293,6 +317,8 @@
 				64071C1709105BE6194D0570 /* DiffPreviewTool.swift */,
 				B87A92AF8834D4EAB5ED2FED /* HelpTool.swift */,
 				BB2C3D4E5F6A7B8C9D0E1F2A /* ToolTier.swift */,
+				A2B3C4D5E6F70829304B5C6D /* GitHubTool.swift */,
+				A3B4C5D6E7F8093A415C6D7E /* CodeAnalysisTool.swift */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -328,6 +354,10 @@
 				D18CD3C400C3AD1177178192 /* ThinkingIndicatorView.swift */,
 				B9DCFE1EB35E1587BE810984 /* CollapsibleToolResultView.swift */,
 				3BA6541CD08A3BD34802C064 /* HelpView.swift */,
+				A7B8C9DAEBFC3D7E859001A2 /* ProjectDashboardView.swift */,
+				A8B9CADBECED4E8F960112B3 /* BuildPanelView.swift */,
+				A9BACBDCEDFE5F900A1223C4 /* GitHubPanelView.swift */,
+				AABBCCDDEEAF60011B2334D5 /* CodeAnalysisPanelView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -340,6 +370,9 @@
 				0674F2D9E84C4AC3AC8ED170619E99EA /* FileService.swift */,
 				D3FFCCE81A9942AD88F69691662852EC /* PythonService.swift */,
 				2484B300512B2B737C691AF5 /* WidgetDataSync.swift */,
+				A1B2C3D4E5F60718293A4B5C /* GitHubService.swift */,
+				D1E2F3A4B5C60718293A4B5C /* ContextAnalysisService.swift */,
+				F2A3B4C5D6E7081929304C5D /* UserMemories.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -357,6 +390,9 @@
 			children = (
 				D8C77339FE1D4E7FAA34113946220883 /* ChatViewModel.swift */,
 				DEE14123640793BDCED74DE1 /* ChatViewModel+Tools.swift */,
+				A4B5C6D7E8F90A4B526D7E8F /* ProjectViewModel.swift */,
+				A5B6C7D8E9FA1B5C637E8F90 /* GitHubViewModel.swift */,
+				A6B7C8D9EAFB2C6D748F9001 /* CodeAnalysisViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -651,6 +687,18 @@
 				EE5F6A7B8C9D0E1F2A3B4C5D /* ToolApprovalView.swift in Sources */,
 				117B8C9D0E1F2A3B4C5D6E7F /* ContextBudget.swift in Sources */,
 				339D0E1F2A3B4C5D6E7F8192 /* ContextManager.swift in Sources */,
+				C1D2E3F4A5B6071829304C5D /* ContextAnalysisService.swift in Sources */,
+				E2F3A4B5C6D7081929304C5D /* UserMemories.swift in Sources */,
+				B1C2D3E4F5A60718293B4C5D /* GitHubService.swift in Sources */,
+				B2C3D4E5F6A70829304C5D6E /* GitHubTool.swift in Sources */,
+				B3C4D5E6F7A8093A415D6E7F /* CodeAnalysisTool.swift in Sources */,
+				B4C5D6E7F8A90A4B526E7F80 /* ProjectViewModel.swift in Sources */,
+				B5C6D7E8F9AA1B5C637F8091 /* GitHubViewModel.swift in Sources */,
+				B6C7D8E9FAAB2C6D74809102 /* CodeAnalysisViewModel.swift in Sources */,
+				B7C8D9EAFBAC3D7E859102A3 /* ProjectDashboardView.swift in Sources */,
+				B8C9DAEBFBAD4E8F960213B4 /* BuildPanelView.swift in Sources */,
+				B9CADBECEBBE5F900A1324C5 /* GitHubPanelView.swift in Sources */,
+				BACBDCEDDCBF60011B2435D6 /* CodeAnalysisPanelView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -690,7 +738,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 5.0.0;
+				MARKETING_VERSION = 6.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -769,7 +817,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 5.0.0;
+				MARKETING_VERSION = 6.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -857,7 +905,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 5.0.0;
+				MARKETING_VERSION = 6.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -890,7 +938,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 5.0.0;
+				MARKETING_VERSION = 6.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

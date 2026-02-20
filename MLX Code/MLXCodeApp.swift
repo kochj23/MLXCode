@@ -31,6 +31,15 @@ struct MLXCodeApp: App {
     /// Chat view model for managing conversations
     @StateObject private var chatViewModel = ChatViewModel()
 
+    /// Project view model for build operations
+    @StateObject private var projectViewModel = ProjectViewModel.shared
+
+    /// GitHub view model
+    @StateObject private var githubViewModel = GitHubViewModel.shared
+
+    /// Code analysis view model
+    @StateObject private var codeAnalysisViewModel = CodeAnalysisViewModel.shared
+
     /// Show prerequisites window
     @State private var showingPrerequisites = false
 
@@ -39,6 +48,19 @@ struct MLXCodeApp: App {
 
     /// Show GitHub panel
     @State private var showingGitHub = false
+
+    /// Refreshes user memories snapshot for system prompts
+    @MainActor
+    private func refreshMemories() async {
+        let memories = await UserMemories.shared.getPromptMemories(
+            userName: settings.authorName,
+            binariesPath: settings.binariesPath,
+            nasPath: settings.nasBinariesPath,
+            projectsPath: settings.xcodeProjectsPath
+        )
+        SystemPrompts.memoriesSnapshot = memories
+        print("Loaded \(memories.isEmpty ? "0" : "user") memories into system prompt")
+    }
 
     /// Discovers models on disk and updates the model list with correct paths
     @MainActor
@@ -73,11 +95,17 @@ struct MLXCodeApp: App {
             ChatView()
                 .environmentObject(settings)
                 .environmentObject(chatViewModel)
+                .environmentObject(projectViewModel)
+                .environmentObject(githubViewModel)
+                .environmentObject(codeAnalysisViewModel)
                 .frame(minWidth: 900, minHeight: 600)
                 .onAppear {
-                    // Discover actual models on disk at startup
                     Task {
+                        // Discover actual models on disk at startup
                         await discoverAndRefreshModels()
+
+                        // Load user memories into system prompt cache
+                        await refreshMemories()
                     }
                 }
         }

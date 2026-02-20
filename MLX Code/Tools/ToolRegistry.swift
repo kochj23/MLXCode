@@ -45,6 +45,10 @@ class ToolRegistry: ObservableObject {
         register(GitIntegrationTool())
         register(DiffPreviewTool())
 
+        // GitHub & Analysis tools
+        register(GitHubTool())
+        register(CodeAnalysisTool())
+
         // Help System
         register(HelpTool())
 
