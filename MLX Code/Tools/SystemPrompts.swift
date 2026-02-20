@@ -3,8 +3,8 @@
 //  MLX Code
 //
 //  Created on 2025-11-19.
-//  Updated 2026-02-19 — Stripped to core tools only.
-//  Copyright © 2025. All rights reserved.
+//  Updated 2026-02-20 — Integrated user memories system.
+//  Copyright © 2025 Jordan Koch. All rights reserved.
 //
 
 import Foundation
@@ -20,10 +20,14 @@ struct SystemPrompts {
     - Read, write, and edit files
     - Run shell commands (bash)
     - Search code with grep and glob
-    - Build and test Xcode projects
+    - Build, archive, and deploy Xcode projects
+    - Create DMG installers and manage versions
     - Inspect git status, diffs, commits
+    - Manage GitHub repos, issues, PRs, branches
     - Navigate code symbols and definitions
     - Diagnose build errors
+    - Analyze code metrics, dependencies, lint, symbols
+    - Scan for credential leaks before pushing
 
     LIMITATIONS:
     - You run locally — no internet access, no cloud APIs
@@ -39,9 +43,9 @@ struct SystemPrompts {
     - One tool call at a time. Wait for results before calling another.
     """
 
-    /// Generate full system prompt with tools
+    /// Generate full system prompt with tools and user memories
     @MainActor
-    static func generateSystemPrompt(includeTools: Bool = true) -> String {
+    static func generateSystemPrompt(includeTools: Bool = true, includeMemories: Bool = true) -> String {
         var prompt = baseSystemPrompt
 
         if includeTools {
@@ -65,7 +69,23 @@ struct SystemPrompts {
             prompt += "- Never hallucinate tool results.\n"
         }
 
+        // Inject user memories into the system prompt (respects user toggle)
+        if includeMemories && AppSettings.shared.enableMemories && !memoriesSnapshot.isEmpty {
+            prompt += memoriesSnapshot
+        }
+
         return prompt
+    }
+
+    /// Cached memories snapshot — refreshed when memories change
+    /// Updated via `refreshMemoriesSnapshot()` on app launch and settings changes
+    @MainActor
+    static var memoriesSnapshot: String = ""
+
+    /// Refresh the cached memories snapshot from the UserMemories actor
+    @MainActor
+    static func refreshMemoriesSnapshot() async {
+        memoriesSnapshot = await UserMemories.shared.getPromptMemories()
     }
 
     /// Few-shot examples for tool calling — covers every core tool pattern
@@ -99,7 +119,7 @@ struct SystemPrompts {
 
     User: Build the Xcode project
     Assistant: <tool>
-    {"name": "xcode", "args": {"action": "build"}}
+    {"name": "xcode", "args": {"operation": "build"}}
     </tool>
 
     User: Show me the git status
@@ -107,7 +127,29 @@ struct SystemPrompts {
     {"name": "git_integration", "args": {"operation": "status"}}
     </tool>
 
+    User: Deploy the app (build, archive, DMG, install)
+    Assistant: <tool>
+    {"name": "xcode", "args": {"operation": "full_build", "scheme": "MyApp", "configuration": "Release"}}
+    </tool>
+
+    User: Show me the GitHub issues
+    Assistant: <tool>
+    {"name": "github", "args": {"operation": "list_issues", "state": "open"}}
+    </tool>
+
+    User: Run code analysis
+    Assistant: <tool>
+    {"name": "code_analysis", "args": {"operation": "full_analysis"}}
+    </tool>
+
+    User: Scan for credentials before pushing
+    Assistant: <tool>
+    {"name": "github", "args": {"operation": "scan_credentials"}}
+    </tool>
+
     """
+
+    // MARK: - Task-Specific Prompts (with memory integration)
 
     /// Prompt for specific coding tasks
     static func taskPrompt(task: String, context: String = "") -> String {
@@ -130,24 +172,26 @@ struct SystemPrompts {
         return prompt
     }
 
-    /// Prompt for code review
+    /// Prompt for code review — includes security and quality memories
     static func codeReviewPrompt(filePath: String) -> String {
         return """
         # Code Review Task
         Please review the code in: \(filePath)
 
         Focus on:
-        1. Memory management (retain cycles, weak references)
-        2. Error handling
-        3. Code clarity and documentation
-        4. Swift best practices
-        5. Potential bugs or edge cases
+        1. Memory management (retain cycles, weak/unowned references, closure captures)
+        2. Security vulnerabilities (injection, XSS, hardcoded secrets, input validation)
+        3. Error handling (no silent failures, actionable user messages, detailed logs)
+        4. Code clarity (single responsibility, max 3 nesting levels, no magic numbers)
+        5. Swift best practices (access control, value types, protocol-oriented design)
+        6. Potential bugs or edge cases
 
         Use the file_operations tool to read the file, then provide detailed feedback.
+        Flag any security issues as CRITICAL, HIGH, MEDIUM, or LOW severity.
         """
     }
 
-    /// Prompt for bug fixing
+    /// Prompt for bug fixing — includes quality and testing memories
     static func bugFixPrompt(description: String, filePath: String? = nil) -> String {
         var prompt = """
         # Bug Fix Task
@@ -161,19 +205,21 @@ struct SystemPrompts {
 
         prompt += """
         Please:
-        1. Read the relevant files
-        2. Identify the root cause
-        3. Propose a fix
-        4. Implement the fix
-        5. Verify it builds and works
+        1. Read the relevant files (NEVER propose changes to unread code)
+        2. Identify the root cause — show your thinking
+        3. Check for related issues (memory leaks, retain cycles, similar patterns)
+        4. Implement the fix with minimal changes
+        5. Verify it builds without warnings
+        6. Add a regression test for this bug
+        7. Document what you tried if multiple approaches were needed
 
-        Use tools to investigate and fix the issue systematically.
+        If the fix could introduce breaking changes, explain the risk before proceeding.
         """
 
         return prompt
     }
 
-    /// Prompt for feature implementation
+    /// Prompt for feature implementation — includes full standard set
     static func featurePrompt(description: String, files: [String] = []) -> String {
         var prompt = """
         # Feature Implementation Task
@@ -191,17 +237,23 @@ struct SystemPrompts {
 
         prompt += """
         Please:
-        1. Read existing related code
-        2. Design the implementation approach
-        3. Implement the feature
-        4. Add necessary documentation
-        5. Build and test
+        1. Read existing related code first
+        2. Design the implementation approach (explain before coding)
+        3. Implement the feature following Swift conventions
+        4. Check for memory leaks and retain cycles
+        5. Validate all user inputs. Never hardcode secrets
+        6. Add unit tests for the new feature
+        7. Add documentation for public APIs (/// format, document WHY not WHAT)
+        8. Build and verify zero warnings
+        9. Add the new file to the Xcode project if creating new files
+
+        Security: scan for credential leaks. Validate inputs. Use Keychain for secrets.
         """
 
         return prompt
     }
 
-    /// Prompt for refactoring
+    /// Prompt for refactoring — includes quality memories
     static func refactorPrompt(description: String, filePath: String) -> String {
         return """
         # Refactoring Task
@@ -209,17 +261,24 @@ struct SystemPrompts {
         File: \(filePath)
 
         Please:
-        1. Read the current code
-        2. Analyze the structure
-        3. Propose refactoring approach
-        4. Implement the refactoring
-        5. Ensure tests still pass
+        1. Read the current code thoroughly
+        2. Analyze the structure and identify issues
+        3. Propose refactoring approach before implementing
+        4. Implement the refactoring:
+           - Single responsibility per function
+           - Max 3 levels of nesting
+           - No magic numbers — use named constants
+           - Delete commented-out code (Git preserves history)
+           - Prefer clarity over cleverness
+        5. Ensure all existing tests still pass
+        6. Build and verify zero warnings
 
         Focus on improving code quality while preserving functionality.
+        If this is a significant structural change, explain the trade-offs.
         """
     }
 
-    /// Prompt for adding tests
+    /// Prompt for adding tests — includes testing memories
     static func testPrompt(description: String, targetFile: String) -> String {
         return """
         # Test Implementation Task
@@ -228,16 +287,24 @@ struct SystemPrompts {
 
         Please:
         1. Read the target code
-        2. Identify test cases (happy path, edge cases, error cases)
-        3. Create test file if needed
-        4. Implement comprehensive tests
-        5. Run tests to verify
-
-        Use XCTest framework and follow Apple's testing best practices.
+        2. Identify test cases:
+           - Happy path (normal operation)
+           - Edge cases (boundaries, empty inputs, nil values)
+           - Error conditions (invalid input, failure scenarios)
+        3. Create test file if needed (add to Xcode project)
+        4. Implement tests following these standards:
+           - Use XCTest framework
+           - Tests must be independent (no order dependencies)
+           - Test names should describe what they test
+           - One assertion per test when practical
+           - Test behavior, not implementation details
+           - Mock external dependencies
+        5. Run tests to verify they pass
+        6. Add regression tests for any known bugs
         """
     }
 
-    /// Prompt for documentation
+    /// Prompt for documentation — includes documentation memories
     static func documentationPrompt(filePath: String) -> String {
         return """
         # Documentation Task
@@ -245,12 +312,59 @@ struct SystemPrompts {
 
         Please:
         1. Read the code
-        2. Add header comments to all public APIs
-        3. Add inline comments for complex logic
-        4. Use proper Swift documentation format (///)
-        5. Include parameter descriptions and return values
+        2. Add documentation following these rules:
+           - Document WHY, not WHAT (the code shows what it does)
+           - Use Swift doc format (///) with parameter descriptions and return values
+           - Document: complex algorithms, public APIs, security-sensitive code, workarounds
+           - DON'T document obvious code — let it speak for itself
+           - Include code examples for public APIs
+        3. Credit author as "Jordan Koch"
+        4. Verify documentation builds without warnings
 
-        Follow Apple's documentation guidelines.
+        Focus on helping future developers understand decisions, not mechanics.
+        """
+    }
+
+    /// Prompt for deployment — includes deployment and security memories
+    static func deployPrompt(scheme: String, configuration: String = "Release") -> String {
+        return """
+        # Deployment Task
+        Deploy: \(scheme) (\(configuration))
+
+        Pipeline:
+        1. Increment version number appropriately (major/minor/patch)
+        2. Clean build folder
+        3. Build and fix ALL warnings (treat as errors)
+        4. Run test suite — all must pass
+        5. Archive the project
+        6. Create DMG installer (AppName-vX.Y.Z-buildN.dmg)
+        7. Export to binaries directory (date-coded: YYYYMMDD-AppName-vX.Y.Z/)
+        8. Copy to NAS binaries directory
+        9. Install to /Applications
+        10. Scan for credential leaks before any git push
+        11. Write release notes (include "Jordan Koch" as author)
+        12. Never overwrite existing archives
+
+        Use the xcode tool with operation "full_build" for the complete pipeline.
+        """
+    }
+
+    /// Prompt for git operations — includes git and security memories
+    static func gitPrompt(operation: String) -> String {
+        return """
+        # Git Operation: \(operation)
+
+        Standards:
+        - Commit format: type(scope): description
+        - Types: feat, fix, docs, refactor, test, chore, security
+        - Before committing: remove debug code, run tests, scan for secrets, build clean
+        - Before pushing: scan for credentials (API keys, tokens, passwords, private keys)
+        - Public repos require MIT License
+        - Use SSH URLs: git@github.com:user/repo.git
+        - Never commit: *.p12, *.cer, *.mobileprovision, secrets.json, .env files
+        - Branch strategy: main = stable, feature/* = features, fix/* = fixes
+
+        Perform the requested git operation following these standards.
         """
     }
 }

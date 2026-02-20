@@ -18,6 +18,12 @@ class XcodeTool: BaseTool {
         case analyze
         case list_schemes
         case list_targets
+        case full_build
+        case create_dmg
+        case install
+        case export_binaries
+        case version_info
+        case bump_version
     }
 
     init() {
@@ -25,8 +31,9 @@ class XcodeTool: BaseTool {
             properties: [
                 "operation": ParameterProperty(
                     type: "string",
-                    description: "Xcode operation: build, test, clean, archive, analyze, list_schemes, list_targets",
-                    enum: ["build", "test", "clean", "archive", "analyze", "list_schemes", "list_targets"]
+                    description: "Xcode operation to perform",
+                    enum: ["build", "test", "clean", "archive", "analyze", "list_schemes", "list_targets",
+                           "full_build", "create_dmg", "install", "export_binaries", "version_info", "bump_version"]
                 ),
                 "project_path": ParameterProperty(
                     type: "string",
@@ -51,6 +58,11 @@ class XcodeTool: BaseTool {
                 "parallel": ParameterProperty(
                     type: "boolean",
                     description: "Enable parallel build (default: true)"
+                ),
+                "version_component": ParameterProperty(
+                    type: "string",
+                    description: "Version component to bump: major, minor, patch, build",
+                    enum: ["major", "minor", "patch", "build"]
                 )
             ],
             required: ["operation"]
@@ -105,6 +117,18 @@ class XcodeTool: BaseTool {
                 result = try await listSchemes(projectPath: projectPath, context: context)
             case .list_targets:
                 result = try await listTargets(projectPath: projectPath, context: context)
+            case .full_build:
+                result = try await fullBuild(projectPath: projectPath, parameters: parameters, context: context)
+            case .create_dmg:
+                result = try await createDMGFromProject(projectPath: projectPath, parameters: parameters, context: context)
+            case .install:
+                result = try await installApp(projectPath: projectPath, parameters: parameters, context: context)
+            case .export_binaries:
+                result = try await exportBinaries(projectPath: projectPath, parameters: parameters, context: context)
+            case .version_info:
+                result = try await versionInfo(projectPath: projectPath, context: context)
+            case .bump_version:
+                result = try await bumpVersion(projectPath: projectPath, parameters: parameters, context: context)
             }
 
             // Record telemetry
@@ -228,6 +252,145 @@ class XcodeTool: BaseTool {
         }
 
         return result
+    }
+
+    // MARK: - Extended Operations
+
+    /// Full build pipeline: build + archive + DMG + install + export to binaries
+    private func fullBuild(projectPath: String, parameters: [String: Any], context: ToolContext) async throws -> ToolResult {
+        let xcodeService = XcodeService.shared
+        try await xcodeService.setProject(path: projectPath)
+
+        let scheme = (try? stringParameter(parameters, key: "scheme")) ?? ((projectPath as NSString).lastPathComponent as NSString).deletingPathExtension
+        let configuration = (try? stringParameter(parameters, key: "configuration")) ?? "Release"
+
+        var bumpComponent: VersionComponent?
+        if let componentStr = try? stringParameter(parameters, key: "version_component") {
+            bumpComponent = VersionComponent(rawValue: componentStr)
+        }
+
+        let result = try await xcodeService.fullBuildPipeline(
+            scheme: scheme,
+            configuration: configuration,
+            bumpVersion: bumpComponent
+        )
+
+        var output = """
+        Full Build Pipeline Complete:
+          Version: v\(result.version) build \(result.build)
+          Build: \(result.buildResult.succeeded ? "SUCCESS" : "FAILED") (\(result.buildResult.warnings) warnings)
+          Archive: \(result.archiveResult.archivePath)
+          DMG: \(result.dmgPath)
+          Installed: \(result.installedPath)
+        """
+
+        if let localPath = result.exportResult.localBinaryPath {
+            output += "\n  Local Binary: \(localPath)"
+        }
+        if let nasPath = result.exportResult.nasBinaryPath {
+            output += "\n  NAS Binary: \(nasPath)"
+        }
+
+        return .success(output, metadata: [
+            "version": result.version,
+            "build": result.build,
+            "dmg_path": result.dmgPath,
+            "installed_path": result.installedPath
+        ])
+    }
+
+    /// Creates a DMG from the current project archive
+    private func createDMGFromProject(projectPath: String, parameters: [String: Any], context: ToolContext) async throws -> ToolResult {
+        let xcodeService = XcodeService.shared
+        try await xcodeService.setProject(path: projectPath)
+
+        let scheme = (try? stringParameter(parameters, key: "scheme")) ?? ((projectPath as NSString).lastPathComponent as NSString).deletingPathExtension
+
+        // Archive first
+        let archiveResult = try await xcodeService.archive(scheme: scheme)
+        let appName = archiveResult.appName.replacingOccurrences(of: ".app", with: "")
+        let outputDir = NSTemporaryDirectory()
+
+        let dmgPath = try await xcodeService.createDMG(
+            appPath: archiveResult.appPath,
+            outputPath: outputDir,
+            appName: appName,
+            version: archiveResult.version,
+            build: archiveResult.build
+        )
+
+        return .success("DMG created: \(dmgPath)", metadata: ["dmg_path": dmgPath])
+    }
+
+    /// Installs the app to ~/Applications
+    private func installApp(projectPath: String, parameters: [String: Any], context: ToolContext) async throws -> ToolResult {
+        let xcodeService = XcodeService.shared
+        try await xcodeService.setProject(path: projectPath)
+
+        let scheme = (try? stringParameter(parameters, key: "scheme")) ?? ((projectPath as NSString).lastPathComponent as NSString).deletingPathExtension
+
+        let archiveResult = try await xcodeService.archive(scheme: scheme)
+        let installedPath = try await xcodeService.installToApplications(appPath: archiveResult.appPath)
+
+        return .success("Installed to: \(installedPath)", metadata: ["installed_path": installedPath])
+    }
+
+    /// Exports to binary directories
+    private func exportBinaries(projectPath: String, parameters: [String: Any], context: ToolContext) async throws -> ToolResult {
+        let xcodeService = XcodeService.shared
+        try await xcodeService.setProject(path: projectPath)
+
+        let scheme = (try? stringParameter(parameters, key: "scheme")) ?? ((projectPath as NSString).lastPathComponent as NSString).deletingPathExtension
+
+        let archiveResult = try await xcodeService.archive(scheme: scheme)
+        let appName = archiveResult.appName.replacingOccurrences(of: ".app", with: "")
+
+        let exportResult = try await xcodeService.exportToBinaries(
+            appPath: archiveResult.appPath,
+            dmgPath: nil,
+            appName: appName,
+            version: archiveResult.version
+        )
+
+        var output = "Exported binaries:"
+        if let local = exportResult.localBinaryPath {
+            output += "\n  Local: \(local)"
+        }
+        if let nas = exportResult.nasBinaryPath {
+            output += "\n  NAS: \(nas)"
+        }
+
+        return .success(output)
+    }
+
+    /// Gets current version info
+    private func versionInfo(projectPath: String, context: ToolContext) async throws -> ToolResult {
+        let xcodeService = XcodeService.shared
+        try await xcodeService.setProject(path: projectPath)
+
+        let info = try await xcodeService.getVersionInfo()
+        return .success("Version: v\(info.marketing) build \(info.build)\nBundle ID: \(info.bundleId)", metadata: [
+            "version": info.marketing,
+            "build": info.build,
+            "bundle_id": info.bundleId
+        ])
+    }
+
+    /// Bumps version number
+    private func bumpVersion(projectPath: String, parameters: [String: Any], context: ToolContext) async throws -> ToolResult {
+        let componentStr = try stringParameter(parameters, key: "version_component")
+        guard let component = VersionComponent(rawValue: componentStr) else {
+            return .failure("Invalid version component: \(componentStr). Use: major, minor, patch, build")
+        }
+
+        let xcodeService = XcodeService.shared
+        try await xcodeService.setProject(path: projectPath)
+
+        let newVersion = try await xcodeService.incrementVersion(component: component)
+        return .success("Version bumped to v\(newVersion.marketing) build \(newVersion.build)", metadata: [
+            "version": newVersion.marketing,
+            "build": newVersion.build
+        ])
     }
 
     // MARK: - Helpers

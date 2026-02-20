@@ -14,7 +14,7 @@ MLX Code runs language models directly on your Mac using Apple Silicon. No cloud
 
 MLX Code is a chat-based coding assistant with tool calling. You describe what you need, and the model reads files, searches code, runs commands, and builds your project — all locally.
 
-**11 built-in tools:**
+**14 built-in tools:**
 
 | Tool | What it does |
 |------|-------------|
@@ -22,12 +22,15 @@ MLX Code is a chat-based coding assistant with tool calling. You describe what y
 | **Bash** | Run shell commands |
 | **Grep** | Search file contents with regex |
 | **Glob** | Find files by pattern |
-| **Xcode** | Build, test, clean Xcode projects |
-| **Git** | Status, diff, commit, branch, log |
+| **Xcode** | Build, test, clean, archive, full deploy pipeline |
+| **Git** | Status, diff, commit, branch, log, push, pull |
+| **GitHub** | Issues, PRs, branches, credential scanning |
 | **Code Navigation** | Jump to definitions, find symbols |
+| **Code Analysis** | Metrics, dependencies, lint, symbols, full analysis |
 | **Error Diagnosis** | Analyze and explain build errors |
 | **Test Generation** | Create unit tests from source files |
 | **Diff Preview** | Show before/after file changes |
+| **Context Analysis** | Analyze project structure and dependencies |
 | **Help** | List available commands and usage |
 
 **Slash commands:** `/commit`, `/review`, `/test`, `/docs`, `/refactor`, `/explain`, `/optimize`, `/fix`, `/search`, `/plan`, `/help`, `/clear`
@@ -42,6 +45,29 @@ MLX Code is a chat-based coding assistant with tool calling. You describe what y
 4. The model responds with findings or takes the next action
 
 Read-only tools (grep, glob, file read, code navigation) auto-approve. Write/execute tools (bash, file write, xcode build) ask for confirmation.
+
+---
+
+## Features
+
+### Xcode Integration
+- Build, test, clean, archive from chat
+- Full deploy pipeline: version bump, build, archive, DMG, install
+- Error diagnosis with context-aware analysis
+- GitHub integration: issues, PRs, branches, credential scanning
+- Code analysis: metrics, dependencies, linting, symbol inspection
+
+### User Memories
+- Persistent preferences that shape assistant behavior
+- 50+ built-in coding standards across 8 categories
+- Custom memories stored locally (~/.mlxcode/memories.json)
+- Categories: personality, code quality, security, Xcode, git, testing, docs, deployment
+- User-specific settings (name, paths) injected at runtime — never hardcoded
+
+### Context Management
+- Token budgeting with automatic message compaction
+- Project context auto-include when workspace is open
+- Two tool tiers: core (always available) and development (when project is open)
 
 ---
 
@@ -104,8 +130,19 @@ MLX Code (SwiftUI)
   |-- ChatViewModel         # Conversation management, tool execution loop
   |-- MLXService            # Talks to Python daemon via stdin/stdout JSON
   |-- ContextManager        # Token budgeting, message compaction
-  |-- ToolRegistry          # 11 registered tools
-  |-- SystemPrompts         # Compact prompt with few-shot examples
+  |-- ToolRegistry          # 14 registered tools (2 tiers)
+  |-- SystemPrompts         # Compact prompt with few-shot examples + user memories
+  |-- UserMemories          # Persistent coding standards and preferences
+  |
+  |-- Services/
+  |   |-- GitHubService     # GitHub API: issues, PRs, branches, credentials scan
+  |   |-- ContextAnalysis   # Project structure and dependency analysis
+  |   `-- UserMemories      # Configurable standards, custom memory persistence
+  |
+  |-- ViewModels/
+  |   |-- ProjectViewModel  # Build operations and project management
+  |   |-- GitHubViewModel   # GitHub panel state
+  |   `-- CodeAnalysis VM   # Code metrics and analysis state
   |
   `-- Python/mlx_daemon.py  # mlx-lm model loading, chat_generate with templates
 ```
@@ -115,6 +152,7 @@ MLX Code (SwiftUI)
 - Tool prompt is ~500 tokens (not 4000) — leaves room for actual conversation
 - Context budget system allocates tokens: system prompt, messages, project context, output reservation
 - Two tool tiers: core (always available) and development (when project is open)
+- User memories injected at runtime from AppSettings — no personal data in source code
 
 ---
 
@@ -132,12 +170,20 @@ Being honest about limitations:
 
 ## Version History
 
-### v5.0.0 (February 2026) — Current
+### v6.0.0 (February 20, 2026) — Current
+- GitHub integration: issues, PRs, branches, credential scanning
+- Code analysis: metrics, dependencies, lint, symbols
+- Xcode full deploy pipeline: build, archive, DMG, install
+- User memories system — persistent coding standards and preferences
+- Context analysis service for project structure inspection
+- Project dashboard, GitHub panel, code analysis panel, build panel views
+- 14 tools (up from 11)
+
+### v5.0.0 (February 2026)
 - Major simplification: deleted 41 files (~16,000 lines) of unused features
-- Removed image generation, video generation, voice cloning, TTS, GitHub panel, RAG, autonomous agent, multi-model comparison, cost tracker, prompt library, performance dashboard
 - Rewrote system prompt to be honest and compact
 - Default model: Qwen 2.5 7B
-- 11 focused tools instead of 40+
+- 11 focused tools
 
 ### v4.0.0 (February 2026)
 - Phase 1: Chat template support, structured message passing, tool tier system

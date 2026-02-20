@@ -75,6 +75,39 @@ class AppSettings: ObservableObject {
     /// Conversation export directory
     @Published var conversationsExportPath: String = "~/Documents"
 
+    // MARK: - Xcode Settings
+
+    /// Default build configuration
+    @Published var defaultBuildConfiguration: String = "Debug"
+
+    /// Default build scheme (auto-detected if empty)
+    @Published var defaultBuildScheme: String = ""
+
+    /// Local binaries archive path
+    @Published var binariesPath: String = "/Volumes/Data/xcode/binaries"
+
+    /// NAS binaries archive path
+    @Published var nasBinariesPath: String = "/Volumes/NAS/binaries"
+
+    /// Auto-analyze after build
+    @Published var autoAnalyzeOnBuild: Bool = false
+
+    // MARK: - GitHub Settings
+
+    /// Default GitHub branch
+    @Published var defaultGitBranch: String = "main"
+
+    /// Run credential scan before push
+    @Published var credentialScanOnPush: Bool = true
+
+    // MARK: - Memory Settings
+
+    /// Author name for documentation and release notes (injected into LLM memories at runtime)
+    @Published var authorName: String = ""
+
+    /// Enable user memories in LLM system prompt
+    @Published var enableMemories: Bool = true
+
     // MARK: - Private Properties
 
     private let userDefaults = UserDefaults.standard
@@ -99,6 +132,15 @@ class AppSettings: ObservableObject {
         static let modelsPath = "modelsPath"
         static let templatesPath = "templatesPath"
         static let conversationsExportPath = "conversationsExportPath"
+        static let defaultBuildConfiguration = "defaultBuildConfiguration"
+        static let defaultBuildScheme = "defaultBuildScheme"
+        static let binariesPath = "binariesPath"
+        static let nasBinariesPath = "nasBinariesPath"
+        static let autoAnalyzeOnBuild = "autoAnalyzeOnBuild"
+        static let defaultGitBranch = "defaultGitBranch"
+        static let credentialScanOnPush = "credentialScanOnPush"
+        static let authorName = "authorName"
+        static let enableMemories = "enableMemories"
     }
 
     // MARK: - Initialization
@@ -253,6 +295,35 @@ class AppSettings: ObservableObject {
             conversationsExportPath = path
         }
 
+        // Load Xcode/GitHub settings
+        if let config = userDefaults.string(forKey: Keys.defaultBuildConfiguration), !config.isEmpty {
+            defaultBuildConfiguration = config
+        }
+        if let scheme = userDefaults.string(forKey: Keys.defaultBuildScheme) {
+            defaultBuildScheme = scheme
+        }
+        if let path = userDefaults.string(forKey: Keys.binariesPath), !path.isEmpty {
+            binariesPath = path
+        }
+        if let path = userDefaults.string(forKey: Keys.nasBinariesPath), !path.isEmpty {
+            nasBinariesPath = path
+        }
+        if userDefaults.object(forKey: Keys.autoAnalyzeOnBuild) != nil {
+            autoAnalyzeOnBuild = userDefaults.bool(forKey: Keys.autoAnalyzeOnBuild)
+        }
+        if let branch = userDefaults.string(forKey: Keys.defaultGitBranch), !branch.isEmpty {
+            defaultGitBranch = branch
+        }
+        if userDefaults.object(forKey: Keys.credentialScanOnPush) != nil {
+            credentialScanOnPush = userDefaults.bool(forKey: Keys.credentialScanOnPush)
+        }
+        if let name = userDefaults.string(forKey: Keys.authorName) {
+            authorName = name
+        }
+        if userDefaults.object(forKey: Keys.enableMemories) != nil {
+            enableMemories = userDefaults.bool(forKey: Keys.enableMemories)
+        }
+
         // Load available models
         if let modelsData = userDefaults.data(forKey: Keys.availableModels),
            let models = try? JSONDecoder().decode([MLXModel].self, from: modelsData) {
@@ -289,6 +360,17 @@ class AppSettings: ObservableObject {
         userDefaults.set(modelsPath, forKey: Keys.modelsPath)
         userDefaults.set(templatesPath, forKey: Keys.templatesPath)
         userDefaults.set(conversationsExportPath, forKey: Keys.conversationsExportPath)
+
+        // Save Xcode/GitHub settings
+        userDefaults.set(defaultBuildConfiguration, forKey: Keys.defaultBuildConfiguration)
+        userDefaults.set(defaultBuildScheme, forKey: Keys.defaultBuildScheme)
+        userDefaults.set(binariesPath, forKey: Keys.binariesPath)
+        userDefaults.set(nasBinariesPath, forKey: Keys.nasBinariesPath)
+        userDefaults.set(autoAnalyzeOnBuild, forKey: Keys.autoAnalyzeOnBuild)
+        userDefaults.set(defaultGitBranch, forKey: Keys.defaultGitBranch)
+        userDefaults.set(credentialScanOnPush, forKey: Keys.credentialScanOnPush)
+        userDefaults.set(authorName, forKey: Keys.authorName)
+        userDefaults.set(enableMemories, forKey: Keys.enableMemories)
 
         // Save selected model ID
         if let modelId = selectedModel?.id.uuidString {

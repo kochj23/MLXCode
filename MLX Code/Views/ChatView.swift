@@ -31,6 +31,9 @@ struct ChatView: View {
     /// Whether log viewer panel is shown
     @State private var showingLogViewer = false
 
+    /// Selected right panel tab
+    @State private var selectedRightPanel: RightPanelTab = .logs
+
     /// Whether help viewer is shown
     @State private var showingHelp = false
 
@@ -118,12 +121,46 @@ struct ChatView: View {
                     .frame(minWidth: 400)
                 }
 
-                // Right panel with logs
+                // Right panel with tabs
                 if showingLogViewer {
                     VStack(spacing: 0) {
-                        LogViewerPanel()
+                        // Panel tab bar
+                        HStack(spacing: 0) {
+                            ForEach(RightPanelTab.allCases, id: \.self) { tab in
+                                Button(action: { selectedRightPanel = tab }) {
+                                    HStack(spacing: 4) {
+                                        Image(systemName: tab.icon)
+                                            .font(.system(size: 10))
+                                        Text(tab.rawValue)
+                                            .font(.system(size: 10, weight: selectedRightPanel == tab ? .bold : .medium, design: .rounded))
+                                    }
+                                    .foregroundColor(selectedRightPanel == tab ? ModernColors.cyan : ModernColors.textTertiary)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 8)
+                                    .background(selectedRightPanel == tab ? ModernColors.cyan.opacity(0.1) : Color.clear)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .background(Color(white: 0.1))
+
+                        Divider()
+
+                        // Panel content
+                        switch selectedRightPanel {
+                        case .logs:
+                            LogViewerPanel()
+                        case .dashboard:
+                            ProjectDashboardView()
+                        case .build:
+                            BuildPanelView()
+                        case .github:
+                            GitHubPanelView()
+                        case .analysis:
+                            CodeAnalysisPanelView()
+                        }
                     }
-                    .frame(minWidth: 300, idealWidth: 400, maxWidth: 600)
+                    .frame(minWidth: 350, idealWidth: 450, maxWidth: 700)
                 }
             }
             .onChange(of: viewModel.isGenerating) { _, newValue in
@@ -275,14 +312,27 @@ struct ChatView: View {
                 .help("Show build errors")
             }
 
+            // Panel toggle buttons
+            HStack(spacing: 4) {
+                panelToggleButton(tab: .dashboard, shortcut: nil)
+                panelToggleButton(tab: .build, shortcut: nil)
+                panelToggleButton(tab: .github, shortcut: nil)
+                panelToggleButton(tab: .analysis, shortcut: nil)
+            }
+
             // Log viewer toggle button
             Button(action: {
                 withAnimation {
-                    showingLogViewer.toggle()
+                    if showingLogViewer && selectedRightPanel == .logs {
+                        showingLogViewer = false
+                    } else {
+                        selectedRightPanel = .logs
+                        showingLogViewer = true
+                    }
                 }
             }) {
-                Image(systemName: showingLogViewer ? "list.bullet.rectangle.fill" : "list.bullet.rectangle")
-                    .foregroundColor(showingLogViewer ? ModernColors.cyan : ModernColors.textPrimary)
+                Image(systemName: showingLogViewer && selectedRightPanel == .logs ? "list.bullet.rectangle.fill" : "list.bullet.rectangle")
+                    .foregroundColor(showingLogViewer && selectedRightPanel == .logs ? ModernColors.cyan : ModernColors.textPrimary)
             }
             .buttonStyle(.plain)
             .help("Toggle Log Viewer (⌘L)")
@@ -526,6 +576,28 @@ struct ChatView: View {
                 Color(NSColor.controlBackgroundColor)
         )
         .animation(.easeInOut(duration: 0.3), value: viewModel.isGenerating)
+    }
+
+    // MARK: - Panel Toggle
+
+    /// Creates a toolbar button for a right panel tab
+    private func panelToggleButton(tab: RightPanelTab, shortcut: KeyEquivalent?) -> some View {
+        Button(action: {
+            withAnimation {
+                if showingLogViewer && selectedRightPanel == tab {
+                    showingLogViewer = false
+                } else {
+                    selectedRightPanel = tab
+                    showingLogViewer = true
+                }
+            }
+        }) {
+            Image(systemName: showingLogViewer && selectedRightPanel == tab ? "\(tab.icon).fill" : tab.icon)
+                .font(.system(size: 12))
+                .foregroundColor(showingLogViewer && selectedRightPanel == tab ? ModernColors.cyan : ModernColors.textPrimary)
+        }
+        .buttonStyle(.plain)
+        .help(tab.rawValue)
     }
 
     // MARK: - Helper Methods
@@ -931,6 +1003,27 @@ struct KeyboardShortcutsModifier: ViewModifier {
                 .keyboardShortcut("r", modifiers: [.command])
                 .hidden()
             )
+    }
+}
+
+// MARK: - Right Panel Tab
+
+/// Available right panel tabs
+enum RightPanelTab: String, CaseIterable {
+    case logs = "Logs"
+    case dashboard = "Dashboard"
+    case build = "Build"
+    case github = "GitHub"
+    case analysis = "Analysis"
+
+    var icon: String {
+        switch self {
+        case .logs: return "list.bullet.rectangle"
+        case .dashboard: return "gauge"
+        case .build: return "hammer"
+        case .github: return "arrow.triangle.branch"
+        case .analysis: return "magnifyingglass"
+        }
     }
 }
 

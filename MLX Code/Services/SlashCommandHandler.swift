@@ -195,6 +195,81 @@ struct SlashCommand: Identifiable {
                 handler: agentHandler
             ),
 
+            // Build & Deploy Commands
+            SlashCommand(
+                name: "build",
+                description: "Build the current Xcode project",
+                usage: "/build [scheme]",
+                category: .project,
+                handler: buildHandler
+            ),
+
+            SlashCommand(
+                name: "deploy",
+                description: "Full pipeline: build, archive, DMG, install, export",
+                usage: "/deploy [scheme]",
+                category: .project,
+                handler: deployHandler
+            ),
+
+            SlashCommand(
+                name: "archive",
+                description: "Archive the current Xcode project",
+                usage: "/archive [scheme]",
+                category: .project,
+                handler: archiveHandler
+            ),
+
+            // GitHub Commands
+            SlashCommand(
+                name: "github",
+                description: "Show GitHub repository overview",
+                usage: "/github [repo-path]",
+                category: .git,
+                handler: githubHandler
+            ),
+
+            SlashCommand(
+                name: "issues",
+                description: "List open GitHub issues",
+                usage: "/issues [state]",
+                category: .git,
+                handler: issuesHandler
+            ),
+
+            SlashCommand(
+                name: "prs",
+                description: "List open pull requests",
+                usage: "/prs [state]",
+                category: .git,
+                handler: prsHandler
+            ),
+
+            SlashCommand(
+                name: "push",
+                description: "Push with credential scan",
+                usage: "/push [branch]",
+                category: .git,
+                handler: pushHandler
+            ),
+
+            // Analysis Commands
+            SlashCommand(
+                name: "analyze",
+                description: "Run full code analysis",
+                usage: "/analyze [project-path]",
+                category: .code,
+                handler: analyzeHandler
+            ),
+
+            SlashCommand(
+                name: "metrics",
+                description: "Show code metrics",
+                usage: "/metrics",
+                category: .code,
+                handler: metricsHandler
+            ),
+
             // System Commands
             SlashCommand(
                 name: "help",
@@ -379,6 +454,171 @@ struct SlashCommand: Identifiable {
     private static func clearHandler(_ args: [String]) async throws -> String {
         // Will be handled by ChatViewModel
         return "Conversation cleared"
+    }
+
+    // MARK: - Build & Deploy Handlers
+
+    private static func buildHandler(_ args: [String]) async throws -> String {
+        let projectPath = args.first ?? "/Volumes/Data/xcode/MLX Code/MLX Code.xcodeproj"
+        let xcodeService = XcodeService.shared
+        try await xcodeService.setProject(path: projectPath)
+
+        let scheme = args.count > 1 ? args[1] : nil
+        let result = try await xcodeService.build(scheme: scheme, configuration: "Debug")
+
+        if result.succeeded {
+            return "Build succeeded (\(result.warnings) warnings)"
+        } else {
+            return "Build FAILED (\(result.errors) errors, \(result.warnings) warnings)"
+        }
+    }
+
+    private static func deployHandler(_ args: [String]) async throws -> String {
+        let projectPath = args.first ?? "/Volumes/Data/xcode/MLX Code/MLX Code.xcodeproj"
+        let xcodeService = XcodeService.shared
+        try await xcodeService.setProject(path: projectPath)
+
+        let scheme = args.count > 1 ? args[1] : ((projectPath as NSString).lastPathComponent as NSString).deletingPathExtension
+
+        let result = try await xcodeService.fullBuildPipeline(scheme: scheme, configuration: "Release")
+
+        var output = """
+        Deploy Complete:
+          Version: v\(result.version) build \(result.build)
+          Build: \(result.buildResult.succeeded ? "SUCCESS" : "FAILED")
+          DMG: \(result.dmgPath)
+          Installed: \(result.installedPath)
+        """
+
+        if let local = result.exportResult.localBinaryPath {
+            output += "\n  Local Binary: \(local)"
+        }
+        if let nas = result.exportResult.nasBinaryPath {
+            output += "\n  NAS Binary: \(nas)"
+        }
+
+        return output
+    }
+
+    private static func archiveHandler(_ args: [String]) async throws -> String {
+        let projectPath = args.first ?? "/Volumes/Data/xcode/MLX Code/MLX Code.xcodeproj"
+        let xcodeService = XcodeService.shared
+        try await xcodeService.setProject(path: projectPath)
+
+        let scheme = args.count > 1 ? args[1] : ((projectPath as NSString).lastPathComponent as NSString).deletingPathExtension
+        let result = try await xcodeService.archive(scheme: scheme)
+
+        return "Archive created: \(result.archivePath)\nVersion: v\(result.version) build \(result.build)"
+    }
+
+    // MARK: - GitHub Handlers
+
+    private static func githubHandler(_ args: [String]) async throws -> String {
+        let repoPath = args.first ?? "/Volumes/Data/xcode/MLX Code"
+
+        do {
+            let info = try await GitHubService.shared.getRepoInfo(repoPath: repoPath)
+            return """
+            Repository: \(info.owner)/\(info.name)
+            Visibility: \(info.visibility)
+            Stars: \(info.stars) | Forks: \(info.forks)
+            Default Branch: \(info.defaultBranch)
+            URL: \(info.url)
+            """
+        } catch {
+            return "GitHub error: \(error.localizedDescription)"
+        }
+    }
+
+    private static func issuesHandler(_ args: [String]) async throws -> String {
+        let state = args.first ?? "open"
+        let repoPath = "/Volumes/Data/xcode/MLX Code"
+
+        let issues = try await GitHubService.shared.listIssues(repoPath: repoPath, state: state)
+
+        if issues.isEmpty {
+            return "No \(state) issues."
+        }
+
+        var output = "Issues (\(state)):\n"
+        for issue in issues {
+            output += "  #\(issue.number) \(issue.title) by @\(issue.author)\n"
+        }
+        return output
+    }
+
+    private static func prsHandler(_ args: [String]) async throws -> String {
+        let state = args.first ?? "open"
+        let repoPath = "/Volumes/Data/xcode/MLX Code"
+
+        let prs = try await GitHubService.shared.listPullRequests(repoPath: repoPath, state: state)
+
+        if prs.isEmpty {
+            return "No \(state) pull requests."
+        }
+
+        var output = "Pull Requests (\(state)):\n"
+        for pr in prs {
+            output += "  #\(pr.number) \(pr.title) (\(pr.headBranch) -> \(pr.baseBranch))\n"
+        }
+        return output
+    }
+
+    private static func pushHandler(_ args: [String]) async throws -> String {
+        let branch = args.first
+        let repoPath = "/Volumes/Data/xcode/MLX Code"
+
+        return try await GitHubService.shared.push(repoPath: repoPath, branch: branch)
+    }
+
+    // MARK: - Analysis Handlers
+
+    private static func analyzeHandler(_ args: [String]) async throws -> String {
+        let projectPath = args.first ?? "/Volumes/Data/xcode/MLX Code"
+        _ = try await ContextAnalysisService.shared.detectActiveProject(from: projectPath)
+
+        var sections: [String] = ["Full Project Analysis"]
+
+        if let metrics = try? await ContextAnalysisService.shared.getCodeMetrics() {
+            sections.append("Files: \(metrics.totalFiles) | Lines: \(metrics.totalLines) | Code: \(metrics.codeLines)")
+        }
+
+        if let deps = try? await ContextAnalysisService.shared.getFrameworkDependencies(), !deps.isEmpty {
+            sections.append("Dependencies: \(deps.map(\.name).joined(separator: ", "))")
+        }
+
+        if let violations = try? await ContextAnalysisService.shared.runSwiftLint(), !violations.isEmpty {
+            let errors = violations.filter { $0.isError }.count
+            let warnings = violations.filter { $0.isWarning }.count
+            sections.append("SwiftLint: \(errors) errors, \(warnings) warnings")
+        }
+
+        return sections.joined(separator: "\n")
+    }
+
+    private static func metricsHandler(_ args: [String]) async throws -> String {
+        let projectPath = args.first ?? "/Volumes/Data/xcode/MLX Code"
+        _ = try await ContextAnalysisService.shared.detectActiveProject(from: projectPath)
+
+        let metrics = try await ContextAnalysisService.shared.getCodeMetrics()
+
+        var output = """
+        Code Metrics:
+          Total Files: \(metrics.totalFiles)
+          Total Lines: \(metrics.totalLines)
+          Code Lines: \(metrics.codeLines)
+          Comment Lines: \(metrics.commentLines)
+          Blank Lines: \(metrics.blankLines)
+        """
+
+        if !metrics.largestFiles.isEmpty {
+            output += "\n\nLargest Files:"
+            for file in metrics.largestFiles.prefix(5) {
+                output += "\n  \(file.name): \(file.lines) lines"
+            }
+        }
+
+        return output
     }
 }
 
