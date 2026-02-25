@@ -22,7 +22,7 @@ final class SecurityUtilsTests: XCTestCase {
     }
 
     func testValidPathAcceptance() {
-        let validPath = "/Users/kochj/Desktop/xcode/project.swift"
+        let validPath = "/Users/testuser/projects/project.swift"
         let isValid = SecurityUtils.validatePath(validPath)
 
         XCTAssertTrue(isValid, "Valid path should be accepted")

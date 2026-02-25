@@ -23,7 +23,7 @@ NC='\033[0m' # No Color
 
 # Paths
 BINARIES_DIR="/Volumes/Data/xcode/Binaries"
-INSTALL_DIR="/Users/kochj/Applications"
+INSTALL_DIR="$HOME/Applications"
 APP_NAME="MLX Code.app"
 
 # Find build path
