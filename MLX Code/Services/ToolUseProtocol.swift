@@ -303,9 +303,12 @@ actor ToolUseProtocol {
             throw MLXToolError.missingParameter("command")
         }
 
+        // CRITICAL SECURITY: Validate command before execution (same as BashTool)
+        let validatedCommand = try CommandValidator.validateBashCommand(command)
+
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/bin/bash")
-        process.arguments = ["-c", command]
+        process.arguments = ["-c", validatedCommand]
 
         if let workingDir = args["working_dir"] as? String {
             process.currentDirectoryURL = URL(fileURLWithPath: workingDir)

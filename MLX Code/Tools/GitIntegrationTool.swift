@@ -320,11 +320,10 @@ class GitIntegrationTool: BaseTool {
     // MARK: - Helper Methods
 
     private func runGitCommand(_ command: String, in directory: String) async throws -> String {
-        let fullCommand = "cd \"\(directory)\" && git \(command) 2>&1"
-
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/bin/bash")
-        process.arguments = ["-c", fullCommand]
+        process.currentDirectoryURL = URL(fileURLWithPath: directory)
+        process.arguments = ["-c", "git \(command) 2>&1"]
 
         let pipe = Pipe()
         process.standardOutput = pipe

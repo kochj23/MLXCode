@@ -240,11 +240,12 @@ class ErrorDiagnosisTool: BaseTool {
         let flag = isWorkspace ? "-workspace" : "-project"
 
         let buildCommand = """
-        cd "\(directory)" && xcodebuild \(flag) "\(project)" -scheme "\(getDefaultScheme(project))" clean build 2>&1
+        xcodebuild \(flag) "\(project)" -scheme "\(getDefaultScheme(project))" clean build 2>&1
         """
 
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/bin/bash")
+        process.currentDirectoryURL = URL(fileURLWithPath: directory)
         process.arguments = ["-c", buildCommand]
 
         let pipe = Pipe()
