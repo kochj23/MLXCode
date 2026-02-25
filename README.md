@@ -156,6 +156,22 @@ MLX Code (SwiftUI)
 
 ---
 
+## Security
+
+### Shell Execution Safety
+- **Command Validation**: All bash commands pass through `CommandValidator` before execution, blocking dangerous patterns (rm -rf /, fork bombs, etc.)
+- **No Shell Interpolation**: Git and build tools use `process.currentDirectoryURL` instead of `cd` string interpolation, preventing directory traversal and injection attacks
+- **Tool Approval Flow**: Write and execute tools (bash, file write, xcode build) require user confirmation before running
+- **Read-Only Auto-Approve**: Only safe, read-only tools (grep, glob, file read) auto-approve without user interaction
+
+### Data Privacy
+- **100% Local**: All model inference runs on-device via Apple MLX -- no data leaves your machine
+- **No Telemetry**: No analytics, crash reporting, or usage tracking
+- **No API Keys Required**: No cloud services, no subscriptions, no accounts
+- **Local Memory Storage**: User memories stored in `~/.mlxcode/memories.json`, never transmitted
+
+---
+
 ## What It Doesn't Do
 
 Being honest about limitations:
