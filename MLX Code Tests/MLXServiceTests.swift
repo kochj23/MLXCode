@@ -25,7 +25,7 @@ class MLXServiceTests: XCTestCase {
                 description: "Debug response"
             ),
             (
-                json: #"{"success":true,"path":"/Users/kochj/.mlx/models/phi-3.5-mini","name":"phi-3.5-mini","cached":false,"message":"Model loaded successfully"}"#,
+                json: #"{"success":true,"path":"/Users/testuser/.mlx/models/phi-3.5-mini","name":"phi-3.5-mini","cached":false,"message":"Model loaded successfully"}"#,
                 shouldSucceed: true,
                 description: "Load success response (missing 'type' field)"
             ),
@@ -91,8 +91,8 @@ class MLXServiceTests: XCTestCase {
         let fileManager = FileManager.default
         let testPaths = [
             "~/.mlx/models/phi-3.5-mini",
-            "/Users/kochj/.mlx/models/phi-3.5-mini",
-            "/Users/kochj/Downloads/MLXCode/phi-3.5-mini"
+            "/Users/testuser/.mlx/models/phi-3.5-mini",
+            "/Users/testuser/Downloads/MLXCode/phi-3.5-mini"
         ]
 
         for path in testPaths {
@@ -127,7 +127,7 @@ class MLXServiceTests: XCTestCase {
         // Simulate what the daemon sends
         let daemonResponses = [
             #"{"type":"ready","message":"Daemon started and ready"}"#,
-            #"{"success":true,"path":"/Users/kochj/.mlx/models/phi-3.5-mini","name":"phi-3.5-mini","cached":false,"message":"Model loaded successfully"}"#
+            #"{"success":true,"path":"/Users/testuser/.mlx/models/phi-3.5-mini","name":"phi-3.5-mini","cached":false,"message":"Model loaded successfully"}"#
         ]
 
         for response in daemonResponses {
@@ -154,8 +154,8 @@ class MLXServiceTests: XCTestCase {
 
         let paths = [
             "~/.mlx/models",
-            "/Users/kochj/.mlx/models",
-            "/Users/kochj/Downloads/MLXCode"
+            "/Users/testuser/.mlx/models",
+            "/Users/testuser/Downloads/MLXCode"
         ]
 
         for path in paths {
