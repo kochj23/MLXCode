@@ -261,7 +261,7 @@ class XcodeTool: BaseTool {
         let xcodeService = XcodeService.shared
         try await xcodeService.setProject(path: projectPath)
 
-        let scheme = (try? stringParameter(parameters, key: "scheme")) ?? ((projectPath as NSString).lastPathComponent as NSString).deletingPathExtension
+        let scheme = (try? stringParameter(parameters, key: "scheme")) ?? URL(fileURLWithPath: projectPath).deletingPathExtension().lastPathComponent
         let configuration = (try? stringParameter(parameters, key: "configuration")) ?? "Release"
 
         var bumpComponent: VersionComponent?
@@ -304,7 +304,7 @@ class XcodeTool: BaseTool {
         let xcodeService = XcodeService.shared
         try await xcodeService.setProject(path: projectPath)
 
-        let scheme = (try? stringParameter(parameters, key: "scheme")) ?? ((projectPath as NSString).lastPathComponent as NSString).deletingPathExtension
+        let scheme = (try? stringParameter(parameters, key: "scheme")) ?? URL(fileURLWithPath: projectPath).deletingPathExtension().lastPathComponent
 
         // Archive first
         let archiveResult = try await xcodeService.archive(scheme: scheme)
@@ -327,7 +327,7 @@ class XcodeTool: BaseTool {
         let xcodeService = XcodeService.shared
         try await xcodeService.setProject(path: projectPath)
 
-        let scheme = (try? stringParameter(parameters, key: "scheme")) ?? ((projectPath as NSString).lastPathComponent as NSString).deletingPathExtension
+        let scheme = (try? stringParameter(parameters, key: "scheme")) ?? URL(fileURLWithPath: projectPath).deletingPathExtension().lastPathComponent
 
         let archiveResult = try await xcodeService.archive(scheme: scheme)
         let installedPath = try await xcodeService.installToApplications(appPath: archiveResult.appPath)
@@ -340,7 +340,7 @@ class XcodeTool: BaseTool {
         let xcodeService = XcodeService.shared
         try await xcodeService.setProject(path: projectPath)
 
-        let scheme = (try? stringParameter(parameters, key: "scheme")) ?? ((projectPath as NSString).lastPathComponent as NSString).deletingPathExtension
+        let scheme = (try? stringParameter(parameters, key: "scheme")) ?? URL(fileURLWithPath: projectPath).deletingPathExtension().lastPathComponent
 
         let archiveResult = try await xcodeService.archive(scheme: scheme)
         let appName = archiveResult.appName.replacingOccurrences(of: ".app", with: "")

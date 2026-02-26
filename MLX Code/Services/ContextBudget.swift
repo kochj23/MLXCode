@@ -12,6 +12,21 @@ import Foundation
 
 /// Manages token budget allocation across context components
 struct ContextBudget {
+    // MARK: - Budget Allocation Ratios
+    // These ratios divide the conversation budget (total minus fixed allocations).
+    // Recent messages get the largest share to preserve conversational context.
+    // Project context provides file tree / recent file awareness.
+    // Summary budget holds a compressed summary of older dropped messages.
+
+    /// Fraction of conversation budget allocated to recent messages
+    private static let recentMessagesRatio = 0.7
+
+    /// Fraction of conversation budget allocated to project context (file tree, recent files)
+    private static let projectContextRatio = 0.2
+
+    /// Fraction of conversation budget allocated to conversation summary of dropped messages
+    private static let summaryRatio = 0.1
+
     /// Total token budget (model's context window)
     let totalBudget: Int
 
@@ -31,17 +46,17 @@ struct ContextBudget {
 
     /// Budget for recent messages (70% of conversation budget)
     var recentMessagesBudget: Int {
-        Int(Double(conversationBudget) * 0.7)
+        Int(Double(conversationBudget) * Self.recentMessagesRatio)
     }
 
-    /// Budget for project context — file tree, recent files (20%)
+    /// Budget for project context -- file tree, recent files (20%)
     var projectContextBudget: Int {
-        Int(Double(conversationBudget) * 0.2)
+        Int(Double(conversationBudget) * Self.projectContextRatio)
     }
 
     /// Budget for conversation summary of dropped messages (10%)
     var summaryBudget: Int {
-        Int(Double(conversationBudget) * 0.1)
+        Int(Double(conversationBudget) * Self.summaryRatio)
     }
 
     /// Creates a context budget for the given model

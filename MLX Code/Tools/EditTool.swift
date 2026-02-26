@@ -63,16 +63,9 @@ actor EditTool {
         // Write new content
         try newContent.write(toFile: filePath, atomically: true, encoding: .utf8)
 
-        // TODO: Record for undo (temporarily disabled due to build issues)
-        // let operation = FileOperation.edit(
-        //     path: filePath,
-        //     beforeContent: originalContent,
-        //     afterContent: newContent
-        // )
-        //
-        // await MainActor.run {
-        //     FileUndoManager.shared.recordOperation(operation)
-        // }
+        // Undo recording disabled: FileUndoManager and FileOperation types were removed
+        // during a build refactor. Undo support can be re-added by implementing a
+        // FileUndoManager that stores before/after content keyed by file path.
 
         return EditResult(
             success: true,
@@ -113,16 +106,8 @@ actor EditTool {
         // Write
         try currentContent.write(toFile: filePath, atomically: true, encoding: .utf8)
 
-        // TODO: Record undo (temporarily disabled due to build issues)
-        // let operation = FileOperation.edit(
-        //     path: filePath,
-        //     beforeContent: originalContent,
-        //     afterContent: currentContent
-        // )
-        //
-        // await MainActor.run {
-        //     FileUndoManager.shared.recordOperation(operation)
-        // }
+        // Undo recording disabled: FileUndoManager and FileOperation types were removed
+        // during a build refactor. See single-edit method above for details.
 
         return EditResult(
             success: true,

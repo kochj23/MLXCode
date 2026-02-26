@@ -19,6 +19,9 @@ struct SettingsView: View {
     /// Dismiss action
     @Environment(\.dismiss) private var dismiss
 
+    /// Whether to show the clear conversations confirmation alert
+    @State private var showingClearConversationsAlert = false
+
     /// Model being downloaded
     @State private var downloadingModelId: UUID?
 
@@ -620,7 +623,7 @@ struct SettingsView: View {
                         .frame(maxWidth: 300)
 
                         Button(role: .destructive, action: {
-                            // TODO: Implement confirmation dialog
+                            showingClearConversationsAlert = true
                         }) {
                             HStack {
                                 Image(systemName: "trash")
@@ -630,6 +633,14 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.bordered)
                         .frame(maxWidth: 300)
+                        .alert("Clear All Conversations", isPresented: $showingClearConversationsAlert) {
+                            Button("Cancel", role: .cancel) { }
+                            Button("Clear All", role: .destructive) {
+                                clearAllConversations()
+                            }
+                        } message: {
+                            Text("This will permanently delete all conversation history. This action cannot be undone.")
+                        }
                     }
                 }
 
@@ -733,6 +744,24 @@ struct SettingsView: View {
     private func openConsoleApp() {
         let consoleURL = URL(fileURLWithPath: "/System/Applications/Utilities/Console.app")
         NSWorkspace.shared.openApplication(at: consoleURL, configuration: NSWorkspace.OpenConfiguration())
+    }
+
+    /// Clears all saved conversations from Application Support
+    private func clearAllConversations() {
+        let fileManager = FileManager.default
+        guard let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return }
+        let conversationsDir = appSupport.appendingPathComponent("MLX Code/conversations")
+
+        guard fileManager.fileExists(atPath: conversationsDir.path) else { return }
+
+        do {
+            let files = try fileManager.contentsOfDirectory(at: conversationsDir, includingPropertiesForKeys: nil)
+            for file in files where file.pathExtension == "json" {
+                try fileManager.removeItem(at: file)
+            }
+        } catch {
+            print("Failed to clear conversations: \(error.localizedDescription)")
+        }
     }
 
     /// Opens the application support folder in Finder

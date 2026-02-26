@@ -285,7 +285,7 @@ class TestGenerationTool: BaseTool {
                 XCTAssertNotNil(sut)
             }
 
-            // TODO: Add more test cases
+            // Additional test methods should be added for each public method in \(className)
         }
         """
 
