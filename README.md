@@ -4,7 +4,7 @@
 ![Platform](https://img.shields.io/badge/platform-macOS%2014%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-**Local AI coding assistant for macOS, powered by Apple MLX.**
+**Local AI coding assistant for macOS, powered by Apple MLX (Machine Learning eXtensions).**
 
 MLX Code runs language models directly on your Mac using Apple Silicon. No cloud, no API keys, no subscriptions. Your code stays on your machine.
 
@@ -24,7 +24,7 @@ MLX Code is a chat-based coding assistant with tool calling. You describe what y
 | **Glob** | Find files by pattern |
 | **Xcode** | Build, test, clean, archive, full deploy pipeline |
 | **Git** | Status, diff, commit, branch, log, push, pull |
-| **GitHub** | Issues, PRs, branches, credential scanning |
+| **GitHub** | Issues, PRs (Pull Requests), branches, credential scanning |
 | **Code Navigation** | Jump to definitions, find symbols |
 | **Code Analysis** | Metrics, dependencies, lint, symbols, full analysis |
 | **Error Diagnosis** | Analyze and explain build errors |
@@ -52,7 +52,7 @@ Read-only tools (grep, glob, file read, code navigation) auto-approve. Write/exe
 
 ### Xcode Integration
 - Build, test, clean, archive from chat
-- Full deploy pipeline: version bump, build, archive, DMG, install
+- Full deploy pipeline: version bump, build, archive, DMG (Disk Image), install
 - Error diagnosis with context-aware analysis
 - GitHub integration: issues, PRs, branches, credential scanning
 - Code analysis: metrics, dependencies, linting, symbol inspection
@@ -92,7 +92,7 @@ Models download automatically on first use. You can also add custom models from 
 
 - **macOS 14.0** (Sonoma) or later
 - **Apple Silicon** (M1, M2, M3, M4)
-- **8 GB RAM** minimum (16 GB recommended for 7B models)
+- **8 GB RAM (Random Access Memory)** minimum (16 GB recommended for 7B models)
 - **Python 3.9+** with `mlx-lm` installed
 
 ---
