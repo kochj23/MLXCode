@@ -75,13 +75,13 @@ actor ModelSecurityValidator {
         // 2. Check file extension
         if dangerousExtensions.contains(ext) {
             issues.append(.dangerousFormat(ext, reason: "Format can execute arbitrary code"))
-            await logSecurityEvent("❌ BLOCKED: Dangerous format '\(ext)' at \(path)", level: .critical)
+            await logSecurityEvent("BLOCKED: Dangerous format '\(ext)' at \(path)", level: .critical)
             return ValidationResult(isSafe: false, issues: issues, warnings: warnings)
         }
 
         if !safeExtensions.contains(ext) {
             warnings.append("Unknown file extension '\(ext)' - proceeding with caution")
-            await logSecurityEvent("⚠️ Unknown file extension: \(ext)", level: .warning)
+            await logSecurityEvent("Unknown file extension: \(ext)", level: .warning)
         }
 
         // 3. Verify SafeTensors header if applicable
@@ -97,7 +97,7 @@ actor ModelSecurityValidator {
         if let sourceURL = sourceURL {
             if !isTrustedSource(sourceURL) {
                 warnings.append("Model from untrusted source: \(sourceURL)")
-                await logSecurityEvent("⚠️ Untrusted source: \(sourceURL)", level: .warning)
+                await logSecurityEvent("Untrusted source: \(sourceURL)", level: .warning)
             }
         }
 
@@ -116,7 +116,10 @@ actor ModelSecurityValidator {
             }
         }
 
-        await logSecurityEvent("✅ SAFE: Model validated: \(path)", level: .info)
+        // 7. Warn if no hash verification was performed
+        warnings.append("No hash verification performed - provide an expected SHA256 hash for stronger integrity checking")
+
+        await logSecurityEvent("Model validated (no hash verification): \(path)", level: .info)
 
         return ValidationResult(
             isSafe: true,
@@ -125,6 +128,49 @@ actor ModelSecurityValidator {
             modelPath: path,
             format: ext
         )
+    }
+
+    /// Verifies a file's SHA256 hash matches an expected value
+    /// - Parameters:
+    ///   - filePath: Path to the file to verify
+    ///   - expectedHash: Expected SHA256 hex string (lowercase)
+    /// - Returns: True if the computed hash matches the expected hash
+    func verifyModelHash(filePath: String, expectedHash: String) async -> Bool {
+        guard FileManager.default.fileExists(atPath: filePath) else {
+            await logSecurityEvent("Hash verification failed: file not found at \(filePath)", level: .error)
+            return false
+        }
+
+        guard let fileHandle = FileHandle(forReadingAtPath: filePath) else {
+            await logSecurityEvent("Hash verification failed: cannot open file at \(filePath)", level: .error)
+            return false
+        }
+
+        defer { try? fileHandle.close() }
+
+        var hasher = SHA256()
+        let bufferSize = 65_536
+
+        while autoreleasepool(invoking: {
+            guard let chunk = try? fileHandle.read(upToCount: bufferSize), !chunk.isEmpty else {
+                return false
+            }
+            hasher.update(data: chunk)
+            return true
+        }) {}
+
+        let digest = hasher.finalize()
+        let computedHash = digest.map { String(format: "%02x", $0) }.joined()
+
+        let matches = computedHash == expectedHash.lowercased()
+
+        if matches {
+            await logSecurityEvent("Hash verification passed for \(filePath)", level: .info)
+        } else {
+            await logSecurityEvent("Hash verification FAILED for \(filePath) - expected: \(expectedHash), got: \(computedHash)", level: .critical)
+        }
+
+        return matches
     }
 
     /// Validates SafeTensors file header
@@ -146,7 +192,7 @@ actor ModelSecurityValidator {
 
         // Sanity check: header should be < 10MB
         guard headerSize < 10_000_000 else {
-            await logSecurityEvent("❌ Invalid SafeTensors: header size \(headerSize) too large", level: .error)
+            await logSecurityEvent("Invalid SafeTensors: header size \(headerSize) too large", level: .error)
             return false
         }
 
@@ -174,7 +220,7 @@ actor ModelSecurityValidator {
         // Check for pickle signatures
         for i in 0..<(data.count - 1) {
             if data[i] == 0x80 && (2...5).contains(data[i + 1]) {
-                await logSecurityEvent("❌ PICKLE DETECTED in file: \(path)", level: .critical)
+                await logSecurityEvent("PICKLE DETECTED in file: \(path)", level: .critical)
                 return true
             }
         }
@@ -220,7 +266,7 @@ actor ModelSecurityValidator {
         for pattern in dangerousPatterns {
             if script.contains(pattern) {
                 issues.append(.dangerousCode("Script contains dangerous operation: \(pattern)"))
-                await logSecurityEvent("❌ BLOCKED: Python script contains '\(pattern)'", level: .critical)
+                await logSecurityEvent("BLOCKED: Python script contains '\(pattern)'", level: .critical)
             }
         }
 

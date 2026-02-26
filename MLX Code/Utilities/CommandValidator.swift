@@ -31,35 +31,39 @@ enum CommandValidator {
             throw SecurityError.commandLength(command.count)
         }
 
-        // 2. Check for dangerous characters
+        // 2. FIRST: Check for dangerous characters via SecurityUtils (short-circuits on ;|&$`<> etc.)
+        // This MUST run before pattern matching since it catches shell metacharacters that enable injection
         guard SecurityUtils.validateCommand(command) else {
+            logSecurityEvent("BLOCKED command with dangerous characters", level: .critical)
             throw SecurityError.dangerousCharacters("Command contains shell metacharacters")
         }
 
-        // 3. Check for dangerous patterns
-        let dangerousPatterns = [
-            "rm -rf /",
-            ":(){ :|:& };:",  // Fork bomb
-            "chmod 777",
-            "sudo",
-            "su ",
-            "> /dev/",
-            "curl.*|.*sh",
-            "wget.*|.*sh",
-            "eval",
-            "exec"
+        // 3. SECOND: Check for dangerous patterns using proper regex matching
+        // Each tuple: (regex pattern, human-readable description)
+        let dangerousPatterns: [(pattern: String, description: String)] = [
+            (#"\brm\s+-rf\b"#, "rm -rf"),
+            (#":\(\)\s*\{.*\}.*;"#, "fork bomb"),
+            (#"\bchmod\s+777\b"#, "chmod 777"),
+            (#"\bsudo\b"#, "sudo"),
+            (#"\bsu\b"#, "su"),
+            (#">\s*/dev/"#, "> /dev/"),
+            (#"\bcurl\b.*\|\s*\bsh\b"#, "curl pipe to sh"),
+            (#"\bwget\b.*\|\s*\bsh\b"#, "wget pipe to sh"),
+            (#"\beval\b"#, "eval"),
+            (#"\bexec\b"#, "exec")
         ]
 
         let lowerCommand = command.lowercased()
-        for pattern in dangerousPatterns {
-            if lowerCommand.contains(pattern.lowercased()) {
-                logSecurityEvent("🔴 BLOCKED dangerous pattern: \(pattern) in command", level: .critical)
-                throw SecurityError.dangerousPattern(pattern)
+        for (regexPattern, description) in dangerousPatterns {
+            if let regex = try? NSRegularExpression(pattern: regexPattern, options: [.caseInsensitive]),
+               regex.firstMatch(in: lowerCommand, range: NSRange(lowerCommand.startIndex..., in: lowerCommand)) != nil {
+                logSecurityEvent("BLOCKED dangerous pattern: \(description) in command", level: .critical)
+                throw SecurityError.dangerousPattern(description)
             }
         }
 
         // 4. Log for audit trail
-        logSecurityEvent("✅ Validated bash command: \(command.prefix(100))", level: .info)
+        logSecurityEvent("Validated bash command: \(command.prefix(100))", level: .info)
 
         return command
     }
@@ -79,7 +83,7 @@ enum CommandValidator {
 
         // Check whitelist
         guard allowedCommands.contains(firstWord) else {
-            logSecurityEvent("🔴 BLOCKED non-whitelisted command: \(firstWord)", level: .critical)
+            logSecurityEvent("BLOCKED non-whitelisted command: \(firstWord)", level: .critical)
             throw SecurityError.commandNotWhitelisted(firstWord)
         }
 
@@ -99,25 +103,33 @@ enum CommandValidator {
             throw SecurityError.codeLength(code.count)
         }
 
-        // 2. Block dangerous imports
-        let dangerousImports = [
-            "import os",
-            "import subprocess",
-            "import sys",
-            "import pickle",
-            "import _pickle",
-            "import marshal",
-            "import shelve",
-            "from os import",
-            "from subprocess import",
-            "from sys import",
-            "__import__"
+        // 2. Block dangerous imports using regex (skip comment lines)
+        // Each tuple: (regex pattern, human-readable description)
+        let dangerousImportPatterns: [(pattern: String, description: String)] = [
+            (#"(?:^|\n)\s*import\s+os\b"#, "import os"),
+            (#"(?:^|\n)\s*import\s+subprocess\b"#, "import subprocess"),
+            (#"(?:^|\n)\s*import\s+sys\b"#, "import sys"),
+            (#"(?:^|\n)\s*import\s+pickle\b"#, "import pickle"),
+            (#"(?:^|\n)\s*import\s+_pickle\b"#, "import _pickle"),
+            (#"(?:^|\n)\s*import\s+marshal\b"#, "import marshal"),
+            (#"(?:^|\n)\s*import\s+shelve\b"#, "import shelve"),
+            (#"(?:^|\n)\s*from\s+os\s+import\b"#, "from os import"),
+            (#"(?:^|\n)\s*from\s+subprocess\s+import\b"#, "from subprocess import"),
+            (#"(?:^|\n)\s*from\s+sys\s+import\b"#, "from sys import"),
+            (#"\b__import__\b"#, "__import__")
         ]
 
-        for dangerous in dangerousImports {
-            if code.contains(dangerous) {
-                logSecurityEvent("🔴 BLOCKED dangerous Python import: \(dangerous)", level: .critical)
-                throw SecurityError.dangerousImport(dangerous)
+        // Filter out comment lines before checking
+        let codeLines = code.components(separatedBy: "\n")
+        let uncommentedCode = codeLines
+            .filter { !$0.trimmingCharacters(in: .whitespaces).hasPrefix("#") }
+            .joined(separator: "\n")
+
+        for (regexPattern, description) in dangerousImportPatterns {
+            if let regex = try? NSRegularExpression(pattern: regexPattern, options: []),
+               regex.firstMatch(in: uncommentedCode, range: NSRange(uncommentedCode.startIndex..., in: uncommentedCode)) != nil {
+                logSecurityEvent("BLOCKED dangerous Python import: \(description)", level: .critical)
+                throw SecurityError.dangerousImport(description)
             }
         }
 
@@ -136,19 +148,19 @@ enum CommandValidator {
 
         for dangerous in dangerousFunctions {
             if code.contains(dangerous) {
-                logSecurityEvent("🔴 BLOCKED dangerous Python function: \(dangerous)", level: .critical)
+                logSecurityEvent("BLOCKED dangerous Python function: \(dangerous)", level: .critical)
                 throw SecurityError.dangerousFunction(dangerous)
             }
         }
 
         // 4. Block system manipulation
         if code.contains("os.") || code.contains("sys.") || code.contains("subprocess.") {
-            logSecurityEvent("🔴 BLOCKED system manipulation in Python code", level: .critical)
+            logSecurityEvent("BLOCKED system manipulation in Python code", level: .critical)
             throw SecurityError.systemManipulation
         }
 
         // 5. Log for audit
-        logSecurityEvent("✅ Validated Python code: \(code.prefix(100))", level: .info)
+        logSecurityEvent("Validated Python code: \(code.prefix(100))", level: .info)
 
         return code
     }
@@ -185,7 +197,7 @@ enum CommandValidator {
         }
 
         // 5. Log validation
-        logSecurityEvent("✅ Validated Python script: \(expandedPath)", level: .info)
+        logSecurityEvent("Validated Python script: \(expandedPath)", level: .info)
 
         return expandedPath
     }
@@ -221,7 +233,7 @@ enum CommandValidator {
 
         for pattern in privateIPPatterns {
             if host.range(of: pattern, options: .regularExpression) != nil {
-                logSecurityEvent("🔴 BLOCKED private IP access: \(host)", level: .critical)
+                logSecurityEvent("BLOCKED private IP access: \(host)", level: .critical)
                 throw SecurityError.privateIPBlocked(host)
             }
         }
@@ -229,7 +241,7 @@ enum CommandValidator {
         // 3. Block localhost variations
         let localhostPatterns = ["localhost", "local", "127.0.0.1", "0.0.0.0", "::1"]
         if localhostPatterns.contains(host.lowercased()) {
-            logSecurityEvent("🔴 BLOCKED localhost access: \(host)", level: .critical)
+            logSecurityEvent("BLOCKED localhost access: \(host)", level: .critical)
             throw SecurityError.localhostBlocked
         }
 
@@ -238,11 +250,11 @@ enum CommandValidator {
             // Block common internal service ports
             let suspiciousPorts = [22, 23, 25, 3306, 5432, 6379, 27017, 9200]
             if suspiciousPorts.contains(port) {
-                logSecurityEvent("⚠️ WARNING: Suspicious port \(port)", level: .warning)
+                logSecurityEvent("Suspicious port \(port)", level: .warning)
             }
         }
 
-        logSecurityEvent("✅ Validated URL: \(urlString)", level: .info)
+        logSecurityEvent("Validated URL: \(urlString)", level: .info)
         return url
     }
 
