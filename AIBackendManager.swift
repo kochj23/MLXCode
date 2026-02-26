@@ -54,16 +54,32 @@ class AIBackendManager: ObservableObject {
     @Published var activeBackend: AIBackend = .ollama
     @Published var lastRefreshDate: Date?
 
-    // Cloud AI Services - API Keys (WARNING: Use Keychain in production!)
-    @Published var openAIAPIKey: String = ""
-    @Published var googleCloudAPIKey: String = ""
-    @Published var azureAPIKey: String = ""
-    @Published var azureEndpoint: String = ""
-    @Published var awsAccessKey: String = ""
-    @Published var awsSecretKey: String = ""
+    // Cloud AI Services - API Keys (stored in macOS Keychain)
+    @Published var openAIAPIKey: String = "" {
+        didSet { try? KeychainManager.shared.save(openAIAPIKey, forKey: "OpenAI_Key") }
+    }
+    @Published var googleCloudAPIKey: String = "" {
+        didSet { try? KeychainManager.shared.save(googleCloudAPIKey, forKey: "GoogleCloud_Key") }
+    }
+    @Published var azureAPIKey: String = "" {
+        didSet { try? KeychainManager.shared.save(azureAPIKey, forKey: "Azure_Key") }
+    }
+    @Published var azureEndpoint: String = "" {
+        didSet { try? KeychainManager.shared.save(azureEndpoint, forKey: "Azure_Endpoint") }
+    }
+    @Published var awsAccessKey: String = "" {
+        didSet { try? KeychainManager.shared.save(awsAccessKey, forKey: "AWS_AccessKey") }
+    }
+    @Published var awsSecretKey: String = "" {
+        didSet { try? KeychainManager.shared.save(awsSecretKey, forKey: "AWS_SecretKey") }
+    }
     @Published var awsRegion: String = "us-east-1"
-    @Published var ibmWatsonAPIKey: String = ""
-    @Published var ibmWatsonURL: String = ""
+    @Published var ibmWatsonAPIKey: String = "" {
+        didSet { try? KeychainManager.shared.save(ibmWatsonAPIKey, forKey: "IBM_Key") }
+    }
+    @Published var ibmWatsonURL: String = "" {
+        didSet { try? KeychainManager.shared.save(ibmWatsonURL, forKey: "IBM_URL") }
+    }
 
     // Cloud availability
     @Published var isOpenAIAvailable = false
@@ -382,16 +398,31 @@ class AIBackendManager: ObservableObject {
         swarmUIServerURL = defaults.string(forKey: "AIBackend_SwarmUIURL") ?? "http://localhost:7801"
         selectedOllamaModel = defaults.string(forKey: "AIBackend_OllamaModel") ?? "mistral:latest"
 
-        // Cloud API Keys (WARNING: These should be in Keychain in production!)
-        openAIAPIKey = defaults.string(forKey: "AIBackend_OpenAI_Key") ?? ""
-        googleCloudAPIKey = defaults.string(forKey: "AIBackend_GoogleCloud_Key") ?? ""
-        azureAPIKey = defaults.string(forKey: "AIBackend_Azure_Key") ?? ""
-        azureEndpoint = defaults.string(forKey: "AIBackend_Azure_Endpoint") ?? ""
-        awsAccessKey = defaults.string(forKey: "AIBackend_AWS_AccessKey") ?? ""
-        awsSecretKey = defaults.string(forKey: "AIBackend_AWS_SecretKey") ?? ""
+        // Cloud API Keys — migrate from UserDefaults to Keychain on first load
+        let keychain = KeychainManager.shared
+        let migrations: [(udKey: String, kcKey: String)] = [
+            ("AIBackend_OpenAI_Key",      "OpenAI_Key"),
+            ("AIBackend_GoogleCloud_Key",  "GoogleCloud_Key"),
+            ("AIBackend_Azure_Key",        "Azure_Key"),
+            ("AIBackend_Azure_Endpoint",   "Azure_Endpoint"),
+            ("AIBackend_AWS_AccessKey",    "AWS_AccessKey"),
+            ("AIBackend_AWS_SecretKey",    "AWS_SecretKey"),
+            ("AIBackend_IBM_Key",          "IBM_Key"),
+            ("AIBackend_IBM_URL",          "IBM_URL"),
+        ]
+        for m in migrations {
+            keychain.migrateFromUserDefaults(userDefaultsKey: m.udKey, keychainKey: m.kcKey)
+        }
+
+        openAIAPIKey = keychain.load(forKey: "OpenAI_Key")
+        googleCloudAPIKey = keychain.load(forKey: "GoogleCloud_Key")
+        azureAPIKey = keychain.load(forKey: "Azure_Key")
+        azureEndpoint = keychain.load(forKey: "Azure_Endpoint")
+        awsAccessKey = keychain.load(forKey: "AWS_AccessKey")
+        awsSecretKey = keychain.load(forKey: "AWS_SecretKey")
         awsRegion = defaults.string(forKey: "AIBackend_AWS_Region") ?? "us-east-1"
-        ibmWatsonAPIKey = defaults.string(forKey: "AIBackend_IBM_Key") ?? ""
-        ibmWatsonURL = defaults.string(forKey: "AIBackend_IBM_URL") ?? ""
+        ibmWatsonAPIKey = keychain.load(forKey: "IBM_Key")
+        ibmWatsonURL = keychain.load(forKey: "IBM_URL")
 
         if let backendRaw = defaults.string(forKey: "AIBackend_Active"),
            let backend = AIBackend(rawValue: backendRaw) {
@@ -411,16 +442,9 @@ class AIBackendManager: ObservableObject {
         defaults.set(swarmUIServerURL, forKey: "AIBackend_SwarmUIURL")
         defaults.set(selectedOllamaModel, forKey: "AIBackend_OllamaModel")
 
-        // Cloud API Keys (WARNING: These should be in Keychain in production!)
-        defaults.set(openAIAPIKey, forKey: "AIBackend_OpenAI_Key")
-        defaults.set(googleCloudAPIKey, forKey: "AIBackend_GoogleCloud_Key")
-        defaults.set(azureAPIKey, forKey: "AIBackend_Azure_Key")
-        defaults.set(azureEndpoint, forKey: "AIBackend_Azure_Endpoint")
-        defaults.set(awsAccessKey, forKey: "AIBackend_AWS_AccessKey")
-        defaults.set(awsSecretKey, forKey: "AIBackend_AWS_SecretKey")
+        // Cloud API Keys — saved to Keychain via @Published didSet observers
+        // Only non-secret config (region) stays in UserDefaults
         defaults.set(awsRegion, forKey: "AIBackend_AWS_Region")
-        defaults.set(ibmWatsonAPIKey, forKey: "AIBackend_IBM_Key")
-        defaults.set(ibmWatsonURL, forKey: "AIBackend_IBM_URL")
 
         defaults.set(activeBackend.rawValue, forKey: "AIBackend_Active")
     }
