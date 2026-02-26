@@ -44,6 +44,9 @@ actor MLXService {
     /// Daemon health check task
     private var healthCheckTask: Task<Void, Never>?
 
+    /// Stderr monitoring task for the daemon process
+    private var stderrMonitorTask: Task<Void, Never>?
+
     /// Context window size reported by loaded model (nil if unknown)
     private(set) var loadedModelContextWindow: Int?
 
@@ -63,73 +66,59 @@ actor MLXService {
     /// - Parameter model: The model to load
     /// - Throws: MLXServiceError if loading fails
     func loadModel(_ model: MLXModel) async throws {
-        print("🔵🔵🔵 MLXService.loadModel() called for: \(model.name)")
         await LogManager.shared.info("Loading model: \(model.name)", category: "MLX")
-        await SecureLogger.shared.info("🔵 loadModel() called for: \(model.name)", category: "MLXService")
+        await SecureLogger.shared.info("loadModel() called for: \(model.name)", category: "MLXService")
 
         // Validate model
-        print("🔍🔍🔍 Validating model...")
+        await SecureLogger.shared.debug("Validating model...", category: "MLXService")
         guard model.isValid() else {
-            print("❌❌❌ Model validation FAILED")
-            await SecureLogger.shared.error("❌ Model validation failed", category: "MLXService")
+            await SecureLogger.shared.error("Model validation failed", category: "MLXService")
             throw MLXServiceError.invalidModel
         }
 
-        print("✅✅✅ Model validation passed")
-        await SecureLogger.shared.info("✅ Model validation passed", category: "MLXService")
+        await SecureLogger.shared.debug("Model validation passed", category: "MLXService")
 
         guard model.isDownloaded else {
-            print("❌❌❌ Model not downloaded")
-            await SecureLogger.shared.error("❌ Model not downloaded", category: "MLXService")
+            await SecureLogger.shared.error("Model not downloaded", category: "MLXService")
             throw MLXServiceError.modelNotDownloaded
         }
 
-        print("✅✅✅ Model is marked as downloaded")
-        await SecureLogger.shared.info("✅ Model is marked as downloaded", category: "MLXService")
+        await SecureLogger.shared.debug("Model is marked as downloaded", category: "MLXService")
 
         // Expand model path
         let expandedPath = (model.path as NSString).expandingTildeInPath
-        print("📁📁📁 Expanded path: \(expandedPath)")
-        await SecureLogger.shared.info("📁 Expanded path: \(expandedPath)", category: "MLXService")
+        await SecureLogger.shared.debug("Expanded path: \(expandedPath)", category: "MLXService")
 
         // Verify model directory exists
         var isDirectory: ObjCBool = false
         let directoryExists = FileManager.default.fileExists(atPath: expandedPath, isDirectory: &isDirectory)
 
-        print("🔍🔍🔍 Directory check - exists: \(directoryExists), isDirectory: \(isDirectory.boolValue)")
-        await SecureLogger.shared.info("🔍 Directory check - exists: \(directoryExists), isDirectory: \(isDirectory.boolValue)", category: "MLXService")
+        await SecureLogger.shared.debug("Directory check - exists: \(directoryExists), isDirectory: \(isDirectory.boolValue)", category: "MLXService")
 
         guard directoryExists, isDirectory.boolValue else {
-            print("❌❌❌ Model directory not found or not a directory: \(expandedPath)")
-            await SecureLogger.shared.error("❌ Model directory not found or not a directory: \(expandedPath)", category: "MLXService")
+            await SecureLogger.shared.error("Model directory not found or not a directory: \(expandedPath)", category: "MLXService")
             throw MLXServiceError.modelNotFound(expandedPath)
         }
 
-        print("✅✅✅ Model directory exists and is valid")
-        await SecureLogger.shared.info("✅ Model directory exists and is valid", category: "MLXService")
+        await SecureLogger.shared.debug("Model directory exists and is valid", category: "MLXService")
 
         // Verify model has required files (config.json as indicator)
         let configPath = (expandedPath as NSString).appendingPathComponent("config.json")
         let configExists = FileManager.default.fileExists(atPath: configPath)
 
-        print("🔍🔍🔍 Config check - exists: \(configExists) at: \(configPath)")
-        await SecureLogger.shared.info("🔍 Config check - exists: \(configExists) at: \(configPath)", category: "MLXService")
+        await SecureLogger.shared.debug("Config check - exists: \(configExists) at: \(configPath)", category: "MLXService")
 
         guard configExists else {
-            print("❌❌❌ Config file missing: \(configPath)")
-            await SecureLogger.shared.error("❌ Config file missing: \(configPath)", category: "MLXService")
+            await SecureLogger.shared.error("Config file missing: \(configPath)", category: "MLXService")
             throw MLXServiceError.modelNotFound("\(expandedPath) (config.json missing)")
         }
 
-        print("✅✅✅ Config file found")
-        await SecureLogger.shared.info("✅ Config file found", category: "MLXService")
+        await SecureLogger.shared.debug("Config file found", category: "MLXService")
 
         // Start daemon if not running
-        print("🔄🔄🔄 Starting daemon...")
-        await SecureLogger.shared.info("🔄 Starting daemon...", category: "MLXService")
+        await SecureLogger.shared.debug("Starting daemon...", category: "MLXService")
         try await startDaemon()
-        print("✅✅✅ Daemon ready")
-        await SecureLogger.shared.info("✅ Daemon ready", category: "MLXService")
+        await SecureLogger.shared.debug("Daemon ready", category: "MLXService")
 
         // Send load command to Python
         let loadCommand: [String: Any] = [
@@ -137,24 +126,22 @@ actor MLXService {
             "model_path": expandedPath
         ]
 
-        print("📤📤📤 Sending to daemon - model_path: '\(expandedPath)'")
-        await SecureLogger.shared.info("📤 Sending load_model command with path: '\(expandedPath)'", category: "MLXService")
+        await SecureLogger.shared.debug("Sending load_model command with path: '\(expandedPath)'", category: "MLXService")
         try await sendDaemonCommand(loadCommand)
-        await SecureLogger.shared.info("✅ Load command sent", category: "MLXService")
+        await SecureLogger.shared.debug("Load command sent", category: "MLXService")
 
         // Wait for response (may receive debug messages first)
-        await SecureLogger.shared.info("⏳ Waiting for daemon load response...", category: "MLXService")
+        await SecureLogger.shared.debug("Waiting for daemon load response...", category: "MLXService")
         var finalResponse: PythonResponse?
 
         // Read responses until we get the final load result
-        while finalResponse == nil {
+        while finalResponse == nil && !Task.isCancelled {
             let response = try await readDaemonResponse()
 
             if response.type == "debug" {
                 // Log debug messages from daemon
                 if let message = response.message {
-                    print("🐛 Daemon debug: \(message)")
-                    await SecureLogger.shared.info("🐛 Daemon: \(message)", category: "MLXService")
+                    await SecureLogger.shared.debug("Daemon: \(message)", category: "MLXService")
                 }
             } else if response.success != nil {
                 // This is the load response (has success field, no type field)
@@ -166,12 +153,12 @@ actor MLXService {
         }
 
         let response = finalResponse!
-        await SecureLogger.shared.info("📥 Received load response - success: \(response.success ?? false), cached: \(response.cached ?? false)", category: "MLXService")
+        await SecureLogger.shared.debug("Received load response - success: \(response.success ?? false), cached: \(response.cached ?? false)", category: "MLXService")
 
         guard response.success == true else {
             let errorMsg = response.error ?? "Unknown error loading model"
             await LogManager.shared.error("Model load failed: \(errorMsg)", category: "MLX")
-            await SecureLogger.shared.error("❌ Model load failed: \(errorMsg)", category: "MLXService")
+            await SecureLogger.shared.error("Model load failed: \(errorMsg)", category: "MLXService")
             throw MLXServiceError.generationFailed(errorMsg)
         }
 
@@ -181,12 +168,12 @@ actor MLXService {
         // Store context window and chat template info from daemon
         if let contextWindow = response.context_window {
             loadedModelContextWindow = contextWindow
-            await SecureLogger.shared.info("📐 Model context window: \(contextWindow) tokens", category: "MLXService")
+            await SecureLogger.shared.info("Model context window: \(contextWindow) tokens", category: "MLXService")
         }
         hasChatTemplateSupport = response.has_chat_template ?? false
 
         await LogManager.shared.info("Model loaded successfully: \(model.name)", category: "MLX")
-        await SecureLogger.shared.info("✅ MLX model loaded successfully: \(model.name) (context: \(loadedModelContextWindow ?? 8192), chat_template: \(hasChatTemplateSupport))", category: "MLXService")
+        await SecureLogger.shared.info("MLX model loaded successfully: \(model.name) (context: \(loadedModelContextWindow ?? 8192), chat_template: \(hasChatTemplateSupport))", category: "MLXService")
     }
 
     /// Unloads the currently loaded model
@@ -238,43 +225,42 @@ actor MLXService {
         parameters: ModelParameters? = nil,
         streamHandler: ((String) -> Void)? = nil
     ) async throws -> String {
-        await SecureLogger.shared.info("🟢 generate() called with prompt length: \(prompt.count)", category: "MLXService")
+        await SecureLogger.shared.debug("generate() called with prompt length: \(prompt.count)", category: "MLXService")
 
         // Ensure model is loaded
         guard isModelLoaded, let model = loadedModel else {
-            await SecureLogger.shared.error("❌ No model loaded", category: "MLXService")
+            await SecureLogger.shared.error("No model loaded", category: "MLXService")
             throw MLXServiceError.noModelLoaded
         }
 
-        await SecureLogger.shared.info("✅ Model is loaded: \(model.name)", category: "MLXService")
+        await SecureLogger.shared.debug("Model is loaded: \(model.name)", category: "MLXService")
 
         // Prevent concurrent inference
         guard !isInferenceRunning else {
-            await SecureLogger.shared.warning("⚠️ Inference already in progress", category: "MLXService")
+            await SecureLogger.shared.warning("Inference already in progress", category: "MLXService")
             throw MLXServiceError.inferenceInProgress
         }
 
-        await SecureLogger.shared.info("✅ No concurrent inference, proceeding", category: "MLXService")
+        await SecureLogger.shared.debug("No concurrent inference, proceeding", category: "MLXService")
 
         isInferenceRunning = true
         defer { isInferenceRunning = false }
 
         // Sanitize prompt
         let sanitizedPrompt = SecurityUtils.sanitizeUserInput(prompt)
-        await SecureLogger.shared.info("✅ Prompt sanitized", category: "MLXService")
+        await SecureLogger.shared.debug("Prompt sanitized", category: "MLXService")
 
         // Use provided parameters or model defaults
         let genParams = parameters ?? model.parameters
-        await SecureLogger.shared.info("📊 Parameters: temp=\(genParams.temperature), max_tokens=\(genParams.maxTokens)", category: "MLXService")
+        await SecureLogger.shared.debug("Parameters: temp=\(genParams.temperature), max_tokens=\(genParams.maxTokens)", category: "MLXService")
 
         // Validate parameters
         guard genParams.isValid() else {
-            await SecureLogger.shared.error("❌ Invalid parameters", category: "MLXService")
+            await SecureLogger.shared.error("Invalid parameters", category: "MLXService")
             throw MLXServiceError.invalidParameters
         }
 
-        await SecureLogger.shared.info("✅ Parameters validated", category: "MLXService")
-        await SecureLogger.shared.info("🚀 Starting inference...", category: "MLXService")
+        await SecureLogger.shared.debug("Parameters validated, starting inference...", category: "MLXService")
 
         // Send generate command to Python
         let generateCommand: [String: Any] = [
@@ -287,40 +273,39 @@ actor MLXService {
             "stream": streamHandler != nil
         ]
 
-        await SecureLogger.shared.info("📤 Sending generate command to daemon...", category: "MLXService")
+        await SecureLogger.shared.debug("Sending generate command to daemon...", category: "MLXService")
         try await sendDaemonCommand(generateCommand)
-        await SecureLogger.shared.info("✅ Command sent to daemon", category: "MLXService")
+        await SecureLogger.shared.debug("Command sent to daemon", category: "MLXService")
 
         var fullResponse = ""
 
         // Read streaming responses
-        await SecureLogger.shared.info("👂 Listening for daemon responses...", category: "MLXService")
-        while true {
+        await SecureLogger.shared.debug("Listening for daemon responses...", category: "MLXService")
+        while !Task.isCancelled {
             let response = try await readDaemonResponse()
-            await SecureLogger.shared.info("📥 Received response type: \(response.type ?? "nil")", category: "MLXService")
+            await SecureLogger.shared.debug("Received response type: \(response.type ?? "nil")", category: "MLXService")
 
             if response.type == "token" {
                 // Streaming token
                 if let token = response.token {
                     fullResponse += token
-                    await SecureLogger.shared.info("🔹 Token received (length: \(token.count))", category: "MLXService")
                     streamHandler?(token)
                 }
             } else if response.type == "complete" {
                 // Generation complete - DON'T overwrite accumulated tokens!
-                await SecureLogger.shared.info("✅ Complete signal received, total response length: \(fullResponse.count)", category: "MLXService")
+                await SecureLogger.shared.debug("Complete signal received, total response length: \(fullResponse.count)", category: "MLXService")
                 break
             } else if response.type == "done" {
                 // Generation complete (alternate signal)
-                await SecureLogger.shared.info("✅ Generation done signal received", category: "MLXService")
+                await SecureLogger.shared.debug("Generation done signal received", category: "MLXService")
                 break
             } else if response.error != nil {
-                await SecureLogger.shared.error("❌ Python error: \(response.error!)", category: "MLXService")
+                await SecureLogger.shared.error("Python error: \(response.error!)", category: "MLXService")
                 throw MLXServiceError.generationFailed(response.error!)
             }
         }
 
-        await SecureLogger.shared.info("✅ Inference completed, response length: \(fullResponse.count)", category: "MLXService")
+        await SecureLogger.shared.info("Inference completed, response length: \(fullResponse.count)", category: "MLXService")
 
         return fullResponse
     }
@@ -339,16 +324,16 @@ actor MLXService {
         parameters: ModelParameters? = nil,
         streamHandler: ((String) -> Void)? = nil
     ) async throws -> String {
-        await SecureLogger.shared.info("🔵 chatCompletion() called with \(messages.count) messages", category: "MLXService")
+        await SecureLogger.shared.debug("chatCompletion() called with \(messages.count) messages", category: "MLXService")
 
         // Ensure model is loaded
         guard isModelLoaded, let model = loadedModel else {
-            await SecureLogger.shared.error("❌ No model loaded", category: "MLXService")
+            await SecureLogger.shared.error("No model loaded for chatCompletion", category: "MLXService")
             throw MLXServiceError.noModelLoaded
         }
 
         guard !isInferenceRunning else {
-            await SecureLogger.shared.warning("⚠️ Inference already in progress", category: "MLXService")
+            await SecureLogger.shared.warning("Inference already in progress", category: "MLXService")
             throw MLXServiceError.inferenceInProgress
         }
 
@@ -357,7 +342,7 @@ actor MLXService {
 
         let genParams = parameters ?? model.parameters
         guard genParams.isValid() else {
-            await SecureLogger.shared.error("❌ Invalid parameters", category: "MLXService")
+            await SecureLogger.shared.error("Invalid parameters for chatCompletion", category: "MLXService")
             throw MLXServiceError.invalidParameters
         }
 
@@ -369,7 +354,7 @@ actor MLXService {
             ]
         }
 
-        await SecureLogger.shared.info("📤 Sending chat_generate with \(messageDicts.count) messages", category: "MLXService")
+        await SecureLogger.shared.debug("Sending chat_generate with \(messageDicts.count) messages", category: "MLXService")
 
         // Send chat_generate command (uses tokenizer's chat template on Python side)
         let chatCommand: [String: Any] = [
@@ -386,7 +371,7 @@ actor MLXService {
         var fullResponse = ""
 
         // Read streaming responses
-        while true {
+        while !Task.isCancelled {
             let response = try await readDaemonResponse()
 
             if response.type == "token" {
@@ -395,18 +380,18 @@ actor MLXService {
                     streamHandler?(token)
                 }
             } else if response.type == "complete" || response.type == "done" {
-                await SecureLogger.shared.info("✅ chat_generate complete, response length: \(fullResponse.count)", category: "MLXService")
+                await SecureLogger.shared.debug("chat_generate complete, response length: \(fullResponse.count)", category: "MLXService")
                 break
             } else if response.type == "debug" {
                 // Log debug messages from daemon
                 if let message = response.message {
-                    await SecureLogger.shared.info("🐛 Daemon: \(message)", category: "MLXService")
+                    await SecureLogger.shared.debug("Daemon: \(message)", category: "MLXService")
                 }
             } else if response.type == "error" {
                 // If chat_generate fails (e.g., old daemon), fall back to legacy
                 let errorMsg = response.error ?? "Unknown error"
                 if errorMsg.contains("Unknown command type") {
-                    await SecureLogger.shared.warning("⚠️ Daemon doesn't support chat_generate, falling back to legacy", category: "MLXService")
+                    await SecureLogger.shared.warning("Daemon doesn't support chat_generate, falling back to legacy", category: "MLXService")
                     isInferenceRunning = false
                     return try await legacyChatCompletion(messages: messages, parameters: parameters, streamHandler: streamHandler)
                 }
@@ -414,7 +399,7 @@ actor MLXService {
             }
         }
 
-        await SecureLogger.shared.info("✅ chatCompletion() returning response (length: \(fullResponse.count))", category: "MLXService")
+        await SecureLogger.shared.info("chatCompletion() returning response (length: \(fullResponse.count))", category: "MLXService")
         return fullResponse
     }
 
@@ -424,7 +409,7 @@ actor MLXService {
         parameters: ModelParameters? = nil,
         streamHandler: ((String) -> Void)? = nil
     ) async throws -> String {
-        await SecureLogger.shared.info("🔶 legacyChatCompletion() fallback with \(messages.count) messages", category: "MLXService")
+        await SecureLogger.shared.debug("legacyChatCompletion() fallback with \(messages.count) messages", category: "MLXService")
         let prompt = formatMessagesAsPrompt(messages)
         return try await generate(prompt: prompt, parameters: parameters, streamHandler: streamHandler)
     }
@@ -485,41 +470,42 @@ actor MLXService {
 
     /// Starts the persistent MLX daemon
     private func startDaemon() async throws {
-        await SecureLogger.shared.info("🟣 startDaemon() called", category: "MLXService")
+        await SecureLogger.shared.debug("startDaemon() called", category: "MLXService")
 
         // Check if already running
         if let process = daemonProcess, process.isRunning, isDaemonRunning {
-            await SecureLogger.shared.info("✅ Daemon already running (PID: \(process.processIdentifier))", category: "MLXService")
+            await SecureLogger.shared.debug("Daemon already running (PID: \(process.processIdentifier))", category: "MLXService")
             return
         }
 
-        await SecureLogger.shared.info("🔍 Getting daemon script path...", category: "MLXService")
+        await SecureLogger.shared.debug("Getting daemon script path...", category: "MLXService")
 
         // Get daemon script path (use mlx_daemon.py instead of mlx_inference.py)
         let scriptPath = getDaemonScriptPath()
-        await SecureLogger.shared.info("📝 Daemon script path: \(scriptPath)", category: "MLXService")
+        await SecureLogger.shared.debug("Daemon script path: \(scriptPath)", category: "MLXService")
 
         // Check if path is empty
         if scriptPath.isEmpty {
-            await SecureLogger.shared.error("❌ Daemon script path is EMPTY!", category: "MLXService")
-            await SecureLogger.shared.error("❌ Bundle path: \(Bundle.main.bundlePath)", category: "MLXService")
-            await SecureLogger.shared.error("❌ Resource path: \(Bundle.main.resourcePath ?? "nil")", category: "MLXService")
+            await SecureLogger.shared.error("Daemon script path is EMPTY!", category: "MLXService")
+            await SecureLogger.shared.error("Bundle path: \(Bundle.main.bundlePath)", category: "MLXService")
+            await SecureLogger.shared.error("Resource path: \(Bundle.main.resourcePath ?? "nil")", category: "MLXService")
 
-            // Try to list Python directory
-            let devPath = "/Volumes/Data/xcode/MLX Code/Python"
+            // Try to list Python directory relative to app bundle
+            let appBundleDir = (Bundle.main.bundlePath as NSString).deletingLastPathComponent
+            let devPath = (appBundleDir as NSString).appendingPathComponent("Python")
             if let contents = try? FileManager.default.contentsOfDirectory(atPath: devPath) {
-                await SecureLogger.shared.info("📁 Dev Python dir contents: \(contents.joined(separator: ", "))", category: "MLXService")
+                await SecureLogger.shared.debug("Dev Python dir contents: \(contents.joined(separator: ", "))", category: "MLXService")
             }
 
             throw MLXServiceError.generationFailed("Daemon script path is empty")
         }
 
         guard FileManager.default.fileExists(atPath: scriptPath) else {
-            await SecureLogger.shared.error("❌ Daemon script not found at: \(scriptPath)", category: "MLXService")
+            await SecureLogger.shared.error("Daemon script not found at: \(scriptPath)", category: "MLXService")
             throw MLXServiceError.generationFailed("Daemon script not found at: \(scriptPath)")
         }
 
-        await SecureLogger.shared.info("✅ Daemon script file exists", category: "MLXService")
+        await SecureLogger.shared.debug("Daemon script file exists", category: "MLXService")
 
         // Create process
         let process = Process()
@@ -540,19 +526,17 @@ actor MLXService {
         var env = ProcessInfo.processInfo.environment
 
         // CRITICAL: Add PYTHONPATH so Python can find user-installed packages (mlx, huggingface-hub, etc)
-        let userSitePackages = "/Users/\(NSUserName())/Library/Python/3.9/lib/python/site-packages"
+        let userSitePackages = getUserSitePackagesPath()
         env["PYTHONPATH"] = userSitePackages
 
-        await SecureLogger.shared.info("🔧 Daemon: Environment with PYTHONPATH: \(userSitePackages)", category: "MLXService")
+        await SecureLogger.shared.debug("Daemon environment PYTHONPATH: \(userSitePackages)", category: "MLXService")
 
         process.environment = env
 
         // Set working directory
         process.currentDirectoryURL = FileManager.default.homeDirectoryForCurrentUser
 
-        await SecureLogger.shared.info("📋 Daemon command: /usr/bin/python3 \(scriptPath)", category: "MLXService")
-        await SecureLogger.shared.info("🌍 Environment PYTHONPATH: \(process.environment?["PYTHONPATH"] ?? "none")", category: "MLXService")
-        await SecureLogger.shared.info("🏠 Working directory: \(FileManager.default.homeDirectoryForCurrentUser.path)", category: "MLXService")
+        await SecureLogger.shared.debug("Daemon command: python3 \(scriptPath)", category: "MLXService")
 
         // Store pipes
         self.daemonProcess = process
@@ -560,35 +544,38 @@ actor MLXService {
         self.outputPipe = outputPipe
 
         // Monitor stderr in background to log daemon warnings/errors
-        Task {
+        stderrMonitorTask?.cancel()
+        stderrMonitorTask = Task {
             let errorHandle = errorPipe.fileHandleForReading
-            while true {
+            while !Task.isCancelled {
                 let data = errorHandle.availableData
-                if data.count > 0, let errorMsg = String(data: data, encoding: .utf8) {
-                    await SecureLogger.shared.warning("⚠️ Daemon stderr: \(errorMsg)", category: "MLXService")
-                    print("⚠️⚠️⚠️ Daemon stderr: \(errorMsg)")
+                if data.isEmpty {
+                    break // EOF - pipe closed
+                }
+                if let errorMsg = String(data: data, encoding: .utf8) {
+                    await SecureLogger.shared.warning("Daemon stderr: \(errorMsg)", category: "MLXService")
                 }
                 try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
             }
         }
 
         // Start daemon
-        await SecureLogger.shared.info("🚀 Starting daemon process...", category: "MLXService")
+        await SecureLogger.shared.info("Starting daemon process...", category: "MLXService")
         try process.run()
-        await SecureLogger.shared.info("✅ Daemon process started (PID: \(process.processIdentifier))", category: "MLXService")
+        await SecureLogger.shared.info("Daemon process started (PID: \(process.processIdentifier))", category: "MLXService")
 
         // Wait for ready signal
-        await SecureLogger.shared.info("⏳ Waiting for daemon 'ready' signal...", category: "MLXService")
+        await SecureLogger.shared.debug("Waiting for daemon 'ready' signal...", category: "MLXService")
         let response = try await readDaemonResponse()
-        await SecureLogger.shared.info("📥 Received response type: \(response.type ?? "nil")", category: "MLXService")
+        await SecureLogger.shared.debug("Received response type: \(response.type ?? "nil")", category: "MLXService")
 
         guard response.type == "ready" else {
-            await SecureLogger.shared.error("❌ Daemon failed to send ready signal. Got: \(response.type ?? "nil")", category: "MLXService")
+            await SecureLogger.shared.error("Daemon failed to send ready signal. Got: \(response.type ?? "nil")", category: "MLXService")
             throw MLXServiceError.generationFailed("Daemon failed to start")
         }
 
         isDaemonRunning = true
-        await SecureLogger.shared.info("✅ Daemon started successfully and is ready", category: "MLXService")
+        await SecureLogger.shared.info("Daemon started successfully and is ready", category: "MLXService")
 
         // Start health monitoring
         startHealthMonitoring()
@@ -604,7 +591,7 @@ actor MLXService {
                 // Check if daemon is still running
                 if let process = daemonProcess {
                     if !process.isRunning {
-                        await SecureLogger.shared.warning("⚠️ Daemon process died, restarting...", category: "MLXService")
+                        await SecureLogger.shared.warning("Daemon process died, restarting...", category: "MLXService")
                         isDaemonRunning = false
                         try? await startDaemon()
                     }
@@ -621,9 +608,11 @@ actor MLXService {
 
         await SecureLogger.shared.info("Stopping daemon", category: "MLXService")
 
-        // Cancel health monitoring
+        // Cancel health monitoring and stderr monitor
         healthCheckTask?.cancel()
         healthCheckTask = nil
+        stderrMonitorTask?.cancel()
+        stderrMonitorTask = nil
 
         // Send shutdown command
         do {
@@ -666,60 +655,84 @@ actor MLXService {
         inputPipe.fileHandleForWriting.write(data)
     }
 
-    /// Reads a response from daemon process
+    /// Reads a response from daemon process using buffered I/O
     private func readDaemonResponse() async throws -> PythonResponse {
         guard let outputPipe = outputPipe else {
-            await SecureLogger.shared.error("❌ readDaemonResponse: outputPipe is nil", category: "MLXService")
+            await SecureLogger.shared.error("readDaemonResponse: outputPipe is nil", category: "MLXService")
             throw MLXServiceError.generationFailed("Daemon not running")
         }
 
-        // Read line by line
+        // Read in chunks for performance instead of byte-by-byte
         let handle = outputPipe.fileHandleForReading
+        let chunkSize = 4096
 
-        // Read until newline
+        // First, check if outputBuffer already contains a complete line from a previous read
         var line = Data()
-        while true {
-            let byte = handle.readData(ofLength: 1)
-            if byte.isEmpty {
-                await SecureLogger.shared.error("❌ readDaemonResponse: EOF reached, daemon closed", category: "MLXService")
+        if !outputBuffer.isEmpty {
+            if let newlineIndex = outputBuffer.firstIndex(of: UInt8(ascii: "\n")) {
+                line.append(outputBuffer[outputBuffer.startIndex..<newlineIndex])
+                let remainderStart = outputBuffer.index(after: newlineIndex)
+                if remainderStart < outputBuffer.endIndex {
+                    outputBuffer = Data(outputBuffer[remainderStart..<outputBuffer.endIndex])
+                } else {
+                    outputBuffer.removeAll()
+                }
+                // We already have a complete line from the buffer
+                return try await parseResponse(from: line)
+            } else {
+                // Buffer has data but no newline yet — use it as the start of our line
+                line.append(outputBuffer)
+                outputBuffer.removeAll()
+            }
+        }
+
+        // Read until newline using buffered chunks
+        while !Task.isCancelled {
+            let chunk = handle.readData(ofLength: chunkSize)
+            if chunk.isEmpty {
+                await SecureLogger.shared.error("readDaemonResponse: EOF reached, daemon closed", category: "MLXService")
                 throw MLXServiceError.generationFailed("Daemon closed unexpectedly")
             }
 
-            if byte.first == UInt8(ascii: "\n") {
-                break
-            }
+            // Scan chunk for newline delimiter
+            if let newlineIndex = chunk.firstIndex(of: UInt8(ascii: "\n")) {
+                // Append everything up to (but not including) the newline
+                line.append(chunk[chunk.startIndex..<newlineIndex])
 
-            line.append(byte)
+                // If there's leftover data after the newline, push it back into the output buffer
+                // for the next readDaemonResponse() call
+                let remainderStart = chunk.index(after: newlineIndex)
+                if remainderStart < chunk.endIndex {
+                    outputBuffer.append(chunk[remainderStart..<chunk.endIndex])
+                }
+                break
+            } else {
+                // No newline found in this chunk, append all and continue
+                line.append(chunk)
+            }
         }
 
+        return try await parseResponse(from: line)
+    }
+
+    /// Parses a JSON line from the daemon into a PythonResponse
+    private func parseResponse(from line: Data) async throws -> PythonResponse {
         // Log raw JSON received
         if let jsonString = String(data: line, encoding: .utf8) {
-            await SecureLogger.shared.info("📥 Raw JSON from daemon: \(jsonString)", category: "MLXService")
+            await SecureLogger.shared.debug("Raw JSON from daemon: \(jsonString)", category: "MLXService")
         } else {
-            await SecureLogger.shared.warning("⚠️ Could not decode line as UTF-8, bytes: \(line.count)", category: "MLXService")
-        }
-
-        // Log raw data BEFORE parsing
-        if let rawString = String(data: line, encoding: .utf8) {
-            print("🔍🔍🔍 RAW JSON FROM DAEMON: \(rawString)")
-            await SecureLogger.shared.info("📥 Raw daemon response: \(rawString)", category: "MLXService")
-        } else {
-            print("❌❌❌ CANNOT DECODE DATA AS STRING")
-            await SecureLogger.shared.error("❌ Cannot decode response as UTF-8 string", category: "MLXService")
+            await SecureLogger.shared.warning("Could not decode line as UTF-8, bytes: \(line.count)", category: "MLXService")
         }
 
         // Parse JSON
         do {
             let response = try JSONDecoder().decode(PythonResponse.self, from: line)
-            print("✅✅✅ JSON DECODED: type=\(response.type ?? "nil"), success=\(response.success ?? false)")
-            await SecureLogger.shared.info("✅ Successfully decoded response: type=\(response.type ?? "nil")", category: "MLXService")
+            await SecureLogger.shared.debug("Decoded response: type=\(response.type ?? "nil")", category: "MLXService")
             return response
         } catch {
-            print("❌❌❌ JSON DECODE ERROR: \(error)")
-            await SecureLogger.shared.error("❌ JSON decode error: \(error)", category: "MLXService")
+            await SecureLogger.shared.error("JSON decode error: \(error)", category: "MLXService")
             if let jsonString = String(data: line, encoding: .utf8) {
-                print("❌❌❌ FAILED JSON WAS: \(jsonString)")
-                await SecureLogger.shared.error("❌ Failed JSON was: \(jsonString)", category: "MLXService")
+                await SecureLogger.shared.error("Failed JSON was: \(jsonString)", category: "MLXService")
             }
             throw error
         }
@@ -734,10 +747,11 @@ actor MLXService {
             return bundlePath
         }
 
-        // Fall back to development directory
-        let projectPath = "/Volumes/Data/xcode/MLX Code/Python/\(scriptName).py"
-        if FileManager.default.fileExists(atPath: projectPath) {
-            return projectPath
+        // Fall back to a path relative to the app bundle's parent directory (development)
+        let appBundleDir = (Bundle.main.bundlePath as NSString).deletingLastPathComponent
+        let relativePath = (appBundleDir as NSString).appendingPathComponent("Python/\(scriptName).py")
+        if FileManager.default.fileExists(atPath: relativePath) {
+            return relativePath
         }
 
         return nil
@@ -751,6 +765,22 @@ actor MLXService {
     /// Gets the path to the Python inference script (for compatibility)
     private func getPythonScriptPath() -> String {
         return getPythonScriptPath(scriptName: "mlx_inference") ?? ""
+    }
+
+    /// Discovers user Python site-packages path by checking multiple Python versions
+    /// Falls back through 3.13, 3.12, 3.11, 3.10, 3.9 to find whichever is installed
+    private func getUserSitePackagesPath() -> String {
+        let homeDir = NSHomeDirectory()
+        // Check common Python versions in descending order
+        let pythonVersions = ["3.13", "3.12", "3.11", "3.10", "3.9"]
+        for version in pythonVersions {
+            let path = "\(homeDir)/Library/Python/\(version)/lib/python/site-packages"
+            if FileManager.default.fileExists(atPath: path) {
+                return path
+            }
+        }
+        // Default fallback to the Python version we ship with (Xcode 3.9)
+        return "\(homeDir)/Library/Python/3.9/lib/python/site-packages"
     }
 
     // MARK: - Private Methods
@@ -926,30 +956,30 @@ extension MLXService {
         await SecureLogger.shared.info("Using models path from settings: \(settingsModelsPath)", category: "MLXService")
 
         // Get Python downloader script path
-        await SecureLogger.shared.info("🔍 Looking for huggingface_downloader script...", category: "MLXService")
+        await SecureLogger.shared.debug("Looking for huggingface_downloader script...", category: "MLXService")
 
         // Try bundle first
         if let bundlePath = Bundle.main.path(forResource: "huggingface_downloader", ofType: "py") {
-            await SecureLogger.shared.info("✅ Found script in bundle: \(bundlePath)", category: "MLXService")
+            await SecureLogger.shared.debug("Found script in bundle: \(bundlePath)", category: "MLXService")
         } else {
-            await SecureLogger.shared.warning("⚠️ Script NOT found in bundle resources", category: "MLXService")
+            await SecureLogger.shared.warning("Script NOT found in bundle resources", category: "MLXService")
         }
 
         guard let scriptPath = getPythonScriptPath(scriptName: "huggingface_downloader") else {
-            await SecureLogger.shared.error("❌ CRITICAL: Downloader script not found in bundle or development path", category: "MLXService")
+            await SecureLogger.shared.error("Downloader script not found in bundle or development path", category: "MLXService")
             await SecureLogger.shared.error("Bundle.main.resourcePath: \(Bundle.main.resourcePath ?? "nil")", category: "MLXService")
             await SecureLogger.shared.error("Bundle.main.bundlePath: \(Bundle.main.bundlePath)", category: "MLXService")
             throw MLXServiceError.generationFailed("Downloader script not found in bundle or development path")
         }
 
-        await SecureLogger.shared.info("✅ Using downloader script at: \(scriptPath)", category: "MLXService")
+        await SecureLogger.shared.debug("Using downloader script at: \(scriptPath)", category: "MLXService")
 
         // Verify script exists
         let fileExists = FileManager.default.fileExists(atPath: scriptPath)
         await SecureLogger.shared.info("Script file exists check: \(fileExists)", category: "MLXService")
 
         if !fileExists {
-            await SecureLogger.shared.error("❌ Script path returned but file doesn't exist!", category: "MLXService")
+            await SecureLogger.shared.error("Script path returned but file doesn't exist!", category: "MLXService")
             throw MLXServiceError.generationFailed("Script file not accessible at path: \(scriptPath)")
         }
 
@@ -960,7 +990,7 @@ extension MLXService {
         await SecureLogger.shared.info("Python exists at \(pythonPath): \(pythonExists)", category: "MLXService")
 
         guard pythonExists else {
-            await SecureLogger.shared.error("❌ Python binary not found at: \(pythonPath)", category: "MLXService")
+            await SecureLogger.shared.error("Python binary not found at: \(pythonPath)", category: "MLXService")
             throw MLXServiceError.generationFailed("Python 3.9 not found. Please install Xcode and Command Line Tools.")
         }
 
@@ -981,11 +1011,11 @@ extension MLXService {
         // Skip conversion for mlx-community models (already in MLX format)
         if !needsConversion {
             arguments.append("--no-convert")
-            await SecureLogger.shared.info("✅ Model is from mlx-community, skipping conversion", category: "MLXService")
+            await SecureLogger.shared.info("Model is from mlx-community, skipping conversion", category: "MLXService")
         } else {
             arguments.append("--quantize")
             arguments.append("4bit")
-            await SecureLogger.shared.info("⚙️ Model needs conversion, will quantize to 4bit", category: "MLXService")
+            await SecureLogger.shared.info("Model needs conversion, will quantize to 4bit", category: "MLXService")
         }
 
         process.arguments = arguments
@@ -994,10 +1024,10 @@ extension MLXService {
         var env = ProcessInfo.processInfo.environment
 
         // CRITICAL: Add PYTHONPATH so Python can find user-installed packages (mlx, huggingface-hub, etc)
-        let userSitePackages = "/Users/\(NSUserName())/Library/Python/3.9/lib/python/site-packages"
-        env["PYTHONPATH"] = userSitePackages
+        let downloadSitePackages = getUserSitePackagesPath()
+        env["PYTHONPATH"] = downloadSitePackages
 
-        await SecureLogger.shared.info("🔧 Download: Environment with PYTHONPATH: \(userSitePackages)", category: "MLXService")
+        await SecureLogger.shared.debug("Download environment PYTHONPATH: \(downloadSitePackages)", category: "MLXService")
 
         process.environment = env
 
@@ -1005,9 +1035,8 @@ extension MLXService {
         let homeDir = FileManager.default.homeDirectoryForCurrentUser
         process.currentDirectoryURL = homeDir
 
-        await SecureLogger.shared.info("📝 Command: \(pythonPath) \(process.arguments!.joined(separator: " "))", category: "MLXService")
-        await SecureLogger.shared.info("🏠 Working directory: \(homeDir.path)", category: "MLXService")
-        await SecureLogger.shared.info("🌍 Environment PATH: \(process.environment?["PATH"] ?? "none")", category: "MLXService")
+        await SecureLogger.shared.debug("Command: \(pythonPath) \(process.arguments!.joined(separator: " "))", category: "MLXService")
+        await SecureLogger.shared.debug("Working directory: \(homeDir.path)", category: "MLXService")
 
         let outputPipe = Pipe()
         let errorPipe = Pipe()
@@ -1015,12 +1044,12 @@ extension MLXService {
         process.standardError = errorPipe
 
         // Start download
-        await SecureLogger.shared.info("🚀 Starting download process...", category: "MLXService")
+        await SecureLogger.shared.info("Starting download process...", category: "MLXService")
         do {
             try process.run()
-            await SecureLogger.shared.info("✅ Process started successfully, PID: \(process.processIdentifier)", category: "MLXService")
+            await SecureLogger.shared.info("Process started successfully, PID: \(process.processIdentifier)", category: "MLXService")
         } catch {
-            await SecureLogger.shared.error("❌ Failed to start process: \(error.localizedDescription)", category: "MLXService")
+            await SecureLogger.shared.error("Failed to start process: \(error.localizedDescription)", category: "MLXService")
             throw error
         }
 
@@ -1043,7 +1072,7 @@ extension MLXService {
                 // Log real-time output
                 if let output = String(data: data, encoding: .utf8) {
                     Task {
-                        await SecureLogger.shared.info("📥 Python stdout: \(output)", category: "MLXService")
+                        await SecureLogger.shared.debug("Python stdout: \(output)", category: "MLXService")
                     }
 
                     // Parse progress if JSON
@@ -1070,14 +1099,14 @@ extension MLXService {
                 // Log real-time errors
                 if let errorOutput = String(data: data, encoding: .utf8) {
                     Task {
-                        await SecureLogger.shared.warning("⚠️ Python stderr: \(errorOutput)", category: "MLXService")
+                        await SecureLogger.shared.warning("Python stderr: \(errorOutput)", category: "MLXService")
                     }
                 }
             }
         }
 
         // Wait for completion
-        await SecureLogger.shared.info("⏳ Waiting for download to complete...", category: "MLXService")
+        await SecureLogger.shared.debug("Waiting for download to complete...", category: "MLXService")
         process.waitUntilExit()
 
         // Clean up handlers
@@ -1100,17 +1129,17 @@ extension MLXService {
             fullErrors = String(data: allErrors, encoding: .utf8) ?? ""
         }
 
-        await SecureLogger.shared.info("📋 Full stdout (\(allOutput.count) bytes):", category: "MLXService")
+        await SecureLogger.shared.debug("Full stdout (\(allOutput.count) bytes):", category: "MLXService")
         await SecureLogger.shared.info(fullOutput.isEmpty ? "(empty)" : fullOutput, category: "MLXService")
 
-        await SecureLogger.shared.info("📋 Full stderr (\(allErrors.count) bytes):", category: "MLXService")
+        await SecureLogger.shared.debug("Full stderr (\(allErrors.count) bytes):", category: "MLXService")
         await SecureLogger.shared.info(fullErrors.isEmpty ? "(empty)" : fullErrors, category: "MLXService")
 
         guard exitCode == 0 else {
             // Parse error message if available
             var errorMessage = "Download failed with exit code \(exitCode)"
 
-            await SecureLogger.shared.error("❌ Download failed with exit code \(exitCode)", category: "MLXService")
+            await SecureLogger.shared.error("Download failed with exit code \(exitCode)", category: "MLXService")
 
             // Combine stdout and stderr for error analysis
             let combinedOutput = fullOutput + "\n" + fullErrors
@@ -1137,7 +1166,7 @@ extension MLXService {
             throw MLXServiceError.generationFailed(errorMessage)
         }
 
-        await SecureLogger.shared.info("✅ Model download completed: \(model.name)", category: "MLXService")
+        await SecureLogger.shared.info("Model download completed: \(model.name)", category: "MLXService")
 
         // Return updated model with actual path
         var updatedModel = model
