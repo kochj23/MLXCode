@@ -59,8 +59,10 @@ class MLXSwiftBackend: ObservableObject {
         isLoading = true
         defer { isLoading = false }
 
-        // TODO: Replace with native MLX Swift once packages added
-        // For now, fallback to subprocess
+        // FALLBACK: Using Python subprocess via mlx_lm.generate CLI.
+        // Native MLX Swift integration requires adding swift-mlx and mlx-swift-examples
+        // SPM packages, then replacing this call with direct MLX tensor operations.
+        // See: https://github.com/ml-explore/mlx-swift
         return try await generateViaSubprocess(prompt: prompt, model: model, maxTokens: maxTokens)
     }
 

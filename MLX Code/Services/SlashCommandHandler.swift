@@ -407,7 +407,8 @@ struct SlashCommand: Identifiable {
 
         let task = args.joined(separator: " ")
 
-        // TODO: Implement AutonomousAgent
+        // Agent mode requires: AutonomousAgent class with iterative tool-calling loop,
+        // task decomposition, and sandboxed execution context. Not yet implemented.
         return """
         **Agent Mode** (Coming Soon)
 
@@ -478,7 +479,7 @@ struct SlashCommand: Identifiable {
         let xcodeService = XcodeService.shared
         try await xcodeService.setProject(path: projectPath)
 
-        let scheme = args.count > 1 ? args[1] : ((projectPath as NSString).lastPathComponent as NSString).deletingPathExtension
+        let scheme = args.count > 1 ? args[1] : URL(fileURLWithPath: projectPath).deletingPathExtension().lastPathComponent
 
         let result = try await xcodeService.fullBuildPipeline(scheme: scheme, configuration: "Release")
 
@@ -505,7 +506,7 @@ struct SlashCommand: Identifiable {
         let xcodeService = XcodeService.shared
         try await xcodeService.setProject(path: projectPath)
 
-        let scheme = args.count > 1 ? args[1] : ((projectPath as NSString).lastPathComponent as NSString).deletingPathExtension
+        let scheme = args.count > 1 ? args[1] : URL(fileURLWithPath: projectPath).deletingPathExtension().lastPathComponent
         let result = try await xcodeService.archive(scheme: scheme)
 
         return "Archive created: \(result.archivePath)\nVersion: v\(result.version) build \(result.build)"

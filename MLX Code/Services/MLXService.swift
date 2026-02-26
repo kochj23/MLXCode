@@ -152,7 +152,9 @@ actor MLXService {
             }
         }
 
-        let response = finalResponse!
+        guard let response = finalResponse else {
+            throw MLXServiceError.generationFailed("No response received from daemon during model load")
+        }
         await SecureLogger.shared.debug("Received load response - success: \(response.success ?? false), cached: \(response.cached ?? false)", category: "MLXService")
 
         guard response.success == true else {
@@ -1051,7 +1053,7 @@ extension MLXService {
         let homeDir = FileManager.default.homeDirectoryForCurrentUser
         process.currentDirectoryURL = homeDir
 
-        await SecureLogger.shared.debug("Command: \(pythonPath) \(process.arguments!.joined(separator: " "))", category: "MLXService")
+        await SecureLogger.shared.debug("Command: \(pythonPath) \(process.arguments?.joined(separator: " ") ?? "")", category: "MLXService")
         await SecureLogger.shared.debug("Working directory: \(homeDir.path)", category: "MLXService")
 
         let outputPipe = Pipe()

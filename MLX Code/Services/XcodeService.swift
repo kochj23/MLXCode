@@ -828,14 +828,15 @@ actor XcodeService {
 
     /// Finds Info.plist for a project
     private func findInfoPlist(projectPath: String) throws -> String {
-        let projectDir = (projectPath as NSString).deletingLastPathComponent
-        let projectName = ((projectPath as NSString).lastPathComponent as NSString).deletingPathExtension
+        let projectURL = URL(fileURLWithPath: projectPath)
+        let projectDir = projectURL.deletingLastPathComponent()
+        let projectName = projectURL.deletingPathExtension().lastPathComponent
 
         // Common locations for Info.plist
         let candidates = [
-            (projectDir as NSString).appendingPathComponent("\(projectName)/Info.plist"),
-            (projectDir as NSString).appendingPathComponent("Info.plist"),
-            (projectDir as NSString).appendingPathComponent("\(projectName)/Supporting Files/Info.plist")
+            projectDir.appendingPathComponent("\(projectName)/Info.plist").path,
+            projectDir.appendingPathComponent("Info.plist").path,
+            projectDir.appendingPathComponent("\(projectName)/Supporting Files/Info.plist").path
         ]
 
         for candidate in candidates {
