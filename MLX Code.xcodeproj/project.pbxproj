@@ -77,6 +77,7 @@
 		EC5EC65B8FD9A5025E274336 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B7E2C6F89FEDAA54C278A7 /* HelpView.swift */; };
 		ECB016DEEB77015CF0327B53 /* mlx_inference.py in Resources */ = {isa = PBXBuildFile; fileRef = 254D9DD9EEB20CA0D74A5E00 /* mlx_inference.py */; };
 		ED15B41EF1DB3130F9B71173 /* SharedDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8ECCA430CED7181E9845C7 /* SharedDataManager.swift */; };
+		AA1234560000000000000002 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1234560000000000000001 /* KeychainManager.swift */; };
 		ED42A86D2B4D4BCE84B60AA7411AEFCF /* SecurityUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7492C8D46DB847CFABCF1E5B031731B3 /* SecurityUtils.swift */; };
 		EEE1340E1501B4ACBEFF3472 /* GettingStarted.md in Resources */ = {isa = PBXBuildFile; fileRef = DFCA810E4451DA5EEB9EB66A /* GettingStarted.md */; };
 		F552B2A0318CA58997F79EBA /* Troubleshooting.md in Resources */ = {isa = PBXBuildFile; fileRef = 6FD0BB3BC560F8D474C00FAC /* Troubleshooting.md */; };
@@ -170,6 +171,7 @@
 		7294A0A7EFE8407C852ADC2F428A1167 /* MessageRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRowView.swift; sourceTree = "<group>"; };
 		7382216063DCBF191AE08B34 /* MultiFileOperations.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MultiFileOperations.swift; path = "MLX Code/Services/MultiFileOperations.swift"; sourceTree = "<group>"; };
 		7492C8D46DB847CFABCF1E5B031731B3 /* SecurityUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityUtils.swift; sourceTree = "<group>"; };
+		AA1234560000000000000001 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		76E1CC6DC5CF4943D05FF452 /* ModernDesign.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ModernDesign.swift; path = Design/ModernDesign.swift; sourceTree = "<group>"; };
 		86DA95C55CF31CAA085E0CD4 /* CodebaseIndexer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CodebaseIndexer.swift; path = "MLX Code/Services/CodebaseIndexer.swift"; sourceTree = "<group>"; };
 		8BF344F827174583896C2F07BB4F77EF /* MLXCodeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLXCodeApp.swift; sourceTree = "<group>"; };
@@ -418,6 +420,7 @@
 		D3EDDB8006F24B08845B89374695FC62 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				AA1234560000000000000001 /* KeychainManager.swift */,
 				7492C8D46DB847CFABCF1E5B031731B3 /* SecurityUtils.swift */,
 				FF7455C7A2CE4EAA997C11353C876821 /* SecureLogger.swift */,
 			);
@@ -644,6 +647,7 @@
 				84C70B8FEEA34CAA834FC30FCDA1E267 /* FileService.swift in Sources */,
 				E9092BA47E894E33897524DF0DDAEF6E /* PythonService.swift in Sources */,
 				ED42A86D2B4D4BCE84B60AA7411AEFCF /* SecurityUtils.swift in Sources */,
+				AA1234560000000000000002 /* KeychainManager.swift in Sources */,
 				685055FA9244459B8C843179E846C56E /* SecureLogger.swift in Sources */,
 				DE5057A64D8310A442E26F74 /* MarkdownTextView.swift in Sources */,
 				3BB85EED3A53FFBB2C040746 /* GitService.swift in Sources */,
