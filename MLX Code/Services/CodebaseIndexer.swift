@@ -85,16 +85,20 @@ actor CodebaseIndexer {
                 }
 
                 do {
-                    let content = try String(contentsOf: fileURL, encoding: .utf8)
-                    let symbols = extractSymbols(from: content, language: ext)
-
                     let attributes = try fileManager.attributesOfItem(atPath: fileURL.path)
                     let size = attributes[.size] as? Int ?? 0
                     let modified = attributes[.modificationDate] as? Date ?? Date()
 
+                    // Only cache file content for files under 1 MB to limit memory usage
+                    let maxCachedContentSize = 1_048_576  // 1 MB
+                    let content = try String(contentsOf: fileURL, encoding: .utf8)
+                    let cachedContent = size <= maxCachedContentSize ? content : ""
+
+                    let symbols = extractSymbols(from: content, language: ext)
+
                     let indexed = IndexedFile(
                         path: fileURL.path,
-                        content: content,
+                        content: cachedContent,
                         language: ext,
                         lastModified: modified,
                         size: size,
@@ -119,27 +123,25 @@ actor CodebaseIndexer {
     ///   - limit: Maximum results to return
     /// - Returns: Matching files with relevance scores
     func search(_ query: String, limit: Int = 10) async -> [(file: IndexedFile, score: Double)] {
-        let lowercaseQuery = query.lowercased()
         var results: [(file: IndexedFile, score: Double)] = []
 
         for file in index.values {
             var score = 0.0
 
-            // Check file name
-            if file.path.lowercased().contains(lowercaseQuery) {
+            // Check file name using case-insensitive comparison (avoids per-file lowercasing)
+            if file.path.localizedCaseInsensitiveContains(query) {
                 score += 10.0
             }
 
-            // Check symbols
+            // Check symbols using case-insensitive comparison (avoids per-symbol lowercasing)
             for symbol in file.symbols {
-                if symbol.name.lowercased().contains(lowercaseQuery) {
+                if symbol.name.localizedCaseInsensitiveContains(query) {
                     score += 5.0
                 }
             }
 
-            // Check content
-            let contentLower = file.content.lowercased()
-            let occurrences = contentLower.components(separatedBy: lowercaseQuery).count - 1
+            // Count occurrences using range-based loop (avoids allocating split array)
+            let occurrences = countOccurrences(of: query, in: file.content)
             score += Double(occurrences) * 0.5
 
             if score > 0 {
@@ -151,6 +153,17 @@ actor CodebaseIndexer {
         results.sort { $0.score > $1.score }
 
         return Array(results.prefix(limit))
+    }
+
+    /// Counts case-insensitive occurrences of a substring without allocating an array
+    private func countOccurrences(of query: String, in content: String) -> Int {
+        var count = 0
+        var searchRange = content.startIndex..<content.endIndex
+        while let range = content.range(of: query, options: .caseInsensitive, range: searchRange) {
+            count += 1
+            searchRange = range.upperBound..<content.endIndex
+        }
+        return count
     }
 
     /// Finds files similar to a given file

@@ -515,7 +515,10 @@ actor MLXService {
 
         // Use actual Xcode Python binary (not the xcode-select shim at /usr/bin/python3)
         // The shim calls xcrun which is forbidden in App Sandbox
-        let pythonPath = "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9"
+        guard let pythonPath = getXcodePythonPath() else {
+            await SecureLogger.shared.error("No Xcode Python binary found", category: "MLXService")
+            throw MLXServiceError.generationFailed("Python not found. Please install Xcode and Command Line Tools.")
+        }
         process.executableURL = URL(fileURLWithPath: pythonPath)
         process.arguments = [scriptPath]  // Daemon doesn't need --mode flag
         process.standardInput = inputPipe
@@ -783,6 +786,21 @@ actor MLXService {
         return "\(homeDir)/Library/Python/3.9/lib/python/site-packages"
     }
 
+    /// Discovers the Xcode-bundled Python binary by checking multiple versions
+    /// Falls back through 3.13, 3.12, 3.11, 3.10, 3.9 to find whichever is installed
+    /// - Returns: Path to the Python binary, or nil if none found
+    private func getXcodePythonPath() -> String? {
+        let basePath = "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions"
+        let pythonVersions = ["3.13", "3.12", "3.11", "3.10", "3.9"]
+        for version in pythonVersions {
+            let path = "\(basePath)/\(version)/bin/python\(version)"
+            if FileManager.default.fileExists(atPath: path) {
+                return path
+            }
+        }
+        return nil
+    }
+
     // MARK: - Private Methods
 
     /// Formats chat messages into a prompt string
@@ -985,14 +1003,12 @@ extension MLXService {
 
         // Use actual Xcode Python binary (not the xcode-select shim at /usr/bin/python3)
         // The shim calls xcrun which is forbidden in App Sandbox
-        let pythonPath = "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9"
-        let pythonExists = FileManager.default.fileExists(atPath: pythonPath)
-        await SecureLogger.shared.info("Python exists at \(pythonPath): \(pythonExists)", category: "MLXService")
-
-        guard pythonExists else {
-            await SecureLogger.shared.error("Python binary not found at: \(pythonPath)", category: "MLXService")
-            throw MLXServiceError.generationFailed("Python 3.9 not found. Please install Xcode and Command Line Tools.")
+        // Checks multiple Python versions (3.13 down to 3.9) to find whichever Xcode ships
+        guard let pythonPath = getXcodePythonPath() else {
+            await SecureLogger.shared.error("No Xcode Python binary found across versions 3.9-3.13", category: "MLXService")
+            throw MLXServiceError.generationFailed("Python not found. Please install Xcode and Command Line Tools.")
         }
+        await SecureLogger.shared.info("Using Python at: \(pythonPath)", category: "MLXService")
 
         // Create process to download
         let process = Process()
@@ -1053,9 +1069,9 @@ extension MLXService {
             throw error
         }
 
-        // Capture all output in separate buffers (thread-safe with DispatchQueue)
-        let outputQueue = DispatchQueue(label: "com.mlxcode.output", attributes: .concurrent)
-        let errorQueue = DispatchQueue(label: "com.mlxcode.error", attributes: .concurrent)
+        // Capture all output in separate buffers (thread-safe with serial DispatchQueues)
+        let outputQueue = DispatchQueue(label: "com.mlxcode.output")
+        let errorQueue = DispatchQueue(label: "com.mlxcode.error")
         var allOutput = Data()
         var allErrors = Data()
 
@@ -1064,8 +1080,8 @@ extension MLXService {
         outputHandle.readabilityHandler = { handle in
             let data = handle.availableData
             if data.count > 0 {
-                // Store all output (thread-safe)
-                outputQueue.async(flags: .barrier) {
+                // Store all output (thread-safe via serial queue)
+                outputQueue.async {
                     allOutput.append(data)
                 }
 
@@ -1091,8 +1107,8 @@ extension MLXService {
         errorHandle.readabilityHandler = { handle in
             let data = handle.availableData
             if data.count > 0 {
-                // Store all errors (thread-safe)
-                errorQueue.async(flags: .barrier) {
+                // Store all errors (thread-safe via serial queue)
+                errorQueue.async {
                     allErrors.append(data)
                 }
 

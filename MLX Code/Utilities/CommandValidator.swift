@@ -133,30 +133,40 @@ enum CommandValidator {
             }
         }
 
-        // 3. Block dangerous functions
-        let dangerousFunctions = [
-            "exec(",
-            "eval(",
-            "compile(",
-            "pickle.load(",
-            "pickle.loads(",
-            "torch.load(",
-            "open(",  // File access
-            "input(",  // User input
-            "raw_input("
+        // 3. Block dangerous functions using regex (consistent with import validation above)
+        // Each tuple: (regex pattern, human-readable description)
+        let dangerousFunctionPatterns: [(pattern: String, description: String)] = [
+            (#"\bexec\s*\("#, "exec()"),
+            (#"\beval\s*\("#, "eval()"),
+            (#"\bcompile\s*\("#, "compile()"),
+            (#"\bpickle\.loads?\s*\("#, "pickle.load(s)"),
+            (#"\btorch\.load\s*\("#, "torch.load()"),
+            (#"\bopen\s*\("#, "open()"),
+            (#"\binput\s*\("#, "input()"),
+            (#"\braw_input\s*\("#, "raw_input()")
         ]
 
-        for dangerous in dangerousFunctions {
-            if code.contains(dangerous) {
-                logSecurityEvent("BLOCKED dangerous Python function: \(dangerous)", level: .critical)
-                throw SecurityError.dangerousFunction(dangerous)
+        for (regexPattern, description) in dangerousFunctionPatterns {
+            if let regex = try? NSRegularExpression(pattern: regexPattern, options: []),
+               regex.firstMatch(in: uncommentedCode, range: NSRange(uncommentedCode.startIndex..., in: uncommentedCode)) != nil {
+                logSecurityEvent("BLOCKED dangerous Python function: \(description)", level: .critical)
+                throw SecurityError.dangerousFunction(description)
             }
         }
 
-        // 4. Block system manipulation
-        if code.contains("os.") || code.contains("sys.") || code.contains("subprocess.") {
-            logSecurityEvent("BLOCKED system manipulation in Python code", level: .critical)
-            throw SecurityError.systemManipulation
+        // 4. Block system manipulation using regex for consistency
+        let systemPatterns: [(pattern: String, description: String)] = [
+            (#"\bos\."#, "os module access"),
+            (#"\bsys\."#, "sys module access"),
+            (#"\bsubprocess\."#, "subprocess module access")
+        ]
+
+        for (regexPattern, description) in systemPatterns {
+            if let regex = try? NSRegularExpression(pattern: regexPattern, options: []),
+               regex.firstMatch(in: uncommentedCode, range: NSRange(uncommentedCode.startIndex..., in: uncommentedCode)) != nil {
+                logSecurityEvent("BLOCKED system manipulation: \(description)", level: .critical)
+                throw SecurityError.systemManipulation
+            }
         }
 
         // 5. Log for audit
@@ -182,6 +192,12 @@ enum CommandValidator {
         // 2. Verify file exists
         guard FileManager.default.fileExists(atPath: expandedPath) else {
             throw SecurityError.fileNotFound(expandedPath)
+        }
+
+        // 2b. Verify file is readable (handles permission errors explicitly)
+        guard FileManager.default.isReadableFile(atPath: expandedPath) else {
+            logSecurityEvent("Permission denied reading script: \(expandedPath)", level: .error)
+            throw SecurityError.invalidPath("Permission denied: cannot read \(expandedPath)")
         }
 
         // 3. Verify it's a Python file
@@ -260,24 +276,41 @@ enum CommandValidator {
 
     // MARK: - Logging
 
+    /// Serial queue for async file I/O to avoid blocking the calling thread
+    private static let logQueue = DispatchQueue(label: "com.mlxcode.commandvalidator.log")
+
     private static func logSecurityEvent(_ message: String, level: SecurityLogLevel) {
         let timestamp = ISO8601DateFormatter().string(from: Date())
         let logMessage = "[\(timestamp)] [CommandValidator] [\(level.rawValue)] \(message)"
 
-        print(logMessage)
+        // Delegate to SecureLogger for structured logging (non-blocking fire-and-forget)
+        Task {
+            switch level {
+            case .critical:
+                await SecureLogger.shared.critical(logMessage, category: "CommandValidator")
+            case .error:
+                await SecureLogger.shared.error(logMessage, category: "CommandValidator")
+            case .warning:
+                await SecureLogger.shared.warning(logMessage, category: "CommandValidator")
+            case .info:
+                await SecureLogger.shared.info(logMessage, category: "CommandValidator")
+            }
+        }
 
-        // Also log to security log file
+        // Also write to security log file asynchronously (avoids blocking the caller)
         let logPath = NSHomeDirectory() + "/Library/Logs/MLXCode/security.log"
         if let data = (logMessage + "\n").data(using: .utf8) {
-            if let fileHandle = FileHandle(forWritingAtPath: logPath) {
-                fileHandle.seekToEndOfFile()
-                fileHandle.write(data)
-                try? fileHandle.close()
-            } else {
-                // Create file if doesn't exist
-                let logDir = (logPath as NSString).deletingLastPathComponent
-                try? FileManager.default.createDirectory(atPath: logDir, withIntermediateDirectories: true)
-                try? data.write(to: URL(fileURLWithPath: logPath))
+            logQueue.async {
+                if let fileHandle = FileHandle(forWritingAtPath: logPath) {
+                    fileHandle.seekToEndOfFile()
+                    fileHandle.write(data)
+                    try? fileHandle.close()
+                } else {
+                    // Create file if doesn't exist
+                    let logDir = (logPath as NSString).deletingLastPathComponent
+                    try? FileManager.default.createDirectory(atPath: logDir, withIntermediateDirectories: true)
+                    try? data.write(to: URL(fileURLWithPath: logPath))
+                }
             }
         }
     }

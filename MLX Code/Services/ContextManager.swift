@@ -76,9 +76,11 @@ actor ContextManager {
             if recentTokens + msgTokens > budget.recentMessagesBudget {
                 break
             }
-            recentMessages.insert(message, at: 0)
+            recentMessages.append(message)
             recentTokens += msgTokens
         }
+        // Reverse once after collecting to restore chronological order (avoids O(n^2) inserts at index 0)
+        recentMessages.reverse()
 
         // 3. If older messages were dropped, create rule-based summary
         let droppedCount = nonSystemMessages.count - recentMessages.count
