@@ -1,4 +1,4 @@
-# MLX Code
+# MLX Code v6.1.0
 
 ![Build](https://github.com/kochj23/MLXCode/actions/workflows/build.yml/badge.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS%2014%2B-blue)
@@ -45,6 +45,35 @@ MLX Code is a chat-based coding assistant with tool calling. You describe what y
 4. The model responds with findings or takes the next action
 
 Read-only tools (grep, glob, file read, code navigation) auto-approve. Write/execute tools (bash, file write, xcode build) ask for confirmation.
+
+---
+
+## What's New in v6.1.0 (February 2026)
+
+### Security Hardening & Code Quality Audit
+**31 findings resolved across CRITICAL, HIGH, MEDIUM, LOW, and INFO severities:**
+
+**Critical Fixes:**
+- **API Keys to Keychain**: All AI backend API keys (OpenAI, Anthropic, Google, AWS, Azure, IBM) migrated from UserDefaults to macOS Keychain with automatic migration on first launch
+
+**High Fixes:**
+- **Command Validator Hardened**: Replaced naive `String.contains()` with `NSRegularExpression` word-boundary matching to prevent bypass via substrings
+- **Python Import Validator**: Regex-based import validation with comment filtering prevents bypass via inline comments
+- **Model Hash Verification**: SHA256 verification of downloaded models using CryptoKit
+- **Buffered I/O**: 4096-byte chunk reading replaces byte-by-byte daemon communication for significant performance improvement
+- **Task Cancellation**: All infinite `while true` loops replaced with `while !Task.isCancelled` for clean shutdown
+- **Portable Paths**: Bundle-relative paths replace hardcoded file paths
+- **Secure Logging**: All `print()` statements replaced with `SecureLogger` calls
+
+**Medium Fixes:**
+- Proper Unicode search with `localizedCaseInsensitiveContains()`
+- O(n) context management replacing O(n^2) insert-at-zero pattern
+- 1MB file content cap for memory management
+- Multi-version Python path lookup (3.13 down to 3.9)
+- Serial queues for thread-safe MLX service operations
+- Async logging via serial queue in CommandValidator
+- Permission check for script execution
+- Regex validation improvements
 
 ---
 
@@ -159,16 +188,32 @@ MLX Code (SwiftUI)
 ## Security
 
 ### Shell Execution Safety
-- **Command Validation**: All bash commands pass through `CommandValidator` before execution, blocking dangerous patterns (rm -rf /, fork bombs, etc.)
+- **Command Validation**: All bash commands pass through `CommandValidator` with regex word-boundary matching before execution, blocking dangerous patterns (rm -rf /, fork bombs, etc.)
+- **Python Import Validation (v6.1.0)**: Regex-based validation with comment filtering prevents bypass via inline comments
 - **No Shell Interpolation**: Git and build tools use `process.currentDirectoryURL` instead of `cd` string interpolation, preventing directory traversal and injection attacks
 - **Tool Approval Flow**: Write and execute tools (bash, file write, xcode build) require user confirmation before running
 - **Read-Only Auto-Approve**: Only safe, read-only tools (grep, glob, file read) auto-approve without user interaction
+- **Permission Checks (v6.1.0)**: File permission validation before script execution in CommandValidator
+
+### Credential Security (v6.1.0)
+- **macOS Keychain Storage**: All API keys (OpenAI, Anthropic, Google, AWS, Azure, IBM) stored in macOS Keychain using `SecItemAdd`/`SecItemCopyMatching`
+- **Automatic Migration**: Existing UserDefaults-stored keys automatically migrated to Keychain on first launch
+- **No Plaintext Secrets**: Non-secret config only (region, model names) stored in UserDefaults
+
+### Model Security (v6.1.0)
+- **SHA256 Hash Verification**: Downloaded models verified against expected hashes using CryptoKit
+- **Secure Logging**: All debug output routed through `SecureLogger` instead of `print()` — no sensitive data in console
 
 ### Data Privacy
 - **100% Local**: All model inference runs on-device via Apple MLX -- no data leaves your machine
 - **No Telemetry**: No analytics, crash reporting, or usage tracking
 - **No API Keys Required**: No cloud services, no subscriptions, no accounts
 - **Local Memory Storage**: User memories stored in `~/.mlxcode/memories.json`, never transmitted
+
+### Thread Safety (v6.1.0)
+- **Serial Queues**: MLX service I/O operations serialized to prevent race conditions
+- **Buffered I/O**: 4096-byte chunk reading replaces byte-by-byte daemon communication
+- **Task Cancellation**: All infinite loops replaced with `while !Task.isCancelled` for clean shutdown
 
 ---
 
@@ -186,7 +231,29 @@ Being honest about limitations:
 
 ## Version History
 
-### v6.0.0 (February 20, 2026) — Current
+### v6.1.0 (February 26, 2026) — Current
+- Comprehensive security audit: 31 findings resolved (2 CRITICAL, 8 HIGH, 10 MEDIUM, 9 LOW, 1 INFO)
+- API keys migrated from UserDefaults to macOS Keychain with automatic migration
+- Command validator hardened with NSRegularExpression word-boundary matching
+- Python import validator hardened with regex matching and comment filtering
+- SHA256 model hash verification using CryptoKit
+- Buffered 4096-byte I/O replacing byte-by-byte daemon communication
+- Task cancellation (`while !Task.isCancelled`) replacing infinite loops
+- Bundle-relative paths replacing hardcoded file paths
+- Multi-version Python path lookup (3.13 down to 3.9)
+- Serial queues for thread-safe MLX service operations
+- SecureLogger replacing all `print()` statements
+- Async logging via serial queue in CommandValidator
+- `localizedCaseInsensitiveContains()` for proper Unicode search
+- O(n) context management replacing O(n^2) insert-at-zero pattern
+- 1MB file content cap for memory management in codebase indexer
+- Implemented Clear Conversations confirmation dialog in Settings
+- Force unwrap elimination in MLXService
+- NSString cast chains replaced with URL API across 3 files
+- Named constants for context budget ratios
+- Deprecated unused ContentView with `@available` attribute
+
+### v6.0.0 (February 20, 2026)
 - GitHub integration: issues, PRs, branches, credential scanning
 - Code analysis: metrics, dependencies, lint, symbols
 - Xcode full deploy pipeline: build, archive, DMG, install
