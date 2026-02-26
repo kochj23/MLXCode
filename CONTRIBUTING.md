@@ -1,4 +1,4 @@
-# Contributing to MLXCode
+# Contributing to MLX Code
 
 Thank you for your interest in contributing! We welcome contributions from the community.
 
@@ -19,7 +19,7 @@ Thank you for your interest in contributing! We welcome contributions from the c
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
 4. Ensure code compiles without warnings
-5. Test thoroughly on macOS
+5. Test thoroughly on macOS with Apple Silicon
 6. Commit with clear messages (`git commit -m 'feat: Add amazing feature'`)
 7. Push to your branch (`git push origin feature/amazing-feature`)
 8. Open a Pull Request
@@ -27,15 +27,17 @@ Thank you for your interest in contributing! We welcome contributions from the c
 ## Development Setup
 
 ### Requirements
-- macOS 13.0 (Ventura) or later
+- macOS 14.0 (Sonoma) or later
 - Xcode 15.0+
 - Swift 5.9+
+- Apple Silicon (M1/M2/M3/M4)
+- Python 3.9+ with `mlx-lm` installed
 
 ### Building
 ```bash
 git clone https://github.com/kochj23/MLXCode.git
 cd MLXCode
-open *.xcodeproj
+open "MLX Code.xcodeproj"
 ```
 
 ## Code Standards
@@ -49,12 +51,9 @@ open *.xcodeproj
 ## Security
 
 - **Never commit credentials, API keys, or secrets**
+- Store all secrets in macOS Keychain
 - Report security vulnerabilities privately (see [SECURITY.md](SECURITY.md))
 - Follow OWASP security best practices
-
-## Code of Conduct
-
-This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you agree to uphold this code.
 
 ## License
 
