@@ -208,9 +208,9 @@ MLX Code (SwiftUI)
 
 Being honest about limitations:
 
-- **No internet access** — can't browse, fetch URLs, or call APIs
+- **No web browsing** — can't fetch arbitrary URLs or browse the internet (GitHub API is the exception)
 - **No image/video/audio generation** — this is a code assistant, not a media tool
-- **Small model constraints** — 3-8B parameter models make mistakes, especially with complex multi-step reasoning
+- **Small model constraints** — 3-14B parameter models make mistakes, especially with complex multi-step reasoning
 - **No IDE integration** — standalone app, not an Xcode plugin (yet)
 - **Tool calling is imperfect** — local models sometimes format tool calls incorrectly
 
