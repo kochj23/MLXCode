@@ -164,7 +164,7 @@ MLX Code (SwiftUI)
 ```
 
 **Key design decisions:**
-- Chat templates applied by the Python tokenizer (not hand-rolled in Swift)
+- Chat templates applied natively by `mlx-swift-lm` tokenizer — no Python required for inference
 - Tool prompt is ~500 tokens (not 4000) — leaves room for actual conversation
 - Context budget system allocates tokens: system prompt, messages, project context, output reservation
 - Two tool tiers: core (always available) and development (when project is open)
@@ -197,10 +197,10 @@ MLX Code (SwiftUI)
 - **No API Keys Required**: No cloud services, no subscriptions, no accounts
 - **Local Memory Storage**: User memories stored in `~/.mlxcode/memories.json`, never transmitted
 
-### Thread Safety (v6.1.0)
-- **Serial Queues**: MLX service I/O operations serialized to prevent race conditions
-- **Buffered I/O**: 4096-byte chunk reading replaces byte-by-byte daemon communication
-- **Task Cancellation**: All infinite loops replaced with `while !Task.isCancelled` for clean shutdown
+### Thread Safety
+- **Actor isolation**: `MLXService` is a Swift actor — all model state is automatically serialized
+- **Streaming via AsyncStream**: Token generation uses `AsyncStream<Generation>`, delivered to `@MainActor` via `MainActor.run`
+- **Task Cancellation**: All background loops use `while !Task.isCancelled` for clean shutdown
 
 ---
 
