@@ -73,6 +73,16 @@ actor MLXService {
         }
 
         let directory = URL(fileURLWithPath: expandedPath)
+
+        // Only allow SafeTensors format — reject PyTorch pickle (.bin/.pt) models
+        guard isSafeTensorsModel(at: directory) else {
+            await SecureLogger.shared.error(
+                "Rejected unsafe model format at: \(expandedPath)",
+                category: "MLXService"
+            )
+            throw MLXServiceError.unsafeModelFormat(expandedPath)
+        }
+
         let configuration = ModelConfiguration(directory: directory)
 
         modelContainer = try await LLMModelFactory.shared.loadContainer(
@@ -303,6 +313,23 @@ actor MLXService {
 
     // MARK: - Private Helpers
 
+    /// Validates that a model directory contains only SafeTensors weights.
+    /// Returns true if safe, false if PyTorch pickle files (.bin, .pt) are present
+    /// without any corresponding .safetensors files.
+    private func isSafeTensorsModel(at url: URL) -> Bool {
+        guard let contents = try? FileManager.default.contentsOfDirectory(
+            at: url, includingPropertiesForKeys: nil
+        ) else { return false }
+
+        let hasSafeTensors = contents.contains { $0.pathExtension == "safetensors" }
+        let hasPickle = contents.contains { $0.pathExtension == "bin" || $0.pathExtension == "pt" }
+
+        // Reject if pickle weights present without any safetensors counterpart
+        if hasPickle && !hasSafeTensors { return false }
+        // Require at least one safetensors file
+        return hasSafeTensors
+    }
+
     /// Formats chat messages as a flat prompt string — used as fallback when
     /// the model's Jinja chat template is not supported by swift-jinja.
     private func formatMessagesAsPrompt(_ messages: [Message]) -> String {
@@ -335,6 +362,15 @@ actor MLXService {
             return nil
         }
 
+        // Only surface SafeTensors models in the UI
+        guard isSafeTensorsModel(at: url) else {
+            await SecureLogger.shared.warning(
+                "Skipping non-SafeTensors model: \(url.lastPathComponent)",
+                category: "MLXService"
+            )
+            return nil
+        }
+
         var totalSize: Int64 = 0
         for file in contents {
             if let attributes = try? fileManager.attributesOfItem(atPath: file.path),
@@ -364,6 +400,7 @@ enum MLXServiceError: LocalizedError {
     case inferenceInProgress
     case invalidParameters
     case generationFailed(String)
+    case unsafeModelFormat(String)
 
     var errorDescription: String? {
         switch self {
@@ -381,6 +418,8 @@ enum MLXServiceError: LocalizedError {
             return "The generation parameters are invalid"
         case .generationFailed(let message):
             return "Text generation failed: \(message)"
+        case .unsafeModelFormat(let path):
+            return "Unsafe model format rejected: \(path)\n\nMLX Code only loads SafeTensors (.safetensors) models. PyTorch pickle files (.bin, .pt) are not permitted."
         }
     }
 }
