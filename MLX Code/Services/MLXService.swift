@@ -208,8 +208,22 @@ actor MLXService {
             ]
         }
 
-        let userInput = UserInput(prompt: .messages(messageDicts))
-        let lmInput = try await container.prepare(input: userInput)
+        // Try the model's native chat template first. Some models (e.g. Mistral 7B) use
+        // Jinja features not yet supported by swift-jinja — fall back to flat prompt format.
+        let lmInput: LMInput
+        do {
+            let userInput = UserInput(prompt: .messages(messageDicts))
+            lmInput = try await container.prepare(input: userInput)
+        } catch {
+            await SecureLogger.shared.warning(
+                "Chat template failed (\(error.localizedDescription)), falling back to flat prompt",
+                category: "MLXService"
+            )
+            let flatPrompt = formatMessagesAsPrompt(messages)
+            let fallbackInput = UserInput(prompt: .text(flatPrompt))
+            lmInput = try await container.prepare(input: fallbackInput)
+        }
+
         let stream = try await container.generate(input: lmInput, parameters: params)
 
         var fullResponse = ""
@@ -278,6 +292,23 @@ actor MLXService {
     }
 
     // MARK: - Private Helpers
+
+    /// Formats chat messages as a flat prompt string — used as fallback when
+    /// the model's Jinja chat template is not supported by swift-jinja.
+    private func formatMessagesAsPrompt(_ messages: [Message]) -> String {
+        var prompt = ""
+        for message in messages {
+            let prefix: String
+            switch message.role {
+            case .system:    prefix = "System: "
+            case .user:      prefix = "User: "
+            case .assistant: prefix = "Assistant: "
+            }
+            prompt += prefix + message.content + "\n\n"
+        }
+        prompt += "Assistant: "
+        return prompt
+    }
 
     private func parseModelDirectory(_ url: URL) async throws -> MLXModel? {
         let fileManager = FileManager.default
