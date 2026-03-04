@@ -204,6 +204,14 @@ MLX Code (SwiftUI)
 
 ---
 
+## Roadmap
+
+- **Xcode Extension** — IDE integration so MLX Code can operate directly inside Xcode, with access to the editor selection, build errors, and file context without switching apps
+- **Native model downloads** — replace the Python downloader with a pure Swift HuggingFace Hub client
+- **Faster tool calling** — structured output / grammar-constrained generation to reduce malformed tool calls from smaller models
+
+---
+
 ## What It Doesn't Do
 
 Being honest about limitations:
