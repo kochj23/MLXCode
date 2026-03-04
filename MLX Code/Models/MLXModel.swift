@@ -93,14 +93,14 @@ struct ModelParameters: Codable, Equatable, Hashable {
 
     /// Initializes model parameters with defaults
     /// - Parameters:
-    ///   - temperature: Sampling temperature (default: 0.7)
+    ///   - temperature: Sampling temperature (default: 0.2)
     ///   - maxTokens: Maximum tokens to generate (default: 2048)
     ///   - topP: Top-p sampling (default: 0.9)
     ///   - topK: Top-k sampling (default: 40)
     ///   - repetitionPenalty: Repetition penalty (default: 1.2, higher = less repetition)
     ///   - repetitionContextSize: Context size for repetition (default: 64, look back farther)
     init(
-        temperature: Double = 0.7,
+        temperature: Double = 0.2,
         maxTokens: Int = 2048,  // Restored: chat templates + RepetitionDetector prevent loops
         topP: Double = 0.9,
         topK: Int = 40,

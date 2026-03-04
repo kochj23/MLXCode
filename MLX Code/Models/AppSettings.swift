@@ -26,7 +26,7 @@ class AppSettings: ObservableObject {
     @Published var availableModels: [MLXModel] = []
 
     /// Temperature setting (0.0 to 2.0)
-    @Published var temperature: Double = 0.7
+    @Published var temperature: Double = 0.2
 
     /// Maximum tokens to generate
     @Published var maxTokens: Int = 2048
@@ -385,7 +385,7 @@ class AppSettings: ObservableObject {
 
     /// Resets all settings to defaults
     func resetToDefaults() {
-        temperature = 0.7
+        temperature = 0.2
         maxTokens = 2048
         topP = 0.9
         topK = 40
