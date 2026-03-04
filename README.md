@@ -1,4 +1,4 @@
-# MLX Code v6.1.0
+# MLX Code v6.1.1
 
 ![Build](https://github.com/kochj23/MLXCode/actions/workflows/build.yml/badge.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS%2014%2B-blue)
@@ -231,7 +231,17 @@ Being honest about limitations:
 
 ## Version History
 
-### v6.1.0 (February 26, 2026) — Current
+### v6.1.1 (March 4, 2026) — Current
+- Removed dead `ContentView.swift` (deprecated stub, never referenced anywhere)
+- Removed dead `MLXSwiftBackend.swift` (class was never instantiated — entire file was unused)
+- Removed `handleDirectToolInvocation()` in ChatViewModel, which always returned `false`
+- Removed debug code that was writing to `/tmp/mlx_debug.log` on every message send in production
+- Fixed force unwrap on `FileManager.urls().first!` in ChatViewModel and ConversationManager
+- Replaced bare `print()` with `LogManager` in ConversationManager for consistent error logging
+- Stripped ~15 noisy trace-level log calls from `generateResponse()` (per-token logging, emoji-prefixed step tracing)
+- Removed redundant inline comments that restated what the adjacent code already said
+
+### v6.1.0 (February 26, 2026)
 - Comprehensive security audit: 31 findings resolved (2 CRITICAL, 8 HIGH, 10 MEDIUM, 9 LOW, 1 INFO)
 - API keys migrated from UserDefaults to macOS Keychain with automatic migration
 - Command validator hardened with NSRegularExpression word-boundary matching
@@ -251,7 +261,6 @@ Being honest about limitations:
 - Force unwrap elimination in MLXService
 - NSString cast chains replaced with URL API across 3 files
 - Named constants for context budget ratios
-- Deprecated unused ContentView with `@available` attribute
 
 ### v6.0.0 (February 20, 2026)
 - GitHub integration: issues, PRs, branches, credential scanning
