@@ -111,17 +111,12 @@ class ChatViewModel: ObservableObject {
         setupTokenCounter()
     }
 
-    /// Sets up an observer for model selection changes
+    /// Updates model status when the selected model changes in settings.
     private func setupModelObserver() {
         AppSettings.shared.$selectedModel
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 Task { [weak self] in
-                    // Give model time to load
-                    try? await Task.sleep(nanoseconds: 1_500_000_000) // 1.5 seconds
-                    await self?.updateModelStatus()
-
-                    // Check again after another delay to be sure
-                    try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 more second
                     await self?.updateModelStatus()
                 }
             }

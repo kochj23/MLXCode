@@ -51,7 +51,6 @@
 		9D968D8996FA1AE7F661C916 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 594327739243F92262A48BA3 /* Assets.xcassets */; };
 		9E4728BDDB32D3698B567C19 /* TestGenerationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52CA5C71B521246C88421C5E /* TestGenerationTool.swift */; };
 		A0013163E03EA758655F244E /* ModelSecurityValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3135C47FACB8AE8CB699414 /* ModelSecurityValidator.swift */; };
-		A6C057E939C1A62E58F971A0 /* mlx_daemon.py in Resources */ = {isa = PBXBuildFile; fileRef = 6CC6C830E9E5801EFE2690F2 /* mlx_daemon.py */; };
 		AC2321EF0112053798EF401E /* GitIntegrationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03995484D94FA4FA6BD0F6C /* GitIntegrationTool.swift */; };
 		B227E7F3CC8520A366B0B7AF /* FileOperationsTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9E24703A8FCDC2C9B4B0BA /* FileOperationsTool.swift */; };
 		B383B9851026BBA9EB5D0534 /* WidgetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3516CF4FE359150087D766 /* WidgetData.swift */; };
@@ -593,8 +592,7 @@
 				BC51340E6DC042F101EC852C /* Features.md in Resources */,
 				7A0F8C83531AC0524598D2AF /* KeyboardShortcuts.md in Resources */,
 				FFEA93AF903CFA3261DD0C56 /* Troubleshooting.md in Resources */,
-				A6C057E939C1A62E58F971A0 /* mlx_daemon.py in Resources */,
-				054C45D18234B5AE6A2A3233 /* GettingStarted.md in Resources */,
+					054C45D18234B5AE6A2A3233 /* GettingStarted.md in Resources */,
 				E053530D29423C88386576C8 /* Features.md in Resources */,
 				C76BFA1F8B9FED3E7CEAC4CA /* KeyboardShortcuts.md in Resources */,
 				F552B2A0318CA58997F79EBA /* Troubleshooting.md in Resources */,

@@ -1,4 +1,4 @@
-# MLX Code v6.1.1
+# MLX Code v6.2.0
 
 ![Build](https://github.com/kochj23/MLXCode/actions/workflows/build.yml/badge.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS%2014%2B-blue)
@@ -121,8 +121,8 @@ Models download automatically on first use. You can also add custom models from 
 
 - **macOS 14.0** (Sonoma) or later
 - **Apple Silicon** (M1, M2, M3, M4)
-- **8 GB RAM (Random Access Memory)** minimum (16 GB recommended for 7B models)
-- **Python 3.9+** with `mlx-lm` installed
+- **8 GB RAM** minimum (16 GB recommended for 7B models)
+- **Python 3.9+** with `huggingface-hub` installed (only for model downloads)
 
 ---
 
@@ -141,13 +141,13 @@ open "MLX Code.xcodeproj"
 # Build and run (Cmd+R)
 ```
 
-### Python Setup
+### Python Setup (for model downloads only)
 
 ```bash
-pip install mlx-lm
+pip install huggingface-hub
 ```
 
-MLX Code uses a Python daemon (`mlx_daemon.py`) for model inference. It applies the model's native chat template automatically (ChatML for Qwen, Llama format for Llama, etc.).
+MLX Code uses `mlx-swift-lm` natively for inference — no Python required to run the model. Python is only needed to download models from HuggingFace on first use.
 
 ---
 
@@ -157,7 +157,7 @@ MLX Code uses a Python daemon (`mlx_daemon.py`) for model inference. It applies 
 MLX Code (SwiftUI)
   |
   |-- ChatViewModel         # Conversation management, tool execution loop
-  |-- MLXService            # Talks to Python daemon via stdin/stdout JSON
+  |-- MLXService            # Native MLX Swift inference via mlx-swift-lm
   |-- ContextManager        # Token budgeting, message compaction
   |-- ToolRegistry          # 14 registered tools (2 tiers)
   |-- SystemPrompts         # Compact prompt with few-shot examples + user memories
@@ -173,7 +173,7 @@ MLX Code (SwiftUI)
   |   |-- GitHubViewModel   # GitHub panel state
   |   `-- CodeAnalysis VM   # Code metrics and analysis state
   |
-  `-- Python/mlx_daemon.py  # mlx-lm model loading, chat_generate with templates
+  `-- Python/huggingface_downloader.py  # Model download from HuggingFace Hub
 ```
 
 **Key design decisions:**
@@ -231,7 +231,18 @@ Being honest about limitations:
 
 ## Version History
 
-### v6.1.1 (March 4, 2026) — Current
+### v6.2.0 (March 4, 2026) — Current
+**Native MLX Swift — Python dependency eliminated for inference**
+
+- Replaced Python subprocess daemon (`mlx_daemon.py`) with native `mlx-swift-lm` framework
+- Model loading now uses `LLMModelFactory` + `ModelContainer` directly in Swift — no Python process
+- Chat generation uses `MLXLMCommon.UserInput` + `AsyncStream<Generation>` for streaming
+- Tokenizer chat templates applied natively (Llama, Qwen, Mistral, etc.)
+- Python still used only for initial model download (`huggingface_downloader.py`)
+- Removed 2,726 lines of dead code: `EthicalAIGuardian`, `AIBackendStatusMenu`, all 4 `AIBackendManager` files
+- `mlx_daemon.py` no longer bundled in the app
+
+### v6.1.1 (March 4, 2026)
 - Removed dead `ContentView.swift` (deprecated stub, never referenced anywhere)
 - Removed dead `MLXSwiftBackend.swift` (class was never instantiated — entire file was unused)
 - Removed `handleDirectToolInvocation()` in ChatViewModel, which always returned `false`
