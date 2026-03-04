@@ -31,6 +31,9 @@ struct MLXCodeApp: App {
     /// Chat view model for managing conversations
     @StateObject private var chatViewModel = ChatViewModel()
 
+    /// Handles incoming requests from the Xcode Source Editor Extension
+    private let xcodeActionHandler = XcodeActionHandler.shared
+
     /// Project view model for build operations
     @StateObject private var projectViewModel = ProjectViewModel.shared
 
@@ -106,6 +109,12 @@ struct MLXCodeApp: App {
 
                         // Load user memories into system prompt cache
                         await refreshMemories()
+                    }
+                }
+                .onOpenURL { url in
+                    // Handle requests from the Xcode Source Editor Extension
+                    if url.scheme == "mlxcode", url.host == "xcode-action" {
+                        xcodeActionHandler.handleIncomingRequest(chatViewModel: chatViewModel)
                     }
                 }
         }

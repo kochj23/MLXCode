@@ -67,6 +67,7 @@ struct SystemPrompts {
             prompt += "- Only use tools listed above. Never invent tools.\n"
             prompt += "- Call one tool at a time. Wait for results before calling another.\n"
             prompt += "- Never hallucinate tool results.\n"
+            prompt += "- JSON must be valid: double quotes only, no trailing commas.\n"
         }
 
         // Inject user memories into the system prompt (respects user toggle)

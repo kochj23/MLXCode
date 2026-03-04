@@ -4,10 +4,12 @@
 //
 //  Created on 2025-11-18.
 //  Updated 2026-03-04 — Replaced Python daemon with native MLX Swift
+//  Updated 2026-03-04 — Native model downloads via Hub API (no Python)
 //  Copyright © 2025. All rights reserved.
 //
 
 import Foundation
+import Hub
 import MLXLLM
 import MLXLMCommon
 
@@ -309,39 +311,6 @@ actor MLXService {
         )
     }
 
-    private func getUserSitePackagesPath() -> String {
-        let homeDir = NSHomeDirectory()
-        for version in ["3.13", "3.12", "3.11", "3.10", "3.9"] {
-            let path = "\(homeDir)/Library/Python/\(version)/lib/python/site-packages"
-            if FileManager.default.fileExists(atPath: path) {
-                return path
-            }
-        }
-        return "\(homeDir)/Library/Python/3.9/lib/python/site-packages"
-    }
-
-    private func getXcodePythonPath() -> String? {
-        let basePath = "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions"
-        for version in ["3.13", "3.12", "3.11", "3.10", "3.9"] {
-            let path = "\(basePath)/\(version)/bin/python\(version)"
-            if FileManager.default.fileExists(atPath: path) {
-                return path
-            }
-        }
-        return nil
-    }
-
-    private func getPythonScriptPath(scriptName: String) -> String? {
-        if let bundlePath = Bundle.main.path(forResource: scriptName, ofType: "py") {
-            return bundlePath
-        }
-        let appBundleDir = (Bundle.main.bundlePath as NSString).deletingLastPathComponent
-        let relativePath = (appBundleDir as NSString).appendingPathComponent("Python/\(scriptName).py")
-        if FileManager.default.fileExists(atPath: relativePath) {
-            return relativePath
-        }
-        return nil
-    }
 }
 
 // MARK: - Error Types
@@ -378,7 +347,7 @@ enum MLXServiceError: LocalizedError {
 // MARK: - Model Download
 
 extension MLXService {
-    /// Downloads a model from HuggingFace using the Python downloader script.
+    /// Downloads a model from HuggingFace using the native Hub Swift API.
     func downloadModel(
         _ model: MLXModel,
         progressHandler: ((Double) -> Void)? = nil
@@ -390,112 +359,33 @@ extension MLXService {
             To fix:
             1. Go to Settings → Models
             2. Select a model from the list (Llama 3.2, Qwen 2.5, Mistral, or Phi-3.5)
-            3. Or add HuggingFace ID to your custom model
+            3. Or add a HuggingFace ID to your custom model
 
             Recommended: Use 'Llama 3.2 3B' (fast, 4-bit quantized)
             """)
         }
 
-        await SecureLogger.shared.info("Starting download of model: \(model.name)", category: "MLXService")
+        await SecureLogger.shared.info("Starting download: \(huggingFaceId)", category: "MLXService")
 
-        let fileManager = FileManager.default
         let settingsModelsPath = await AppSettings.shared.modelsPath
-        let expandedModelsPath = (settingsModelsPath as NSString).expandingTildeInPath
-        let modelsDirectory = URL(fileURLWithPath: expandedModelsPath)
+        let modelsDirectory = URL(fileURLWithPath: (settingsModelsPath as NSString).expandingTildeInPath)
+        try? FileManager.default.createDirectory(at: modelsDirectory, withIntermediateDirectories: true)
 
-        try? fileManager.createDirectory(at: modelsDirectory, withIntermediateDirectories: true)
+        let hub = HubApi(downloadBase: modelsDirectory)
+        let repo = Hub.Repo(id: huggingFaceId)
 
-        let modelDirectory = modelsDirectory.appendingPathComponent(model.fileName)
-        let actualPath = modelDirectory.path
-
-        guard let scriptPath = getPythonScriptPath(scriptName: "huggingface_downloader") else {
-            throw MLXServiceError.generationFailed("Downloader script not found in bundle or development path")
+        let modelDirectory = try await hub.snapshot(
+            from: repo,
+            matching: ["*.safetensors", "*.json"]
+        ) { progress in
+            progressHandler?(progress.fractionCompleted)
         }
 
-        guard fileManager.fileExists(atPath: scriptPath) else {
-            throw MLXServiceError.generationFailed("Script file not accessible at path: \(scriptPath)")
-        }
-
-        guard let pythonPath = getXcodePythonPath() else {
-            throw MLXServiceError.generationFailed("Python not found. Please install Xcode and Command Line Tools.")
-        }
-
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: pythonPath)
-
-        let needsConversion = !huggingFaceId.lowercased().contains("mlx-community")
-        var arguments = [scriptPath, "download", huggingFaceId, "--output", actualPath]
-        if !needsConversion {
-            arguments.append("--no-convert")
-        } else {
-            arguments.append(contentsOf: ["--quantize", "4bit"])
-        }
-        process.arguments = arguments
-
-        var env = ProcessInfo.processInfo.environment
-        env["PYTHONPATH"] = getUserSitePackagesPath()
-        process.environment = env
-        process.currentDirectoryURL = fileManager.homeDirectoryForCurrentUser
-
-        let outputPipe = Pipe()
-        let errorPipe = Pipe()
-        process.standardOutput = outputPipe
-        process.standardError = errorPipe
-
-        let outputQueue = DispatchQueue(label: "com.mlxcode.output")
-        let errorQueue = DispatchQueue(label: "com.mlxcode.error")
-        var allOutput = Data()
-        var allErrors = Data()
-
-        outputPipe.fileHandleForReading.readabilityHandler = { handle in
-            let data = handle.availableData
-            guard !data.isEmpty else { return }
-            outputQueue.async { allOutput.append(data) }
-            if let output = String(data: data, encoding: .utf8) {
-                Task { await SecureLogger.shared.debug("Python stdout: \(output)", category: "MLXService") }
-            }
-        }
-
-        errorPipe.fileHandleForReading.readabilityHandler = { handle in
-            let data = handle.availableData
-            guard !data.isEmpty else { return }
-            errorQueue.async { allErrors.append(data) }
-            if let errorOutput = String(data: data, encoding: .utf8) {
-                Task { await SecureLogger.shared.warning("Python stderr: \(errorOutput)", category: "MLXService") }
-            }
-        }
-
-        try process.run()
-        process.waitUntilExit()
-
-        outputPipe.fileHandleForReading.readabilityHandler = nil
-        errorPipe.fileHandleForReading.readabilityHandler = nil
-
-        let exitCode = process.terminationStatus
-
-        var fullOutput = ""
-        var fullErrors = ""
-        outputQueue.sync { fullOutput = String(data: allOutput, encoding: .utf8) ?? "" }
-        errorQueue.sync { fullErrors = String(data: allErrors, encoding: .utf8) ?? "" }
-
-        guard exitCode == 0 else {
-            var errorMessage = "Download failed with exit code \(exitCode)"
-            if let jsonData = fullOutput.data(using: .utf8),
-               let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
-               let error = json["error"] as? String {
-                errorMessage = error
-            } else if !fullErrors.isEmpty {
-                errorMessage = fullErrors.trimmingCharacters(in: .whitespacesAndNewlines)
-            } else if !fullOutput.isEmpty {
-                errorMessage = fullOutput.trimmingCharacters(in: .whitespacesAndNewlines)
-            }
-            throw MLXServiceError.generationFailed(errorMessage)
-        }
-
-        await SecureLogger.shared.info("Model download completed: \(model.name)", category: "MLXService")
+        await SecureLogger.shared.info("Download complete: \(model.name) at \(modelDirectory.path)", category: "MLXService")
 
         var updatedModel = model
-        updatedModel.path = actualPath
+        updatedModel.path = modelDirectory.path
+        updatedModel.isDownloaded = true
         return updatedModel
     }
 }

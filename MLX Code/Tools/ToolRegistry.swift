@@ -259,13 +259,35 @@ class ToolRegistry: ObservableObject {
 
     // MARK: - JSON Tool Call Parsing
 
+    /// Attempts to repair common JSON mistakes models make: single quotes, trailing commas.
+    private func repairJSON(_ raw: String) -> String {
+        var s = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Single quotes → double quotes
+        s = s.replacingOccurrences(of: "'", with: "\"")
+        // Trailing commas before } or ]
+        if let regex = try? NSRegularExpression(pattern: ",\\s*([}\\]])", options: []) {
+            s = regex.stringByReplacingMatches(
+                in: s,
+                range: NSRange(s.startIndex..., in: s),
+                withTemplate: "$1"
+            )
+        }
+        return s
+    }
+
     /// Parse a JSON-format tool call: {"name": "tool_name", "args": {...}}
     func parseToolCallJSON(_ text: String) -> (name: String, parameters: [String: Any])? {
-        // Try to parse as JSON
-        guard let data = text.data(using: .utf8),
-              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-              let name = json["name"] as? String else {
-            // Fall back to legacy format
+        // Try raw text first, then attempt JSON repair on failure
+        let candidates = [text, repairJSON(text)]
+        var json: [String: Any]?
+        for candidate in candidates {
+            if let data = candidate.data(using: .utf8),
+               let parsed = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                json = parsed
+                break
+            }
+        }
+        guard let json, let name = json["name"] as? String else {
             return parseToolCallLegacy(text)
         }
 

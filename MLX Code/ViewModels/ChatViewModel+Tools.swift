@@ -167,9 +167,25 @@ extension ChatViewModel {
         }
     }
 
-    /// Handle tool calls found in assistant response (with approval flow)
-    func handleToolCallsInResponse(_ response: String) async {
+    /// Handle tool calls found in assistant response (with approval flow and retry on parse failure)
+    func handleToolCallsInResponse(_ response: String, retryCount: Int = 0) async {
         let toolCallStrings = extractToolCalls(response)
+
+        // If the model generated a tool tag but we couldn't parse anything valid, prompt it to retry
+        if toolCallStrings.isEmpty && response.contains("<tool>") && retryCount < 2 {
+            let retryMessage = Message.system("""
+            Your previous response contained a malformed tool call that could not be parsed. \
+            Use EXACTLY this format with valid JSON (double quotes, no trailing commas):
+            <tool>
+            {"name": "tool_name", "args": {"key": "value"}}
+            </tool>
+            Please try again.
+            """)
+            currentConversation?.addMessage(retryMessage)
+            await generateResponse()
+            return
+        }
+
         guard !toolCallStrings.isEmpty else { return }
 
         logInfo("Found \(toolCallStrings.count) tool call(s) in response", category: "ChatViewModel+Tools")
