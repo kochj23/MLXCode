@@ -116,20 +116,16 @@ Models download automatically on first use. You can also add custom models from 
 
 ## Installation
 
-### From DMG
+See **[INSTALLATION.md](INSTALLATION.md)** for the full setup guide, including model downloads, enabling the Xcode extension, and troubleshooting.
 
-Download the latest release from [Releases](https://github.com/kochj23/MLXCode/releases), open the DMG, and drag to Applications.
+### Quick Start
 
-### From Source
+1. Download `MLXCode-vX.Y.Z.dmg` from [Releases](https://github.com/kochj23/MLXCode/releases)
+2. Drag **MLX Code** to `/Applications`
+3. Launch the app → Settings → Models → download a model
+4. Load the model and start chatting
 
-```bash
-git clone https://github.com/kochj23/MLXCode.git
-cd MLXCode
-open "MLX Code.xcodeproj"
-# Build and run (Cmd+R)
-```
-
-No Python setup required. MLX Code is fully self-contained.
+No Python required. MLX Code is fully self-contained.
 
 ---
 
