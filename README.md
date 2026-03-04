@@ -254,6 +254,7 @@ Being honest about limitations:
 - **Default temperature 0.2** — reduced from 0.7 to cut hallucinations in code analysis
 - **Jinja template fallback** — models with unsupported chat templates fall back to flat prompt format
 - **Fixed: agentic tool calling loop** — resolved "inference already in progress" error that occurred when the model called a tool and the follow-up generation failed. Root cause was `PythonService.terminate()` being a no-op with native MLX, causing `chatCompletion()` to run until `maxTokens` before returning. Stream now exits immediately when `</tool>` is detected.
+- **Security: SafeTensors-only model loading** — `.bin` and `.pt` (PyTorch pickle) model files are rejected at both discovery and load time. Only `.safetensors` format is permitted.
 
 ### v6.2.0 (March 4, 2026)
 - Replaced Python subprocess daemon with native `mlx-swift-lm` framework for inference
