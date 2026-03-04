@@ -50,7 +50,7 @@ Read-only tools (grep, glob, file read, code navigation) auto-approve. Write/exe
 
 ## What's New in v6.3.0 (March 2026)
 
-### Xcode Extension + Native Downloads + Smarter Tool Calling
+### Xcode Extension · Native Downloads · Polished UI
 
 **Xcode Source Editor Extension** — MLX Code now lives inside Xcode. Select any code and invoke from the **Editor > MLX Code** menu:
 - **Explain Selection** — understand what code does
@@ -59,9 +59,19 @@ Read-only tools (grep, glob, file read, code navigation) auto-approve. Write/exe
 - **Fix Issues** — find and fix bugs
 - **Ask MLX Code** — open with code pre-loaded, ask anything
 
-**No Python required at all** — model downloads now use the native Hub Swift API (`Hub.HubApi`). Python has been fully eliminated from the app.
+**No Python required** — model downloads use the native Hub Swift API. Python is fully eliminated.
 
-**Smarter tool calling** — JSON repair automatically fixes common model mistakes (single quotes, trailing commas). Malformed tool calls now trigger a self-correction retry rather than silently failing.
+**Syntax highlighting** — Code blocks now highlight Swift, Python, JavaScript/TypeScript, Bash, JSON, and Objective-C (keywords, types, strings, comments, numbers).
+
+**Collapsed tool calls** — The raw `<tool>JSON</tool>` message is now a clean "🔧 Called: tool_name" chip. Expand it if you want to see the JSON.
+
+**Accurate context window bar** — Token bar shows real conversation usage against the actual model context window (e.g. 32,768 for Mistral, not a hardcoded 8,192).
+
+**Resume generation** — A **Continue** button appears on the last assistant message after stopping. Click to pick up where it left off.
+
+**Smarter tool calling** — JSON auto-repair fixes common model mistakes. Malformed tool calls retry with a correction prompt rather than silently failing.
+
+**Lower default temperature** — Changed from 0.7 → 0.2 to significantly reduce hallucinations in code analysis tasks.
 
 ---
 
@@ -220,8 +230,13 @@ Being honest about limitations:
 ### v6.3.0 (March 4, 2026) — Current
 - **Xcode Source Editor Extension** — 5 commands in Editor > MLX Code menu (Explain, Refactor, Generate Tests, Fix Issues, Ask). Communicates with main app via shared App Group + `mlxcode://` URL scheme
 - **Native model downloads** — replaced Python `huggingface_downloader.py` with `Hub.HubApi.snapshot()`. Python fully eliminated from the app
-- **Tool call reliability** — JSON auto-repair (single quotes, trailing commas), retry-on-failure loop, stricter system prompt formatting rule
-- Bundle ID for extension: `com.local.mlxcode.xcodeeditor`
+- **Syntax highlighting** — Swift, Python, JS/TS, Bash, JSON, Objective-C in all code blocks
+- **Collapsed tool calls** — raw `<tool>` assistant messages now show as a compact chip; expand to inspect
+- **Accurate context bar** — syncs to model's actual context window on load; tracks conversation totals
+- **Resume generation** — Continue button on last assistant message after stopping
+- **Tool call reliability** — JSON auto-repair, retry-on-failure loop, stricter system prompt rule
+- **Default temperature 0.2** — reduced from 0.7 to cut hallucinations in code analysis
+- **Jinja template fallback** — models with unsupported chat templates (e.g. Mistral 7B) now fall back gracefully to flat prompt format instead of crashing
 
 ### v6.2.0 (March 4, 2026)
 **Native MLX Swift — Python dependency eliminated for inference**
