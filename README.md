@@ -1,4 +1,4 @@
-# MLX Code v6.2.0
+# MLX Code v6.3.0
 
 ![Build](https://github.com/kochj23/MLXCode/actions/workflows/build.yml/badge.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS%2014%2B-blue)
@@ -48,19 +48,20 @@ Read-only tools (grep, glob, file read, code navigation) auto-approve. Write/exe
 
 ---
 
-## What's New in v6.2.0 (March 2026)
+## What's New in v6.3.0 (March 2026)
 
-### Native MLX Swift — Python No Longer Required for Inference
+### Xcode Extension + Native Downloads + Smarter Tool Calling
 
-The biggest change since v1.0: inference now runs entirely in Swift using `mlx-swift-lm`. The Python daemon subprocess has been removed.
+**Xcode Source Editor Extension** — MLX Code now lives inside Xcode. Select any code and invoke from the **Editor > MLX Code** menu:
+- **Explain Selection** — understand what code does
+- **Refactor Selection** — get an improved version
+- **Generate Tests** — write unit tests for selected code
+- **Fix Issues** — find and fix bugs
+- **Ask MLX Code** — open with code pre-loaded, ask anything
 
-**What changed:**
-- **No Python for inference** — `mlx_daemon.py` is gone. Models load and run natively via `LLMModelFactory` + `ModelContainer`
-- **Faster startup** — no subprocess spawn, no pipe handshake, no JSON-RPC overhead
-- **Cleaner streaming** — tokens delivered via `AsyncStream<Generation>`, tokenizer chat templates applied natively
-- **Python still used for downloads only** — `huggingface_downloader.py` runs once when you first pull a model
-- **2,726 lines of dead code removed** — `EthicalAIGuardian`, `AIBackendStatusMenu`, and all 4 `AIBackendManager` files deleted (none were called by the live app)
-- **Code quality cleanup** — removed debug file writes from production, fixed force unwraps, replaced polling sleeps with proper event handling
+**No Python required at all** — model downloads now use the native Hub Swift API (`Hub.HubApi`). Python has been fully eliminated from the app.
+
+**Smarter tool calling** — JSON repair automatically fixes common model mistakes (single quotes, trailing commas). Malformed tool calls now trigger a self-correction retry rather than silently failing.
 
 ---
 
@@ -109,7 +110,7 @@ Models download automatically on first use. You can also add custom models from 
 - **macOS 14.0** (Sonoma) or later
 - **Apple Silicon** (M1, M2, M3, M4)
 - **8 GB RAM** minimum (16 GB recommended for 7B models)
-- **Python 3.9+** with `huggingface-hub` installed (only for model downloads)
+- **No Python required** — inference and downloads are pure Swift
 
 ---
 
@@ -128,13 +129,7 @@ open "MLX Code.xcodeproj"
 # Build and run (Cmd+R)
 ```
 
-### Python Setup (for model downloads only)
-
-```bash
-pip install huggingface-hub
-```
-
-MLX Code uses `mlx-swift-lm` natively for inference — no Python required to run the model. Python is only needed to download models from HuggingFace on first use.
+No Python setup required. MLX Code is fully self-contained.
 
 ---
 
@@ -160,7 +155,7 @@ MLX Code (SwiftUI)
   |   |-- GitHubViewModel   # GitHub panel state
   |   `-- CodeAnalysis VM   # Code metrics and analysis state
   |
-  `-- Python/huggingface_downloader.py  # Model download from HuggingFace Hub
+  `-- MLX Code Extension/               # Xcode Source Editor Extension (5 commands)
 ```
 
 **Key design decisions:**
@@ -206,9 +201,9 @@ MLX Code (SwiftUI)
 
 ## Roadmap
 
-- **Xcode Extension** — IDE integration so MLX Code can operate directly inside Xcode, with access to the editor selection, build errors, and file context without switching apps
-- **Native model downloads** — replace the Python downloader with a pure Swift HuggingFace Hub client
-- **Faster tool calling** — structured output / grammar-constrained generation to reduce malformed tool calls from smaller models
+- **Deeper Xcode integration** — write responses back into the editor buffer without switching apps
+- **Structured output** — grammar-constrained generation to guarantee well-formed tool calls from smaller models
+- **Streaming progress UI** — real-time download progress bar for model downloads
 
 ---
 
@@ -226,7 +221,13 @@ Being honest about limitations:
 
 ## Version History
 
-### v6.2.0 (March 4, 2026) — Current
+### v6.3.0 (March 4, 2026) — Current
+- **Xcode Source Editor Extension** — 5 commands in Editor > MLX Code menu (Explain, Refactor, Generate Tests, Fix Issues, Ask). Communicates with main app via shared App Group + `mlxcode://` URL scheme
+- **Native model downloads** — replaced Python `huggingface_downloader.py` with `Hub.HubApi.snapshot()`. Python fully eliminated from the app
+- **Tool call reliability** — JSON auto-repair (single quotes, trailing commas), retry-on-failure loop, stricter system prompt formatting rule
+- Bundle ID for extension: `com.local.mlxcode.xcodeeditor`
+
+### v6.2.0 (March 4, 2026)
 **Native MLX Swift — Python dependency eliminated for inference**
 
 - Replaced Python subprocess daemon (`mlx_daemon.py`) with native `mlx-swift-lm` framework
