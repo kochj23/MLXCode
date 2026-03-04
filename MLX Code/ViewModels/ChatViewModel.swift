@@ -235,6 +235,14 @@ class ChatViewModel: ObservableObject {
         logInfo("Model unloaded", category: "ChatViewModel")
     }
 
+    /// Continues a generation that was stopped mid-response
+    func continueGeneration() {
+        var nudge = Message.system("[Continue the response — do not repeat what was already written above]")
+        nudge.metadata = ["collapsible": "true", "collapsed": "true"]
+        currentConversation?.addMessage(nudge)
+        Task { await generateResponse() }
+    }
+
     /// Stops the current generation
     func stopGeneration() {
         guard isGenerating else { return }
@@ -481,7 +489,7 @@ class ChatViewModel: ObservableObject {
         }
     }
 
-    /// Updates the model loaded status
+    /// Updates the model loaded status and syncs the context window size
     private func updateModelStatus() async {
         isModelLoaded = await MLXService.shared.isLoaded()
 
@@ -489,6 +497,11 @@ class ChatViewModel: ObservableObject {
             statusMessage = "Model loaded: \(model.name)"
         } else {
             statusMessage = "No model loaded"
+        }
+
+        // Sync actual context window from the loaded model
+        if let contextWindow = await MLXService.shared.loadedModelContextWindow {
+            maxTokens = contextWindow
         }
     }
 

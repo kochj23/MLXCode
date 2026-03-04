@@ -73,9 +73,82 @@ struct CodeBlockView: View {
     }
 
     private var highlightedCode: AttributedString {
-        // Simple monospaced display without complex highlighting to avoid index issues
-        // Full syntax highlighting can be added later with proper AttributedString handling
-        return AttributedString(code)
+        let ns = NSMutableAttributedString(
+            string: code,
+            attributes: [
+                .font: NSFont.monospacedSystemFont(ofSize: 13, weight: .regular),
+                .foregroundColor: NSColor.labelColor
+            ]
+        )
+        applyHighlighting(to: ns)
+        return (try? AttributedString(ns, including: \.appKit)) ?? AttributedString(code)
+    }
+
+    private func applyHighlighting(to ns: NSMutableAttributedString) {
+        let full = NSRange(location: 0, length: ns.length)
+        for (pattern, color) in syntaxPatterns {
+            guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { continue }
+            regex.enumerateMatches(in: ns.string, range: full) { match, _, _ in
+                guard let range = match?.range, range.length > 0 else { return }
+                ns.addAttribute(.foregroundColor, value: color, range: range)
+            }
+        }
+    }
+
+    private var syntaxPatterns: [(String, NSColor)] {
+        switch language.lowercased() {
+        case "swift":
+            return [
+                (#"//.*"#, NSColor.systemGray),
+                (#"/\*[\s\S]*?\*/"#, NSColor.systemGray),
+                (#"\"(?:[^\"\\]|\\.)*\""#, NSColor.systemRed),
+                (#"\b(String|Int|Int64|Int32|Double|Float|Bool|Array|Dictionary|Set|Optional|Void|Never|Character|Data|URL|Date|UUID|Any|AnyObject)\b"#, NSColor.systemTeal),
+                (#"\b(func|var|let|class|struct|enum|protocol|extension|if|else|guard|switch|case|return|import|for|while|in|do|try|catch|throw|async|await|actor|nonisolated|some|any|where|typealias|init|deinit|self|super|static|final|override|public|private|internal|fileprivate|open|mutating|lazy|weak|unowned|inout|defer|repeat|break|continue|fallthrough|is|as|nil|true|false)\b"#, NSColor.systemPurple),
+                (#"\b\d+\.?\d*\b"#, NSColor.systemOrange),
+            ]
+        case "python":
+            return [
+                (#"#.*"#, NSColor.systemGray),
+                (#"\"\"\"[\s\S]*?\"\"\"|\'\'\'[\s\S]*?\'\'\'"#, NSColor.systemRed),
+                (#"\"(?:[^\"\\]|\\.)*\"|\'(?:[^\'\\]|\\.)*\'"#, NSColor.systemRed),
+                (#"\b(str|int|float|bool|list|dict|set|tuple|None|True|False|self|cls)\b"#, NSColor.systemTeal),
+                (#"\b(def|class|if|elif|else|for|while|return|import|from|as|with|try|except|finally|raise|pass|break|continue|and|or|not|in|is|lambda|yield|async|await|global|nonlocal|del|assert)\b"#, NSColor.systemPurple),
+                (#"\b\d+\.?\d*\b"#, NSColor.systemOrange),
+            ]
+        case "javascript", "js", "typescript", "ts":
+            return [
+                (#"//.*"#, NSColor.systemGray),
+                (#"/\*[\s\S]*?\*/"#, NSColor.systemGray),
+                (#"\"(?:[^\"\\]|\\.)*\"|\'(?:[^\'\\]|\\.)*\'|`[^`]*`"#, NSColor.systemRed),
+                (#"\b(String|Number|Boolean|Array|Object|Promise|null|undefined|true|false|NaN|Infinity)\b"#, NSColor.systemTeal),
+                (#"\b(function|var|let|const|class|if|else|switch|case|return|import|export|from|for|while|async|await|try|catch|finally|throw|new|this|typeof|instanceof|default|break|continue|do|of|in|delete|void|yield)\b"#, NSColor.systemPurple),
+                (#"\b\d+\.?\d*\b"#, NSColor.systemOrange),
+            ]
+        case "bash", "sh", "zsh", "shell":
+            return [
+                (#"#.*"#, NSColor.systemGray),
+                (#"\"(?:[^\"\\]|\\.)*\"|\'[^\']*\'"#, NSColor.systemRed),
+                (#"\$\w+|\$\{[^}]*\}"#, NSColor.systemOrange),
+                (#"\b(if|then|else|elif|fi|for|while|do|done|case|esac|function|return|export|local|echo|exit|cd|ls|grep|sed|awk|source|alias|unset|readonly)\b"#, NSColor.systemPurple),
+            ]
+        case "json":
+            return [
+                (#"\"(?:[^\"\\]|\\.)*\"\s*:"#, NSColor.systemTeal),
+                (#"\"(?:[^\"\\]|\\.)*\""#, NSColor.systemRed),
+                (#"\b(true|false|null)\b"#, NSColor.systemPurple),
+                (#"\b\d+\.?\d*\b"#, NSColor.systemOrange),
+            ]
+        case "objc", "objective-c", "m":
+            return [
+                (#"//.*"#, NSColor.systemGray),
+                (#"/\*[\s\S]*?\*/"#, NSColor.systemGray),
+                (#"@\"(?:[^\"\\]|\\.)*\"|\"(?:[^\"\\]|\\.)*\""#, NSColor.systemRed),
+                (#"\b(NSString|NSArray|NSDictionary|NSInteger|BOOL|CGFloat|NSObject|UIView|void|id)\b"#, NSColor.systemTeal),
+                (#"\b(if|else|for|while|return|import|@interface|@implementation|@end|@property|@synthesize|@dynamic|@protocol|@class|@selector|@encode|self|super|YES|NO|nil|NULL)\b"#, NSColor.systemPurple),
+            ]
+        default:
+            return []
+        }
     }
 
     private func copyCode() {

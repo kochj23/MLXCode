@@ -201,10 +201,19 @@ struct ChatView: View {
         return hasText ? "Send message (⌘↩)" : "Type a message"
     }
 
-    /// Token usage progress (0.0 to 1.0)
+    /// Returns true if the Continue button should be shown on this message.
+    /// Only shown on the last assistant message when not currently generating.
+    private func shouldShowContinue(_ message: Message, in conversation: Conversation) -> Bool {
+        guard message.role == .assistant,
+              !message.content.isEmpty,
+              !viewModel.isGenerating else { return false }
+        return conversation.messages.last(where: { $0.role == .assistant })?.id == message.id
+    }
+
+    /// Token usage progress based on conversation total (0.0 to 1.0)
     private var tokenProgress: Double {
         guard viewModel.maxTokens > 0 else { return 0.0 }
-        return Double(viewModel.inputTokenCount) / Double(viewModel.maxTokens)
+        return Double(viewModel.conversationTotalTokens) / Double(viewModel.maxTokens)
     }
 
     /// Color for the token bar based on usage
@@ -374,8 +383,12 @@ struct ChatView: View {
                     LazyVStack(alignment: .leading, spacing: 16) {
                         if let conversation = viewModel.currentConversation {
                             ForEach(conversation.messages) { message in
-                                MessageRowView(message: message)
-                                    .id(message.id)
+                                MessageRowView(
+                                    message: message,
+                                    onContinue: shouldShowContinue(message, in: conversation)
+                                        ? { viewModel.continueGeneration() } : nil
+                                )
+                                .id(message.id)
                             }
 
                             // Tool approval inline view
@@ -478,7 +491,7 @@ struct ChatView: View {
 
             // Token counter bar
             HStack(spacing: 8) {
-                Text("\(viewModel.inputTokenCount) / \(viewModel.maxTokens) tokens")
+                Text("\(viewModel.conversationTotalTokens) / \(viewModel.maxTokens) ctx tokens")
                     .font(.caption)
                     .foregroundColor(.secondary)
 

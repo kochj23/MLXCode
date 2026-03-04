@@ -18,6 +18,8 @@ struct MessageRowView: View {
 
     /// Whether code blocks should be highlighted
     @State private var showingCopyConfirmation = false
+    @State private var toolCallExpanded = false
+    var onContinue: (() -> Void)? = nil
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
@@ -86,19 +88,34 @@ struct MessageRowView: View {
     /// Message content with markdown rendering
     @ViewBuilder
     private var messageContent: some View {
-        // Show thinking indicator for empty assistant messages
         if message.role == .assistant && message.content.isEmpty {
             ThinkingIndicatorView(showMessage: true, message: "Thinking")
                 .padding(.vertical, 8)
         } else if isCollapsibleToolResult {
-            // Use DisclosureGroup for collapsible tool results
             CollapsibleToolResultView(
                 message: message,
                 fontSize: settings.fontSize,
                 enableSyntaxHighlighting: settings.enableSyntaxHighlighting
             )
+        } else if isRawToolCall {
+            DisclosureGroup(isExpanded: $toolCallExpanded) {
+                MarkdownTextView(
+                    markdown: message.content,
+                    fontSize: settings.fontSize,
+                    enableSyntaxHighlighting: settings.enableSyntaxHighlighting
+                )
+                .padding(.top, 4)
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "wrench.and.screwdriver.fill")
+                        .font(.system(size: 12))
+                        .foregroundColor(Color.green)
+                    Text("Called: \(extractToolName())")
+                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .foregroundColor(Color.green)
+                }
+            }
         } else {
-            // Use MarkdownTextView for rich rendering
             MarkdownTextView(
                 markdown: message.content,
                 fontSize: settings.fontSize,
@@ -107,9 +124,25 @@ struct MessageRowView: View {
         }
     }
 
-    /// Check if this message is a collapsible tool result
     private var isCollapsibleToolResult: Bool {
         return message.metadata?["collapsible"] == "true"
+    }
+
+    private var isRawToolCall: Bool {
+        return message.role == .assistant && message.content.contains("<tool>")
+    }
+
+    private func extractToolName() -> String {
+        guard let start = message.content.range(of: "<tool>"),
+              let end = message.content.range(of: "</tool>") else { return "tool" }
+        let json = String(message.content[start.upperBound..<end.lowerBound])
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if let data = json.data(using: .utf8),
+           let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+           let name = obj["name"] as? String {
+            return name
+        }
+        return "tool"
     }
 
     /// Action buttons for assistant messages
@@ -118,7 +151,7 @@ struct MessageRowView: View {
             Button(action: copyToClipboard) {
                 HStack(spacing: 6) {
                     Image(systemName: showingCopyConfirmation ? "checkmark.circle.fill" : "doc.on.doc.fill")
-                    Text(showingCopyConfirmation ? "Copied!" : "Copy Message")
+                    Text(showingCopyConfirmation ? "Copied!" : "Copy")
                 }
                 .font(.caption)
                 .padding(.horizontal, 10)
@@ -129,6 +162,23 @@ struct MessageRowView: View {
             }
             .buttonStyle(.plain)
             .help("Copy entire message to clipboard")
+
+            if let onContinue {
+                Button(action: onContinue) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.trianglehead.2.clockwise")
+                        Text("Continue")
+                    }
+                    .font(.caption)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(Color.green.opacity(0.1))
+                    .foregroundColor(.green)
+                    .cornerRadius(6)
+                }
+                .buttonStyle(.plain)
+                .help("Continue generating this response")
+            }
         }
         .padding(.top, 4)
     }
