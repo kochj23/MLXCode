@@ -246,15 +246,9 @@ class ChatViewModel: ObservableObject {
     /// Stops the current generation
     func stopGeneration() {
         guard isGenerating else { return }
-
-        Task {
-            await PythonService.shared.terminate()
-            isGenerating = false
-            isWaitingForFirstToken = false
-            statusMessage = "Generation stopped"
-
-            logInfo("Generation stopped by user", category: "ChatViewModel")
-        }
+        isGenerating = false
+        isWaitingForFirstToken = false
+        statusMessage = "Generation stopped"
     }
 
     /// Regenerates the last assistant response
@@ -389,12 +383,8 @@ class ChatViewModel: ObservableObject {
                             }
                         }
 
-                        // Stop if a complete tool call has been received
-                        if accumulatedResponse.contains("</tool>") || accumulatedResponse.contains("</tool_call>") {
-                            shouldStopGeneration = true
-                            await PythonService.shared.terminate()
-                            return
-                        }
+                        // Tool call detection is handled in MLXService — it breaks the stream
+                        // loop as soon as </tool> appears, so we just update UI here.
 
                         // Check for repetition
                         if let detector = self.repetitionDetector {
@@ -410,8 +400,6 @@ class ChatViewModel: ObservableObject {
                                     accumulatedResponse = String(accumulatedResponse[..<truncateIndex])
                                     accumulatedResponse += "\n\n[Response truncated due to repetition detection]"
                                 }
-
-                                await PythonService.shared.terminate()
                             }
                         }
 
@@ -419,14 +407,12 @@ class ChatViewModel: ObservableObject {
                         if accumulatedResponse.count > ChatViewModel.maxResponseLength {
                             shouldStopGeneration = true
                             accumulatedResponse += "\n\n[Response truncated: maximum length reached]"
-                            await PythonService.shared.terminate()
                         }
 
                         // Check for maximum token count
                         if self.tokenCount > ChatViewModel.maxResponseTokens {
                             shouldStopGeneration = true
                             accumulatedResponse += "\n\n[Response truncated: maximum tokens reached]"
-                            await PythonService.shared.terminate()
                         }
 
                         // Update the message content

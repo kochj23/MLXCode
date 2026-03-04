@@ -233,12 +233,22 @@ actor MLXService {
                 if let chunk = generation.chunk {
                     fullResponse += chunk
                     await MainActor.run { box.handler(chunk) }
+                    // Break as soon as a complete tool call is in the response.
+                    // This lets chatCompletion() return immediately rather than
+                    // running to maxTokens, which prevents inferenceInProgress
+                    // errors on the follow-up generation after tool execution.
+                    if fullResponse.contains("</tool>") || fullResponse.contains("</tool_call>") {
+                        break
+                    }
                 }
             }
         } else {
             for await generation in stream {
                 if let chunk = generation.chunk {
                     fullResponse += chunk
+                    if fullResponse.contains("</tool>") || fullResponse.contains("</tool_call>") {
+                        break
+                    }
                 }
             }
         }
