@@ -48,32 +48,19 @@ Read-only tools (grep, glob, file read, code navigation) auto-approve. Write/exe
 
 ---
 
-## What's New in v6.1.0 (February 2026)
+## What's New in v6.2.0 (March 2026)
 
-### Security Hardening & Code Quality Audit
-**31 findings resolved across CRITICAL, HIGH, MEDIUM, LOW, and INFO severities:**
+### Native MLX Swift — Python No Longer Required for Inference
 
-**Critical Fixes:**
-- **API Keys to Keychain**: All AI backend API keys (OpenAI, Anthropic, Google, AWS, Azure, IBM) migrated from UserDefaults to macOS Keychain with automatic migration on first launch
+The biggest change since v1.0: inference now runs entirely in Swift using `mlx-swift-lm`. The Python daemon subprocess has been removed.
 
-**High Fixes:**
-- **Command Validator Hardened**: Replaced naive `String.contains()` with `NSRegularExpression` word-boundary matching to prevent bypass via substrings
-- **Python Import Validator**: Regex-based import validation with comment filtering prevents bypass via inline comments
-- **Model Hash Verification**: SHA256 verification of downloaded models using CryptoKit
-- **Buffered I/O**: 4096-byte chunk reading replaces byte-by-byte daemon communication for significant performance improvement
-- **Task Cancellation**: All infinite `while true` loops replaced with `while !Task.isCancelled` for clean shutdown
-- **Portable Paths**: Bundle-relative paths replace hardcoded file paths
-- **Secure Logging**: All `print()` statements replaced with `SecureLogger` calls
-
-**Medium Fixes:**
-- Proper Unicode search with `localizedCaseInsensitiveContains()`
-- O(n) context management replacing O(n^2) insert-at-zero pattern
-- 1MB file content cap for memory management
-- Multi-version Python path lookup (3.13 down to 3.9)
-- Serial queues for thread-safe MLX service operations
-- Async logging via serial queue in CommandValidator
-- Permission check for script execution
-- Regex validation improvements
+**What changed:**
+- **No Python for inference** — `mlx_daemon.py` is gone. Models load and run natively via `LLMModelFactory` + `ModelContainer`
+- **Faster startup** — no subprocess spawn, no pipe handshake, no JSON-RPC overhead
+- **Cleaner streaming** — tokens delivered via `AsyncStream<Generation>`, tokenizer chat templates applied natively
+- **Python still used for downloads only** — `huggingface_downloader.py` runs once when you first pull a model
+- **2,726 lines of dead code removed** — `EthicalAIGuardian`, `AIBackendStatusMenu`, and all 4 `AIBackendManager` files deleted (none were called by the live app)
+- **Code quality cleanup** — removed debug file writes from production, fixed force unwraps, replaced polling sleeps with proper event handling
 
 ---
 
