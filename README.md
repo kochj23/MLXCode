@@ -243,7 +243,7 @@ Being honest about limitations:
 
 ## Version History
 
-### v6.3.0 (March 4, 2026) — Current
+### v6.3.0 build 7 (March 4, 2026) — Current
 - **Xcode Source Editor Extension** — 5 commands in Editor > MLX Code menu (Explain, Refactor, Generate Tests, Fix Issues, Ask). Communicates via shared App Group + `mlxcode://` URL scheme
 - **Native model downloads** — replaced Python downloader with `Hub.HubApi.snapshot()`. Python fully eliminated
 - **Syntax highlighting** — Swift, Python, JS/TS, Bash, JSON, Objective-C in all code blocks
@@ -253,6 +253,7 @@ Being honest about limitations:
 - **Tool call reliability** — JSON auto-repair, retry-on-failure loop, stricter system prompt rule
 - **Default temperature 0.2** — reduced from 0.7 to cut hallucinations in code analysis
 - **Jinja template fallback** — models with unsupported chat templates fall back to flat prompt format
+- **Fixed: agentic tool calling loop** — resolved "inference already in progress" error that occurred when the model called a tool and the follow-up generation failed. Root cause was `PythonService.terminate()` being a no-op with native MLX, causing `chatCompletion()` to run until `maxTokens` before returning. Stream now exits immediately when `</tool>` is detected.
 
 ### v6.2.0 (March 4, 2026)
 - Replaced Python subprocess daemon with native `mlx-swift-lm` framework for inference
