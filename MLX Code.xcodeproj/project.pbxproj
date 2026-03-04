@@ -20,7 +20,6 @@
 		24010C4728F24595AD26D82143BDCF89 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE711B1853DA4E2BA36640574B1F559C /* ChatView.swift */; };
 		25BA6913200BB43C2F05DE0E /* ErrorDiagnosisTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0656116F5396EF9D9A7065 /* ErrorDiagnosisTool.swift */; };
 		2705EDF1704D46E28F243D58796430B0 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7425F0C774CFFA6C81D44B4EEF006 /* Conversation.swift */; };
-		2B11CE0AB8B2456D938A90B4A87D235C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA83237D6D754FA5807B99D7C733E00B /* ContentView.swift */; };
 		340D62553A7C42F2A58D1FEF72A108C1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705A916896E647D1B0382ABFCD69A97D /* SettingsView.swift */; };
 		3603B426862ED1AF7B591E9D /* CodeNavigationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = F723876CB29C9B2490C118FE /* CodeNavigationTool.swift */; };
 		375B23CD55B79FC1C62A5B23 /* MemorySystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F90FA396C5680D706B96B9 /* MemorySystem.swift */; };
@@ -205,7 +204,6 @@
 		E4F9AF5449DB574FF1AF0CC4 /* InteractivePromptView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InteractivePromptView.swift; path = "MLX Code/Views/InteractivePromptView.swift"; sourceTree = "<group>"; };
 		E683FDA41933E9CBABE2AB4E /* GrepTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GrepTool.swift; path = Tools/GrepTool.swift; sourceTree = "<group>"; };
 		F723876CB29C9B2490C118FE /* CodeNavigationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/CodeNavigationTool.swift; sourceTree = "<group>"; };
-		FA83237D6D754FA5807B99D7C733E00B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FBF68411190D219F58CC40B0 /* ToolProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolProtocol.swift; path = Tools/ToolProtocol.swift; sourceTree = "<group>"; };
 		FD5FD20620CC8E07FFA1428A /* BashTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BashTool.swift; path = Tools/BashTool.swift; sourceTree = "<group>"; };
 		FDF863EF632E990FA28CCD29 /* MLX_Code_Widget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = MLX_Code_Widget.entitlements; sourceTree = "<group>"; };
@@ -403,8 +401,7 @@
 			isa = PBXGroup;
 			children = (
 				8BF344F827174583896C2F07BB4F77EF /* MLXCodeApp.swift */,
-				FA83237D6D754FA5807B99D7C733E00B /* ContentView.swift */,
-				841118D351D54AEDA122F17C77816B9D /* Views */,
+					841118D351D54AEDA122F17C77816B9D /* Views */,
 				BB2E8ECFF03340A5AA4C415F066EB765 /* ViewModels */,
 				EAEFCCA240074A7FB65020791716A06B /* Models */,
 				8D7B12981853422D971FCAD3B063E827 /* Services */,
@@ -632,8 +629,7 @@
 				E2FCF04057F99E48BF46CCF3 /* CommandValidator.swift in Sources */,
 				A0013163E03EA758655F244E /* ModelSecurityValidator.swift in Sources */,
 				4A14B6380E9E4A44949059C9DE2D703A /* MLXCodeApp.swift in Sources */,
-				2B11CE0AB8B2456D938A90B4A87D235C /* ContentView.swift in Sources */,
-				24010C4728F24595AD26D82143BDCF89 /* ChatView.swift in Sources */,
+					24010C4728F24595AD26D82143BDCF89 /* ChatView.swift in Sources */,
 				406CEA4CA10F45879033D10841AF85C6 /* MessageRowView.swift in Sources */,
 				340D62553A7C42F2A58D1FEF72A108C1 /* SettingsView.swift in Sources */,
 				B7A5DD6AFF8A40D0ADEADF847F388274 /* ModelSelectorView.swift in Sources */,

@@ -24,14 +24,18 @@ class ConversationManager: ObservableObject {
 
     private let fileManager = FileManager.default
     private var conversationsDirectory: URL {
-        let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        guard let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+            fatalError("Application Support directory unavailable")
+        }
         let dir = appSupport.appendingPathComponent("MLX Code/Conversations")
         try? fileManager.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir
     }
 
     private var templatesDirectory: URL {
-        let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        guard let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+            fatalError("Application Support directory unavailable")
+        }
         let dir = appSupport.appendingPathComponent("MLX Code/Templates")
         try? fileManager.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir
@@ -65,7 +69,7 @@ class ConversationManager: ObservableObject {
             }
             conversations.sort { $0.updatedAt > $1.updatedAt }
         } catch {
-            print("Failed to load conversations: \(error)")
+            Task { await LogManager.shared.error("Failed to load conversations: \(error)", category: "ConversationManager") }
         }
     }
 

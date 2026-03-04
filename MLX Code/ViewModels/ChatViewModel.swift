@@ -85,7 +85,9 @@ class ChatViewModel: ObservableObject {
 
     init() {
         // Setup conversations directory
-        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        guard let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+            fatalError("Application Support directory unavailable")
+        }
         conversationsDirectory = appSupport.appendingPathComponent("MLX Code/Conversations", isDirectory: true)
 
         // Create directory if needed
@@ -145,124 +147,67 @@ class ChatViewModel: ObservableObject {
 
     /// Sends a message to the model
     func sendMessage() async {
-        await LogManager.shared.info("Sending message", category: "Chat")
-
         guard !userInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            await LogManager.shared.warning("Empty input ignored", category: "Chat")
-            return
-        }
-
-        logInfo("📝 Input received: \(userInput.prefix(50))...", category: "ChatViewModel")
-
-        // DEBUG: Log to file
-        let debugMsg = "=== sendMessage() called ===\nInput: \(userInput)\n"
-        try? debugMsg.write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
-
-        // Check for direct tool invocations (bypass model tool calling for reliability)
-        let handled = await handleDirectToolInvocation(userInput)
-        let handleMsg = "Handled by direct tool: \(handled)\n"
-        if let existingLog = try? String(contentsOfFile: "/tmp/mlx_debug.log") {
-            try? (existingLog + handleMsg).write(toFile: "/tmp/mlx_debug.log", atomically: false, encoding: .utf8)
-        }
-
-        if handled {
-            userInput = ""
             return
         }
 
         // Sanitize input
         let sanitizedInput = SecurityUtils.sanitizeUserInput(userInput)
-        logInfo("✅ Input sanitized", category: "ChatViewModel")
 
         // Validate input length
         guard SecurityUtils.validateLength(sanitizedInput, max: 10_000) else {
             errorMessage = "Message is too long. Maximum 10,000 characters."
-            logError("❌ Input too long", category: "ChatViewModel")
             return
         }
 
-        // Create user message
         let userMessage = Message.user(sanitizedInput)
-        logInfo("✅ User message created with ID: \(userMessage.id)", category: "ChatViewModel")
 
-        // Add to conversation or create new one
         if currentConversation == nil {
             currentConversation = Conversation.new(withFirstMessage: sanitizedInput)
-            logInfo("✅ New conversation created", category: "ChatViewModel")
 
-            // Add system prompt with tool descriptions if tools are enabled
             if toolModeEnabled {
                 let systemPrompt = generateSystemPrompt()
                 let systemMessage = Message.system(systemPrompt)
-                // Insert at beginning
                 if let conv = currentConversation {
                     var messages = conv.messages
                     messages.insert(systemMessage, at: 0)
                     currentConversation?.messages = messages
-                    logInfo("✅ Added system prompt with tool descriptions", category: "ChatViewModel")
                 }
             }
         } else {
             currentConversation?.addMessage(userMessage)
-            logInfo("✅ Message added to existing conversation", category: "ChatViewModel")
         }
 
-        // Clear input
         userInput = ""
-
-        // Generate response
-        logInfo("🔄 Calling generateResponse()...", category: "ChatViewModel")
         await generateResponse()
     }
 
-    /// Creates a new conversation
     func newConversation() {
-        // Save current conversation if it exists
         if let current = currentConversation, !current.isEmpty {
             saveConversation(current)
         }
 
-        // Create new conversation
         currentConversation = Conversation(title: "New Conversation")
-
-        // Reset conversation metrics
         conversationTotalTokens = 0
         conversationAverageTokensPerSecond = 0.0
         totalGenerationTime = 0.0
         conversationStartTime = Date()
-
-        logInfo("Created new conversation", category: "ChatViewModel")
     }
 
-    /// Loads a conversation
-    /// - Parameter conversation: The conversation to load
     func loadConversation(_ conversation: Conversation) {
-        // Save current conversation if needed
         if let current = currentConversation, !current.isEmpty, current.id != conversation.id {
             saveConversation(current)
         }
-
         currentConversation = conversation
-
-        logInfo("Loaded conversation: \(conversation.title)", category: "ChatViewModel")
     }
 
-    /// Deletes a conversation
-    /// - Parameter conversation: The conversation to delete
     func deleteConversation(_ conversation: Conversation) {
-        // Remove from list
         conversations.removeAll { $0.id == conversation.id }
-
-        // Delete file
         let fileURL = conversationsDirectory.appendingPathComponent("\(conversation.id.uuidString).json")
         try? FileManager.default.removeItem(at: fileURL)
-
-        // Clear current if deleted
         if currentConversation?.id == conversation.id {
             currentConversation = nil
         }
-
-        logInfo("Deleted conversation: \(conversation.title)", category: "ChatViewModel")
     }
 
     /// Loads an MLX model
@@ -307,14 +252,6 @@ class ChatViewModel: ObservableObject {
 
             logInfo("Generation stopped by user", category: "ChatViewModel")
         }
-    }
-
-    /// Handles direct tool invocations by detecting keywords (bypasses model tool calling)
-    /// Returns true if handled, false if should proceed with normal chat
-    private func handleDirectToolInvocation(_ input: String) async -> Bool {
-        // All tool invocations now go through the model's tool calling system
-        // No more keyword-based media detection
-        return false
     }
 
     /// Regenerates the last assistant response
@@ -366,22 +303,12 @@ class ChatViewModel: ObservableObject {
 
     /// Generates a response from the model
     func generateResponse() async {
-        logInfo("🎯 generateResponse() called", category: "ChatViewModel")
-
-        guard let conversation = currentConversation else {
-            logError("❌ No current conversation", category: "ChatViewModel")
-            return
-        }
-
-        logInfo("📊 Conversation has \(conversation.messages.count) messages", category: "ChatViewModel")
+        guard let conversation = currentConversation else { return }
 
         guard isModelLoaded else {
             errorMessage = "No model is loaded. Please load a model first."
-            logError("❌ No model loaded", category: "ChatViewModel")
             return
         }
-
-        logInfo("✅ Model is loaded, starting generation", category: "ChatViewModel")
 
         isGenerating = true
         isWaitingForFirstToken = true
@@ -406,19 +333,15 @@ class ChatViewModel: ObservableObject {
         let assistantMessage = Message.assistant("")
         streamingMessageId = assistantMessage.id
         currentConversation?.addMessage(assistantMessage)
-        logInfo("✅ Placeholder assistant message created with ID: \(assistantMessage.id)", category: "ChatViewModel")
 
         var accumulatedResponse = ""
         var shouldStopGeneration = false
 
         do {
-            logInfo("🔵 Assembling context and calling MLXService...", category: "ChatViewModel")
-
             // Build context budget from loaded model
             let selectedModel = AppSettings.shared.selectedModel
             let daemonContextWindow = await MLXService.shared.loadedModelContextWindow
             let budget = ContextBudget.forModel(selectedModel, daemonContextWindow: daemonContextWindow)
-            logInfo("📐 Context budget: total=\(budget.totalBudget), recent=\(budget.recentMessagesBudget), project=\(budget.projectContextBudget), summary=\(budget.summaryBudget)", category: "ChatViewModel")
 
             // Assemble optimized context within budget
             let systemPrompt = generateSystemPrompt()
@@ -428,7 +351,6 @@ class ChatViewModel: ObservableObject {
                 projectPath: AppSettings.shared.projectPath,
                 budget: budget
             )
-            logInfo("📤 Sending \(optimizedMessages.count) optimized messages (from \(conversation.messages.count) total)", category: "ChatViewModel")
 
             // Get response from MLX service with streaming
             let response = try await MLXService.shared.chatCompletion(
@@ -448,7 +370,6 @@ class ChatViewModel: ObservableObject {
                         if self.isWaitingForFirstToken {
                             self.isWaitingForFirstToken = false
                             self.statusMessage = "Generating..."
-                            logInfo("✨ First token received!", category: "ChatViewModel")
                         }
 
                         accumulatedResponse += token
@@ -465,10 +386,8 @@ class ChatViewModel: ObservableObject {
                             }
                         }
 
-                        // Check for tool calls - stop generation if complete tool call detected
-                        // Support both new <tool> and legacy <tool_call> formats
+                        // Stop if a complete tool call has been received
                         if accumulatedResponse.contains("</tool>") || accumulatedResponse.contains("</tool_call>") {
-                            logInfo("🔧 Tool call detected in response! Stopping generation to execute tools.", category: "ChatViewModel")
                             shouldStopGeneration = true
                             await PythonService.shared.terminate()
                             return
@@ -480,27 +399,21 @@ class ChatViewModel: ObservableObject {
                             let hasExcessiveRepetition = detector.detectExcessiveRepetition()
 
                             if hasRepetition || hasExcessiveRepetition {
-                                logWarning("🔁 Repetition detected! Stopping generation.", category: "ChatViewModel")
-                                logWarning("   Pattern detected in buffer: \(detector.currentBuffer.suffix(200))", category: "ChatViewModel")
                                 shouldStopGeneration = true
 
-                                // Truncate response to remove repetition
                                 if accumulatedResponse.count > 500 {
-                                    // Keep first 80% of response, discard repetitive tail
                                     let keepLength = Int(Double(accumulatedResponse.count) * 0.8)
                                     let truncateIndex = accumulatedResponse.index(accumulatedResponse.startIndex, offsetBy: keepLength)
                                     accumulatedResponse = String(accumulatedResponse[..<truncateIndex])
                                     accumulatedResponse += "\n\n[Response truncated due to repetition detection]"
                                 }
 
-                                // Force stop by throwing error
                                 await PythonService.shared.terminate()
                             }
                         }
 
                         // Check for maximum length
                         if accumulatedResponse.count > ChatViewModel.maxResponseLength {
-                            logWarning("📏 Maximum response length reached! Stopping generation.", category: "ChatViewModel")
                             shouldStopGeneration = true
                             accumulatedResponse += "\n\n[Response truncated: maximum length reached]"
                             await PythonService.shared.terminate()
@@ -508,13 +421,10 @@ class ChatViewModel: ObservableObject {
 
                         // Check for maximum token count
                         if self.tokenCount > ChatViewModel.maxResponseTokens {
-                            logWarning("🎫 Maximum token count reached! Stopping generation.", category: "ChatViewModel")
                             shouldStopGeneration = true
                             accumulatedResponse += "\n\n[Response truncated: maximum tokens reached]"
                             await PythonService.shared.terminate()
                         }
-
-                        logInfo("🔹 Received token (length: \(token.count)), total: \(self.tokenCount), speed: \(String(format: "%.1f", self.tokensPerSecond)) t/s", category: "ChatViewModel")
 
                         // Update the message content
                         if let messageId = self.streamingMessageId,
@@ -524,8 +434,6 @@ class ChatViewModel: ObservableObject {
                     }
                 }
             )
-
-            logInfo("✅ MLXService.chatCompletion() completed, response length: \(response.count)", category: "ChatViewModel")
 
             // Update final message
             if let messageId = streamingMessageId,
