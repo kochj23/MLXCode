@@ -6,13 +6,13 @@
 
 **Local AI coding assistant for macOS, powered by Apple MLX (Machine Learning eXtensions).**
 
-MLX Code runs language models directly on your Mac using Apple Silicon. No cloud, no API keys, no subscriptions. Your code stays on your machine.
+MLX Code runs language models directly on your Mac using Apple Silicon. No cloud inference, no subscriptions, no data leaving your machine. Integrates directly into Xcode via a Source Editor Extension.
 
 ---
 
 ## What It Does
 
-MLX Code is a chat-based coding assistant with tool calling. You describe what you need, and the model reads files, searches code, runs commands, and builds your project — all locally.
+MLX Code is a chat-based coding assistant with tool calling and Xcode integration. You describe what you need, and the model reads files, searches code, runs commands, and builds your project — all locally.
 
 **14 built-in tools:**
 
@@ -24,7 +24,7 @@ MLX Code is a chat-based coding assistant with tool calling. You describe what y
 | **Glob** | Find files by pattern |
 | **Xcode** | Build, test, clean, archive, full deploy pipeline |
 | **Git** | Status, diff, commit, branch, log, push, pull |
-| **GitHub** | Issues, PRs (Pull Requests), branches, credential scanning |
+| **GitHub** | Issues, PRs, branches, credential scanning (calls GitHub API) |
 | **Code Navigation** | Jump to definitions, find symbols |
 | **Code Analysis** | Metrics, dependencies, lint, symbols, full analysis |
 | **Error Diagnosis** | Analyze and explain build errors |
@@ -78,21 +78,40 @@ Read-only tools (grep, glob, file read, code navigation) auto-approve. Write/exe
 ## Features
 
 ### Xcode Integration
+
+MLX Code integrates with Xcode at two levels:
+
+**Chat-based tools (built-in):**
 - Build, test, clean, archive from chat
-- Full deploy pipeline: version bump, build, archive, DMG (Disk Image), install
+- Full deploy pipeline: version bump, build, archive, DMG, install
 - Error diagnosis with context-aware analysis
-- GitHub integration: issues, PRs, branches, credential scanning
 - Code analysis: metrics, dependencies, linting, symbol inspection
 
+**Xcode Source Editor Extension:**
+- Select code in Xcode → **Editor > MLX Code** → choose a command
+- Five commands: Explain Selection, Refactor Selection, Generate Tests, Fix Issues, Ask MLX Code
+- Enable once in System Settings → Privacy & Security → Extensions → Xcode Source Editor
+
+### GitHub Integration
+
+The GitHub tool connects to the GitHub API to:
+- View and create issues
+- List and create pull requests
+- Manage branches
+- Scan for exposed credentials before pushing
+
 ### User Memories
+
 - Persistent preferences that shape assistant behavior
 - 50+ built-in coding standards across 8 categories
-- Custom memories stored locally (~/.mlxcode/memories.json)
+- Custom memories stored locally
 - Categories: personality, code quality, security, Xcode, git, testing, docs, deployment
-- User-specific settings (name, paths) injected at runtime — never hardcoded
+- User-specific settings injected at runtime — never hardcoded
 
 ### Context Management
+
 - Token budgeting with automatic message compaction
+- Real-time context window usage bar (synced to actual model context size)
 - Project context auto-include when workspace is open
 - Two tool tiers: core (always available) and development (when project is open)
 
@@ -111,7 +130,7 @@ MLX Code uses [mlx-community](https://huggingface.co/mlx-community) models from 
 | DeepSeek Coder 6.7B | ~4 GB | 16K | Code-specific tasks |
 | Qwen 2.5 14B | ~8 GB | 32K | Best quality (needs 16GB+ RAM) |
 
-Models download automatically on first use. You can also add custom models from any mlx-community repo.
+Models download automatically on first use via the native Hub Swift API. You can also add custom models from any mlx-community repo.
 
 ---
 
@@ -121,6 +140,7 @@ Models download automatically on first use. You can also add custom models from 
 - **Apple Silicon** (M1, M2, M3, M4)
 - **8 GB RAM** minimum (16 GB recommended for 7B models)
 - **No Python required** — inference and downloads are pure Swift
+- **Xcode 15+** — only required for the Source Editor Extension feature
 
 ---
 
@@ -135,41 +155,47 @@ See **[INSTALLATION.md](INSTALLATION.md)** for the full setup guide, including m
 3. Launch the app → Settings → Models → download a model
 4. Load the model and start chatting
 
-No Python required. MLX Code is fully self-contained.
-
 ---
 
 ## Architecture
 
 ```
-MLX Code (SwiftUI)
+MLX Code (SwiftUI macOS app)
   |
   |-- ChatViewModel         # Conversation management, tool execution loop
-  |-- MLXService            # Native MLX Swift inference via mlx-swift-lm
+  |-- MLXService            # Native MLX Swift inference (mlx-swift-lm actor)
   |-- ContextManager        # Token budgeting, message compaction
   |-- ToolRegistry          # 14 registered tools (2 tiers)
-  |-- SystemPrompts         # Compact prompt with few-shot examples + user memories
-  |-- UserMemories          # Persistent coding standards and preferences
+  |-- SystemPrompts         # Compact prompt with tool descriptions + user memories
+  |-- XcodeActionHandler    # Handles incoming requests from the Xcode extension
   |
   |-- Services/
-  |   |-- GitHubService     # GitHub API: issues, PRs, branches, credentials scan
+  |   |-- GitHubService     # GitHub API: issues, PRs, branches, credential scan
   |   |-- ContextAnalysis   # Project structure and dependency analysis
-  |   `-- UserMemories      # Configurable standards, custom memory persistence
+  |   `-- UserMemories      # Built-in standards + custom memory persistence
+  |
+  |-- Views/
+  |   |-- ChatView          # Main chat UI, input area, context bar
+  |   |-- MessageRowView    # Per-message rendering with syntax highlighting
+  |   |-- CodeBlockView     # Syntax-highlighted code blocks with copy button
+  |   `-- CollapsibleToolResultView  # Collapsed tool call/result chips
   |
   |-- ViewModels/
   |   |-- ProjectViewModel  # Build operations and project management
   |   |-- GitHubViewModel   # GitHub panel state
-  |   `-- CodeAnalysis VM   # Code metrics and analysis state
+  |   `-- CodeAnalysisViewModel  # Code metrics and analysis state
   |
-  `-- MLX Code Extension/               # Xcode Source Editor Extension (5 commands)
+  `-- MLX Code Extension/   # Xcode Source Editor Extension (5 commands)
 ```
 
 **Key design decisions:**
-- Chat templates applied natively by `mlx-swift-lm` tokenizer — no Python required for inference
+- Inference via `mlx-swift-lm` Swift framework — no Python required
+- Chat templates applied natively by the tokenizer; falls back to flat format for unsupported models
 - Tool prompt is ~500 tokens (not 4000) — leaves room for actual conversation
-- Context budget system allocates tokens: system prompt, messages, project context, output reservation
+- Context budget system allocates tokens: system prompt, messages, project context, output
 - Two tool tiers: core (always available) and development (when project is open)
 - User memories injected at runtime from AppSettings — no personal data in source code
+- Xcode extension communicates via shared App Group container + `mlxcode://` URL scheme
 
 ---
 
@@ -177,26 +203,16 @@ MLX Code (SwiftUI)
 
 ### Shell Execution Safety
 - **Command Validation**: All bash commands pass through `CommandValidator` with regex word-boundary matching before execution, blocking dangerous patterns (rm -rf /, fork bombs, etc.)
-- **Python Import Validation (v6.1.0)**: Regex-based validation with comment filtering prevents bypass via inline comments
-- **No Shell Interpolation**: Git and build tools use `process.currentDirectoryURL` instead of `cd` string interpolation, preventing directory traversal and injection attacks
+- **No Shell Interpolation**: Git and build tools use `process.currentDirectoryURL` instead of string interpolation, preventing directory traversal and injection attacks
 - **Tool Approval Flow**: Write and execute tools (bash, file write, xcode build) require user confirmation before running
 - **Read-Only Auto-Approve**: Only safe, read-only tools (grep, glob, file read) auto-approve without user interaction
-- **Permission Checks (v6.1.0)**: File permission validation before script execution in CommandValidator
-
-### Credential Security (v6.1.0)
-- **macOS Keychain Storage**: All API keys (OpenAI, Anthropic, Google, AWS, Azure, IBM) stored in macOS Keychain using `SecItemAdd`/`SecItemCopyMatching`
-- **Automatic Migration**: Existing UserDefaults-stored keys automatically migrated to Keychain on first launch
-- **No Plaintext Secrets**: Non-secret config only (region, model names) stored in UserDefaults
-
-### Model Security (v6.1.0)
-- **SHA256 Hash Verification**: Downloaded models verified against expected hashes using CryptoKit
-- **Secure Logging**: All debug output routed through `SecureLogger` instead of `print()` — no sensitive data in console
 
 ### Data Privacy
-- **100% Local**: All model inference runs on-device via Apple MLX -- no data leaves your machine
-- **No Telemetry**: No analytics, crash reporting, or usage tracking
-- **No API Keys Required**: No cloud services, no subscriptions, no accounts
-- **Local Memory Storage**: User memories stored in `~/.mlxcode/memories.json`, never transmitted
+- **100% Local Inference**: All model inference runs on-device via Apple MLX — no prompts or responses leave your machine
+- **No Telemetry**: No analytics, crash reporting, or usage tracking of any kind
+- **No Cloud AI**: No OpenAI, Anthropic, or other cloud AI services — the model runs on your GPU
+- **GitHub API only**: The only external network calls are to the GitHub API (via the GitHub tool), which you explicitly invoke
+- **Local Memory Storage**: User memories stored locally, never transmitted
 
 ### Thread Safety
 - **Actor isolation**: `MLXService` is a Swift actor — all model state is automatically serialized
@@ -209,7 +225,7 @@ MLX Code (SwiftUI)
 
 - **Deeper Xcode integration** — write responses back into the editor buffer without switching apps
 - **Structured output** — grammar-constrained generation to guarantee well-formed tool calls from smaller models
-- **Streaming progress UI** — real-time download progress bar for model downloads
+- **Streaming download progress** — real-time progress bar for model downloads
 
 ---
 
@@ -217,90 +233,57 @@ MLX Code (SwiftUI)
 
 Being honest about limitations:
 
-- **No web browsing** — can't fetch arbitrary URLs or browse the internet (GitHub API is the exception)
+- **No web browsing** — can't fetch arbitrary URLs or browse the internet
 - **No image/video/audio generation** — this is a code assistant, not a media tool
 - **Small model constraints** — 3-14B parameter models make mistakes, especially with complex multi-step reasoning
-- **No IDE integration** — standalone app, not an Xcode plugin (yet)
-- **Tool calling is imperfect** — local models sometimes format tool calls incorrectly
+- **Tool calling is imperfect** — local models sometimes format tool calls incorrectly (auto-retry helps but isn't perfect)
+- **Extension requires app switch** — the Xcode extension opens MLX Code in a separate window rather than responding inline
 
 ---
 
 ## Version History
 
 ### v6.3.0 (March 4, 2026) — Current
-- **Xcode Source Editor Extension** — 5 commands in Editor > MLX Code menu (Explain, Refactor, Generate Tests, Fix Issues, Ask). Communicates with main app via shared App Group + `mlxcode://` URL scheme
-- **Native model downloads** — replaced Python `huggingface_downloader.py` with `Hub.HubApi.snapshot()`. Python fully eliminated from the app
+- **Xcode Source Editor Extension** — 5 commands in Editor > MLX Code menu (Explain, Refactor, Generate Tests, Fix Issues, Ask). Communicates via shared App Group + `mlxcode://` URL scheme
+- **Native model downloads** — replaced Python downloader with `Hub.HubApi.snapshot()`. Python fully eliminated
 - **Syntax highlighting** — Swift, Python, JS/TS, Bash, JSON, Objective-C in all code blocks
-- **Collapsed tool calls** — raw `<tool>` assistant messages now show as a compact chip; expand to inspect
+- **Collapsed tool calls** — raw `<tool>` assistant messages show as a compact chip; expand to inspect
 - **Accurate context bar** — syncs to model's actual context window on load; tracks conversation totals
 - **Resume generation** — Continue button on last assistant message after stopping
 - **Tool call reliability** — JSON auto-repair, retry-on-failure loop, stricter system prompt rule
 - **Default temperature 0.2** — reduced from 0.7 to cut hallucinations in code analysis
-- **Jinja template fallback** — models with unsupported chat templates (e.g. Mistral 7B) now fall back gracefully to flat prompt format instead of crashing
+- **Jinja template fallback** — models with unsupported chat templates fall back to flat prompt format
 
 ### v6.2.0 (March 4, 2026)
-**Native MLX Swift — Python dependency eliminated for inference**
+- Replaced Python subprocess daemon with native `mlx-swift-lm` framework for inference
+- Model loading via `LLMModelFactory` + `ModelContainer` — no Python process
+- Chat generation via `MLXLMCommon.UserInput` + `AsyncStream<Generation>`
+- Removed 2,726 lines of dead code (`EthicalAIGuardian`, `AIBackendStatusMenu`, all `AIBackendManager` files)
 
-- Replaced Python subprocess daemon (`mlx_daemon.py`) with native `mlx-swift-lm` framework
-- Model loading now uses `LLMModelFactory` + `ModelContainer` directly in Swift — no Python process
-- Chat generation uses `MLXLMCommon.UserInput` + `AsyncStream<Generation>` for streaming
-- Tokenizer chat templates applied natively (Llama, Qwen, Mistral, etc.)
-- Python still used only for initial model download (`huggingface_downloader.py`)
-- Removed 2,726 lines of dead code: `EthicalAIGuardian`, `AIBackendStatusMenu`, all 4 `AIBackendManager` files
-- `mlx_daemon.py` no longer bundled in the app
-
-### v6.1.1 (March 4, 2026)
-- Removed dead `ContentView.swift` (deprecated stub, never referenced anywhere)
-- Removed dead `MLXSwiftBackend.swift` (class was never instantiated — entire file was unused)
-- Removed `handleDirectToolInvocation()` in ChatViewModel, which always returned `false`
-- Removed debug code that was writing to `/tmp/mlx_debug.log` on every message send in production
-- Fixed force unwrap on `FileManager.urls().first!` in ChatViewModel and ConversationManager
-- Replaced bare `print()` with `LogManager` in ConversationManager for consistent error logging
-- Stripped ~15 noisy trace-level log calls from `generateResponse()` (per-token logging, emoji-prefixed step tracing)
-- Removed redundant inline comments that restated what the adjacent code already said
-
-### v6.1.0 (February 26, 2026)
-- Comprehensive security audit: 31 findings resolved (2 CRITICAL, 8 HIGH, 10 MEDIUM, 9 LOW, 1 INFO)
-- API keys migrated from UserDefaults to macOS Keychain with automatic migration
-- Command validator hardened with NSRegularExpression word-boundary matching
-- Python import validator hardened with regex matching and comment filtering
-- SHA256 model hash verification using CryptoKit
-- Buffered 4096-byte I/O replacing byte-by-byte daemon communication
-- Task cancellation (`while !Task.isCancelled`) replacing infinite loops
-- Bundle-relative paths replacing hardcoded file paths
-- Multi-version Python path lookup (3.13 down to 3.9)
-- Serial queues for thread-safe MLX service operations
-- SecureLogger replacing all `print()` statements
-- Async logging via serial queue in CommandValidator
-- `localizedCaseInsensitiveContains()` for proper Unicode search
-- O(n) context management replacing O(n^2) insert-at-zero pattern
-- 1MB file content cap for memory management in codebase indexer
-- Implemented Clear Conversations confirmation dialog in Settings
-- Force unwrap elimination in MLXService
-- NSString cast chains replaced with URL API across 3 files
-- Named constants for context budget ratios
+### v6.1.x (March 4, 2026)
+- Comprehensive security audit: 31 findings resolved
+- API key storage migrated to macOS Keychain
+- Dead code removal, debug artifact cleanup, force unwrap fixes
+- Consistent logging via SecureLogger throughout
 
 ### v6.0.0 (February 20, 2026)
 - GitHub integration: issues, PRs, branches, credential scanning
 - Code analysis: metrics, dependencies, lint, symbols
 - Xcode full deploy pipeline: build, archive, DMG, install
 - User memories system — persistent coding standards and preferences
-- Context analysis service for project structure inspection
-- Project dashboard, GitHub panel, code analysis panel, build panel views
 - 14 tools (up from 11)
 
 ### v5.0.0 (February 2026)
 - Major simplification: deleted 41 files (~16,000 lines) of unused features
-- Rewrote system prompt to be honest and compact
+- Rewrote system prompt to be compact and honest
 - Default model: Qwen 2.5 7B
-- 11 focused tools
 
 ### v4.0.0 (February 2026)
-- Phase 1: Chat template support, structured message passing, tool tier system
-- Phase 2: Context budget system, smart token estimation, project context auto-include
+- Chat template support, structured message passing, tool tier system
+- Context budget system, smart token estimation, project context auto-include
 - Tool approval flow with auto-approve for read-only operations
 
-### v1.x (January-February 2026)
+### v1.x (January–February 2026)
 - Initial release with MLX backend
 - Desktop widget extension
 - Basic chat interface
@@ -309,7 +292,7 @@ Being honest about limitations:
 
 ## License
 
-MIT License - Copyright 2026 Jordan Koch
+MIT License — Copyright 2026 Jordan Koch
 
 See [LICENSE](LICENSE) for details.
 
