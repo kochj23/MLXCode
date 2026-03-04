@@ -9,22 +9,11 @@
 //  Created by Jordan Koch on 2026-03-04.
 //
 
+import AppKit
 import Foundation
 import XcodeKit
 
 class SourceEditorCommand: NSObject, XCSourceEditorCommand {
-
-    // MARK: - Command IDs (must match Info.plist)
-
-    enum CommandID: String {
-        case explain   = "com.local.mlxcode.xcodeeditor.explain"
-        case refactor  = "com.local.mlxcode.xcodeeditor.refactor"
-        case tests     = "com.local.mlxcode.xcodeeditor.tests"
-        case fix       = "com.local.mlxcode.xcodeeditor.fix"
-        case ask       = "com.local.mlxcode.xcodeeditor.ask"
-    }
-
-    // MARK: - XCSourceEditorCommand
 
     func perform(
         with invocation: XCSourceEditorCommandInvocation,
@@ -32,19 +21,15 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
     ) {
         let buffer = invocation.buffer
 
-        // Collect selected lines (fall back to full file if nothing selected)
         let selectedText = extractSelectedText(from: buffer)
-        let fullSource = buffer.completeBuffer
 
-        // Build the request payload
         let request = XcodeRequest(
             commandIdentifier: invocation.commandIdentifier,
             selectedText: selectedText,
-            fullSource: fullSource,
+            fullSource: buffer.completeBuffer,
             contentUTI: buffer.contentUTI
         )
 
-        // Write to shared App Group container
         guard let groupURL = FileManager.default.containerURL(
             forSecurityApplicationGroupIdentifier: "group.com.jkoch.mlxcode"
         ) else {
@@ -61,7 +46,6 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
             return
         }
 
-        // Open the main app
         guard let appURL = URL(string: "mlxcode://xcode-action") else {
             completionHandler(ExtensionError.invalidURL)
             return
@@ -75,7 +59,7 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
 
     private func extractSelectedText(from buffer: XCSourceTextBuffer) -> String {
         let lines = buffer.lines as? [String] ?? []
-        guard !buffer.selections.isEmpty else {
+        guard buffer.selections.count > 0 else {
             return buffer.completeBuffer
         }
 
@@ -87,7 +71,6 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
             guard start <= end else { continue }
 
             if start == end {
-                // Single-line selection — extract the column range
                 let line = lines[start]
                 let startCol = min(range.start.column, line.count)
                 let endCol   = min(range.end.column, line.count)
@@ -107,9 +90,8 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
     }
 }
 
-// MARK: - XcodeRequest
+// MARK: - Request Payload
 
-/// Payload written to the App Group container and read by the main app.
 struct XcodeRequest: Codable {
     let commandIdentifier: String
     let selectedText: String
@@ -126,7 +108,7 @@ enum ExtensionError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .noAppGroup:
-            return "Could not access shared App Group container. Ensure MLX Code is installed."
+            return "Could not access shared App Group. Ensure MLX Code is installed."
         case .invalidURL:
             return "Invalid URL scheme for MLX Code."
         }

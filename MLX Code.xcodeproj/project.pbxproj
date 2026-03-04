@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,16 +13,17 @@
 		0AD3C3FF090FA319B50DF586 /* SystemPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D194CFFD68CDA5D646167A5 /* SystemPrompts.swift */; };
 		0E19E7D351E63FC38F41E41F /* GlobTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0804D53D58C342DA55886059 /* GlobTool.swift */; };
 		1015E08E1D210CB0D574ADE3 /* MLX Code Widget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B14C57F7549826EE7E9087F5 /* MLX Code Widget.appex */; };
+		117B8C9D0E1F2A3B4C5D6E7F /* ContextBudget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228C9D0E1F2A3B4C5D6E7F81 /* ContextBudget.swift */; };
 		12C39D162F6650606907452D /* HelpTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = B87A92AF8834D4EAB5ED2FED /* HelpTool.swift */; };
 		18791BFABC004C46B272FB28E9157DBF /* MLXService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0095C89C8F1E4539863AE74D96B702F4 /* MLXService.swift */; };
-		AA001BCDEF123456789ABCDE00001111 /* XcodeActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB001CDEF123456789ABCDE000022222 /* XcodeActionHandler.swift */; };
 		21B357BD3B307E30CF749E7D /* ToolProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF68411190D219F58CC40B0 /* ToolProtocol.swift */; };
 		22F2C54FAC424877BE6CD7758564446B /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C77339FE1D4E7FAA34113946220883 /* ChatViewModel.swift */; };
 		24010C4728F24595AD26D82143BDCF89 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE711B1853DA4E2BA36640574B1F559C /* ChatView.swift */; };
-		25BA6913200BB43C2F05DE0E /* ErrorDiagnosisTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0656116F5396EF9D9A7065 /* ErrorDiagnosisTool.swift */; };
+		25BA6913200BB43C2F05DE0E /* Tools/ErrorDiagnosisTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0656116F5396EF9D9A7065 /* Tools/ErrorDiagnosisTool.swift */; };
 		2705EDF1704D46E28F243D58796430B0 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7425F0C774CFFA6C81D44B4EEF006 /* Conversation.swift */; };
+		339D0E1F2A3B4C5D6E7F8192 /* ContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D005E0D461771E49D839C575 /* ContextManager.swift */; };
 		340D62553A7C42F2A58D1FEF72A108C1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705A916896E647D1B0382ABFCD69A97D /* SettingsView.swift */; };
-		3603B426862ED1AF7B591E9D /* CodeNavigationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = F723876CB29C9B2490C118FE /* CodeNavigationTool.swift */; };
+		3603B426862ED1AF7B591E9D /* Tools/CodeNavigationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = F723876CB29C9B2490C118FE /* Tools/CodeNavigationTool.swift */; };
 		375B23CD55B79FC1C62A5B23 /* MemorySystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F90FA396C5680D706B96B9 /* MemorySystem.swift */; };
 		3BB85EED3A53FFBB2C040746 /* GitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A056387C5D6883F0932FA4 /* GitService.swift */; };
 		3CEE60DFFD9C4E6F5C07E7A4 /* ModernDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76E1CC6DC5CF4943D05FF452 /* ModernDesign.swift */; };
@@ -50,24 +51,47 @@
 		8B5069DCF05D73C50F8BDF52 /* ConversationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4B7D93C0CD7188EECDFAF4 /* ConversationManager.swift */; };
 		8F451BFDE18F863DAF8EA9D5 /* CodeBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5675694C64139E1C905003 /* CodeBlockView.swift */; };
 		9D968D8996FA1AE7F661C916 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 594327739243F92262A48BA3 /* Assets.xcassets */; };
-		9E4728BDDB32D3698B567C19 /* TestGenerationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52CA5C71B521246C88421C5E /* TestGenerationTool.swift */; };
+		9E4728BDDB32D3698B567C19 /* Tools/TestGenerationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52CA5C71B521246C88421C5E /* Tools/TestGenerationTool.swift */; };
 		A0013163E03EA758655F244E /* ModelSecurityValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3135C47FACB8AE8CB699414 /* ModelSecurityValidator.swift */; };
-		AC2321EF0112053798EF401E /* GitIntegrationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03995484D94FA4FA6BD0F6C /* GitIntegrationTool.swift */; };
+		AA001BCDEF123456789ABCDE00001111 /* XcodeActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB001CDEF123456789ABCDE000022222 /* XcodeActionHandler.swift */; };
+		AA1234560000000000000002 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1234560000000000000001 /* KeychainManager.swift */; };
+		AA1B2C3D4E5F6A7B8C9D0E1F /* ToolTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2C3D4E5F6A7B8C9D0E1F2A /* ToolTier.swift */; };
+		AC2321EF0112053798EF401E /* Tools/GitIntegrationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03995484D94FA4FA6BD0F6C /* Tools/GitIntegrationTool.swift */; };
+		B1C2D3E4F5A60718293B4C5D /* GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B5C /* GitHubService.swift */; };
 		B227E7F3CC8520A366B0B7AF /* FileOperationsTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9E24703A8FCDC2C9B4B0BA /* FileOperationsTool.swift */; };
+		B2C3D4E5F6A70829304C5D6E /* GitHubTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3C4D5E6F70829304B5C6D /* GitHubTool.swift */; };
 		B383B9851026BBA9EB5D0534 /* WidgetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3516CF4FE359150087D766 /* WidgetData.swift */; };
+		B3C4D5E6F7A8093A415D6E7F /* CodeAnalysisTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B4C5D6E7F8093A415C6D7E /* CodeAnalysisTool.swift */; };
+		B4C5D6E7F8A90A4B526E7F80 /* ProjectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B5C6D7E8F90A4B526D7E8F /* ProjectViewModel.swift */; };
+		B5C6D7E8F9AA1B5C637F8091 /* GitHubViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B6C7D8E9FA1B5C637E8F90 /* GitHubViewModel.swift */; };
+		B6C7D8E9FAAB2C6D74809102 /* CodeAnalysisViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B7C8D9EAFB2C6D748F9001 /* CodeAnalysisViewModel.swift */; };
 		B7A5DD6AFF8A40D0ADEADF847F388274 /* ModelSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF2B58504414094AD2F4B06D9B90954 /* ModelSelectorView.swift */; };
+		B7C8D9EAFBAC3D7E859102A3 /* ProjectDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8C9DAEBFC3D7E859001A2 /* ProjectDashboardView.swift */; };
+		B8C9DAEBFBAD4E8F960213B4 /* BuildPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B9CADBECED4E8F960112B3 /* BuildPanelView.swift */; };
+		B9CADBECEBBE5F900A1324C5 /* GitHubPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BACBDCEDFE5F900A1223C4 /* GitHubPanelView.swift */; };
+		BACBDCEDDCBF60011B2435D6 /* CodeAnalysisPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCCDDEEAF60011B2334D5 /* CodeAnalysisPanelView.swift */; };
 		BC51340E6DC042F101EC852C /* Features.md in Resources */ = {isa = PBXBuildFile; fileRef = 416CC836CD6FD1509FE5E7E4 /* Features.md */; };
 		BFF3F2FD15788CAE731CD3B9 /* WidgetDataSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2484B300512B2B737C691AF5 /* WidgetDataSync.swift */; };
+		C1D2E3F4A5B6071829304C5D /* ContextAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E2F3A4B5C60718293A4B5C /* ContextAnalysisService.swift */; };
 		C76BFA1F8B9FED3E7CEAC4CA /* KeyboardShortcuts.md in Resources */ = {isa = PBXBuildFile; fileRef = 5E58FA9A583B64C6FC9C7631 /* KeyboardShortcuts.md */; };
 		C7FF6DE571FE5D0FDBF6C782 /* SlashCommandHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B453CB92F39ABE521DEA0327 /* SlashCommandHandler.swift */; };
 		C95840B1287C494587897311FF59BBC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1474EB3E75FB4E45BABB7722A52318FA /* Assets.xcassets */; };
 		CC3A88644A13A397AC99108D /* EditTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A7B1B5482F0213E90D8921 /* EditTool.swift */; };
+		CC3D4E5F6A7B8C9D0E1F2A3B /* ToolApproval.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4E5F6A7B8C9D0E1F2A3B4C /* ToolApproval.swift */; };
 		CD29D0ECFD8746229E8ACE5616B6A134 /* MLXModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C94A9B46BF04BC586CC4248441C2968 /* MLXModel.swift */; };
+		D02617D62F58CCDB003A988A /* MLX in Frameworks */ = {isa = PBXBuildFile; productRef = B7CACEDCC504C0C98061D10B /* MLX */; };
+		D02617D72F58CCDB003A988A /* MLXNN in Frameworks */ = {isa = PBXBuildFile; productRef = B2CDB41D8A69A6A26D70BBE7 /* MLXNN */; };
+		D02617D82F58CCDB003A988A /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = B38BA712F974D727652E810F /* MLXLLM */; };
+		D02617D92F58CCDB003A988A /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 5BA7AB349C44E6745850757A /* MLXLMCommon */; };
+		D02617E12F58CDE1003A988A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D02617E02F58CDE1003A988A /* Cocoa.framework */; };
+		D02617E32F58CDE1003A988A /* XcodeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D02617E22F58CDE1003A988A /* XcodeKit.framework */; };
+		D02617EC2F58CDE1003A988A /* MLX Code Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D02617DF2F58CDE1003A988A /* MLX Code Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D428F9CF79EFE40194B9FEFF /* GrepTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = E683FDA41933E9CBABE2AB4E /* GrepTool.swift */; };
 		DCB39028B0850848FD3B7322 /* RepetitionDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF26AA705F097AAB5624397A /* RepetitionDetector.swift */; };
 		DE5057A64D8310A442E26F74 /* MarkdownTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44598ECF006C6A3E72B011C /* MarkdownTextView.swift */; };
 		E053530D29423C88386576C8 /* Features.md in Resources */ = {isa = PBXBuildFile; fileRef = 4290A181319FB0316E2CD114 /* Features.md */; };
 		E1A07468A30C474ED64E5909 /* MLXCodeWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50B62FF9A14FFACDD5EA3434 /* MLXCodeWidget.swift */; };
+		E2F3A4B5C6D7081929304C5D /* UserMemories.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A3B4C5D6E7081929304C5D /* UserMemories.swift */; };
 		E2FCF04057F99E48BF46CCF3 /* CommandValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB69700D48233E87937D2E3E /* CommandValidator.swift */; };
 		E4398D6A77404E3091C859FA278A70AC /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976738B52C794CED94B0958A9B5294AC /* AppSettings.swift */; };
 		E9092BA47E894E33897524DF0DDAEF6E /* PythonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FFCCE81A9942AD88F69691662852EC /* PythonService.swift */; };
@@ -75,29 +99,12 @@
 		EC5EC65B8FD9A5025E274336 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B7E2C6F89FEDAA54C278A7 /* HelpView.swift */; };
 		ECB016DEEB77015CF0327B53 /* mlx_inference.py in Resources */ = {isa = PBXBuildFile; fileRef = 254D9DD9EEB20CA0D74A5E00 /* mlx_inference.py */; };
 		ED15B41EF1DB3130F9B71173 /* SharedDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8ECCA430CED7181E9845C7 /* SharedDataManager.swift */; };
-		AA1234560000000000000002 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1234560000000000000001 /* KeychainManager.swift */; };
 		ED42A86D2B4D4BCE84B60AA7411AEFCF /* SecurityUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7492C8D46DB847CFABCF1E5B031731B3 /* SecurityUtils.swift */; };
+		EE5F6A7B8C9D0E1F2A3B4C5D /* ToolApprovalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6A7B8C9D0E1F2A3B4C5D6E /* ToolApprovalView.swift */; };
 		EEE1340E1501B4ACBEFF3472 /* GettingStarted.md in Resources */ = {isa = PBXBuildFile; fileRef = DFCA810E4451DA5EEB9EB66A /* GettingStarted.md */; };
 		F552B2A0318CA58997F79EBA /* Troubleshooting.md in Resources */ = {isa = PBXBuildFile; fileRef = 6FD0BB3BC560F8D474C00FAC /* Troubleshooting.md */; };
 		FB45C232C00FB094E07E98A6 /* BashTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5FD20620CC8E07FFA1428A /* BashTool.swift */; };
 		FFEA93AF903CFA3261DD0C56 /* Troubleshooting.md in Resources */ = {isa = PBXBuildFile; fileRef = B57C86C1B983667FB6632C96 /* Troubleshooting.md */; };
-		AA1B2C3D4E5F6A7B8C9D0E1F /* ToolTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2C3D4E5F6A7B8C9D0E1F2A /* ToolTier.swift */; };
-		CC3D4E5F6A7B8C9D0E1F2A3B /* ToolApproval.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4E5F6A7B8C9D0E1F2A3B4C /* ToolApproval.swift */; };
-		EE5F6A7B8C9D0E1F2A3B4C5D /* ToolApprovalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6A7B8C9D0E1F2A3B4C5D6E /* ToolApprovalView.swift */; };
-		117B8C9D0E1F2A3B4C5D6E7F /* ContextBudget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228C9D0E1F2A3B4C5D6E7F81 /* ContextBudget.swift */; };
-		339D0E1F2A3B4C5D6E7F8192 /* ContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D005E0D461771E49D839C575 /* ContextManager.swift */; };
-		C1D2E3F4A5B6071829304C5D /* ContextAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E2F3A4B5C60718293A4B5C /* ContextAnalysisService.swift */; };
-		E2F3A4B5C6D7081929304C5D /* UserMemories.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A3B4C5D6E7081929304C5D /* UserMemories.swift */; };
-		B1C2D3E4F5A60718293B4C5D /* GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B5C /* GitHubService.swift */; };
-		B2C3D4E5F6A70829304C5D6E /* GitHubTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3C4D5E6F70829304B5C6D /* GitHubTool.swift */; };
-		B3C4D5E6F7A8093A415D6E7F /* CodeAnalysisTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B4C5D6E7F8093A415C6D7E /* CodeAnalysisTool.swift */; };
-		B4C5D6E7F8A90A4B526E7F80 /* ProjectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B5C6D7E8F90A4B526D7E8F /* ProjectViewModel.swift */; };
-		B5C6D7E8F9AA1B5C637F8091 /* GitHubViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B6C7D8E9FA1B5C637E8F90 /* GitHubViewModel.swift */; };
-		B6C7D8E9FAAB2C6D74809102 /* CodeAnalysisViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B7C8D9EAFB2C6D748F9001 /* CodeAnalysisViewModel.swift */; };
-		B7C8D9EAFBAC3D7E859102A3 /* ProjectDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8C9DAEBFC3D7E859001A2 /* ProjectDashboardView.swift */; };
-		B8C9DAEBFBAD4E8F960213B4 /* BuildPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B9CADBECED4E8F960112B3 /* BuildPanelView.swift */; };
-		B9CADBECEBBE5F900A1324C5 /* GitHubPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BACBDCEDFE5F900A1223C4 /* GitHubPanelView.swift */; };
-		BACBDCEDDCBF60011B2435D6 /* CodeAnalysisPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCCDDEEAF60011B2334D5 /* CodeAnalysisPanelView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +114,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 6313FF5EB2260339630CD915;
 			remoteInfo = "MLX Code Widget";
+		};
+		D02617EA2F58CDE1003A988A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9BDA8E4425A4DF7A39133B70A11CD1F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D02617DE2F58CDE1003A988A;
+			remoteInfo = "MLX Code Extension";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -118,6 +132,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				1015E08E1D210CB0D574ADE3 /* MLX Code Widget.appex in Embed Foundation Extensions */,
+				D02617EC2F58CDE1003A988A /* MLX Code Extension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -126,9 +141,6 @@
 
 /* Begin PBXFileReference section */
 		0095C89C8F1E4539863AE74D96B702F4 /* MLXService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLXService.swift; sourceTree = "<group>"; };
-		BB001CDEF123456789ABCDE000022222 /* XcodeActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeActionHandler.swift; sourceTree = "<group>"; };
-		D1E2F3A4B5C60718293A4B5C /* ContextAnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextAnalysisService.swift; sourceTree = "<group>"; };
-		F2A3B4C5D6E7081929304C5D /* UserMemories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMemories.swift; sourceTree = "<group>"; };
 		01A056387C5D6883F0932FA4 /* GitService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GitService.swift; path = "MLX Code/Services/GitService.swift"; sourceTree = "<group>"; };
 		0674F2D9E84C4AC3AC8ED170619E99EA /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
 		07F3CD889AF1A1B378575B71 /* PathsSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PathsSettingsView.swift; sourceTree = "<group>"; };
@@ -138,6 +150,7 @@
 		1C94A9B46BF04BC586CC4248441C2968 /* MLXModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLXModel.swift; sourceTree = "<group>"; };
 		1EF7425F0C774CFFA6C81D44B4EEF006 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		2113E8E02AFC404C917BDECE45AD0C31 /* XcodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeService.swift; sourceTree = "<group>"; };
+		228C9D0E1F2A3B4C5D6E7F81 /* ContextBudget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ContextBudget.swift; path = "MLX Code/Services/ContextBudget.swift"; sourceTree = SOURCE_ROOT; };
 		22BF0FCAFA31E5516E7B5EC6 /* PrerequisitesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PrerequisitesView.swift; path = "MLX Code/Views/PrerequisitesView.swift"; sourceTree = "<group>"; };
 		2484B300512B2B737C691AF5 /* WidgetDataSync.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetDataSync.swift; sourceTree = "<group>"; };
 		254D9DD9EEB20CA0D74A5E00 /* mlx_inference.py */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.python; name = mlx_inference.py; path = Python/mlx_inference.py; sourceTree = "<group>"; };
@@ -145,89 +158,108 @@
 		2B297A603876CBEB5317C8DE /* WidgetData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetData.swift; sourceTree = "<group>"; };
 		2C8ECCA430CED7181E9845C7 /* SharedDataManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SharedDataManager.swift; sourceTree = "<group>"; };
 		2D891BD2C79FA8CCEF2C5741 /* UndoManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UndoManager.swift; path = "MLX Code/Services/UndoManager.swift"; sourceTree = "<group>"; };
-		3072558342FD102B940FF3DB /* GettingStarted.md */ = {isa = PBXFileReference; includeInIndex = 1; name = GettingStarted.md; path = Help/GettingStarted.md; sourceTree = "<group>"; };
+		3072558342FD102B940FF3DB /* GettingStarted.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = GettingStarted.md; path = Help/GettingStarted.md; sourceTree = "<group>"; };
 		36512DB9403F2C61AD03ECF3 /* rag_system.py */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.python; name = rag_system.py; path = Python/rag_system.py; sourceTree = "<group>"; };
 		3BA6541CD08A3BD34802C064 /* HelpView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
-		416CC836CD6FD1509FE5E7E4 /* Features.md */ = {isa = PBXFileReference; includeInIndex = 1; name = Features.md; path = Help/Features.md; sourceTree = "<group>"; };
+		416CC836CD6FD1509FE5E7E4 /* Features.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = Features.md; path = Help/Features.md; sourceTree = "<group>"; };
 		41B587EC712978DCE17B395A /* ToolRegistry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolRegistry.swift; path = Tools/ToolRegistry.swift; sourceTree = "<group>"; };
-		4290A181319FB0316E2CD114 /* Features.md */ = {isa = PBXFileReference; includeInIndex = 1; name = Features.md; path = Help/Features.md; sourceTree = "<group>"; };
+		4290A181319FB0316E2CD114 /* Features.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = Features.md; path = Help/Features.md; sourceTree = "<group>"; };
 		48562778370F4A07B8B69516078EE7A2 /* MLX_Code.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MLX_Code.entitlements; sourceTree = "<group>"; };
 		4B4B7D93C0CD7188EECDFAF4 /* ConversationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConversationManager.swift; path = "MLX Code/Services/ConversationManager.swift"; sourceTree = "<group>"; };
 		50B62FF9A14FFACDD5EA3434 /* MLXCodeWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MLXCodeWidget.swift; sourceTree = "<group>"; };
-		52CA5C71B521246C88421C5E /* TestGenerationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/TestGenerationTool.swift; sourceTree = "<group>"; };
+		52CA5C71B521246C88421C5E /* Tools/TestGenerationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/TestGenerationTool.swift; sourceTree = "<group>"; };
 		564D43E7BF13C063A567706B /* EnhancedMessageView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = EnhancedMessageView.swift; path = "MLX Code/Views/EnhancedMessageView.swift"; sourceTree = "<group>"; };
 		594327739243F92262A48BA3 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		599D04AA90CC3F02738DC984 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5D0656116F5396EF9D9A7065 /* ErrorDiagnosisTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/ErrorDiagnosisTool.swift; sourceTree = "<group>"; };
+		5D0656116F5396EF9D9A7065 /* Tools/ErrorDiagnosisTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/ErrorDiagnosisTool.swift; sourceTree = "<group>"; };
 		5D194CFFD68CDA5D646167A5 /* SystemPrompts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SystemPrompts.swift; path = Tools/SystemPrompts.swift; sourceTree = "<group>"; };
-		5E58FA9A583B64C6FC9C7631 /* KeyboardShortcuts.md */ = {isa = PBXFileReference; includeInIndex = 1; name = KeyboardShortcuts.md; path = Help/KeyboardShortcuts.md; sourceTree = "<group>"; };
+		5E58FA9A583B64C6FC9C7631 /* KeyboardShortcuts.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = KeyboardShortcuts.md; path = Help/KeyboardShortcuts.md; sourceTree = "<group>"; };
 		61B7E2C6F89FEDAA54C278A7 /* HelpView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		64071C1709105BE6194D0570 /* DiffPreviewTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DiffPreviewTool.swift; path = Tools/DiffPreviewTool.swift; sourceTree = "<group>"; };
 		64FB3692EC085C7E8F420ABC /* LogViewerPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewerPanel.swift; sourceTree = "<group>"; };
-		6CC6C830E9E5801EFE2690F2 /* mlx_daemon.py */ = {isa = PBXFileReference; includeInIndex = 1; name = mlx_daemon.py; path = Python/mlx_daemon.py; sourceTree = "<group>"; };
-		6FD0BB3BC560F8D474C00FAC /* Troubleshooting.md */ = {isa = PBXFileReference; includeInIndex = 1; name = Troubleshooting.md; path = Help/Troubleshooting.md; sourceTree = "<group>"; };
+		6CC6C830E9E5801EFE2690F2 /* mlx_daemon.py */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.python; name = mlx_daemon.py; path = Python/mlx_daemon.py; sourceTree = "<group>"; };
+		6FD0BB3BC560F8D474C00FAC /* Troubleshooting.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = Troubleshooting.md; path = Help/Troubleshooting.md; sourceTree = "<group>"; };
 		705A916896E647D1B0382ABFCD69A97D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7294A0A7EFE8407C852ADC2F428A1167 /* MessageRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRowView.swift; sourceTree = "<group>"; };
 		7382216063DCBF191AE08B34 /* MultiFileOperations.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MultiFileOperations.swift; path = "MLX Code/Services/MultiFileOperations.swift"; sourceTree = "<group>"; };
 		7492C8D46DB847CFABCF1E5B031731B3 /* SecurityUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityUtils.swift; sourceTree = "<group>"; };
-		AA1234560000000000000001 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		76E1CC6DC5CF4943D05FF452 /* ModernDesign.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ModernDesign.swift; path = Design/ModernDesign.swift; sourceTree = "<group>"; };
 		86DA95C55CF31CAA085E0CD4 /* CodebaseIndexer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CodebaseIndexer.swift; path = "MLX Code/Services/CodebaseIndexer.swift"; sourceTree = "<group>"; };
 		8BF344F827174583896C2F07BB4F77EF /* MLXCodeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLXCodeApp.swift; sourceTree = "<group>"; };
-		CC001DEF012345678901ABCD000033333 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		96B9AC2491F2A5DCF94ABDA5 /* KeyboardShortcuts.md */ = {isa = PBXFileReference; includeInIndex = 1; name = KeyboardShortcuts.md; path = Help/KeyboardShortcuts.md; sourceTree = "<group>"; };
+		96B9AC2491F2A5DCF94ABDA5 /* KeyboardShortcuts.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = KeyboardShortcuts.md; path = Help/KeyboardShortcuts.md; sourceTree = "<group>"; };
 		976738B52C794CED94B0958A9B5294AC /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		A1A7B1B5482F0213E90D8921 /* EditTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = EditTool.swift; path = "MLX Code/Tools/EditTool.swift"; sourceTree = "<group>"; };
+		A1B2C3D4E5F60718293A4B5C /* GitHubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubService.swift; sourceTree = "<group>"; };
+		A2B3C4D5E6F70829304B5C6D /* GitHubTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GitHubTool.swift; path = Tools/GitHubTool.swift; sourceTree = "<group>"; };
+		A3B4C5D6E7F8093A415C6D7E /* CodeAnalysisTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CodeAnalysisTool.swift; path = Tools/CodeAnalysisTool.swift; sourceTree = "<group>"; };
 		A44598ECF006C6A3E72B011C /* MarkdownTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MarkdownTextView.swift; path = "MLX Code/Views/MarkdownTextView.swift"; sourceTree = "<group>"; };
+		A4B5C6D7E8F90A4B526D7E8F /* ProjectViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProjectViewModel.swift; sourceTree = "<group>"; };
+		A5B6C7D8E9FA1B5C637E8F90 /* GitHubViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GitHubViewModel.swift; sourceTree = "<group>"; };
 		A618C93267C54CBEA8B15E4321B53726 /* MLX Code.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MLX Code.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6B7C8D9EAFB2C6D748F9001 /* CodeAnalysisViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CodeAnalysisViewModel.swift; sourceTree = "<group>"; };
+		A7B8C9DAEBFC3D7E859001A2 /* ProjectDashboardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProjectDashboardView.swift; sourceTree = "<group>"; };
+		A8B9CADBECED4E8F960112B3 /* BuildPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BuildPanelView.swift; sourceTree = "<group>"; };
+		A9BACBDCEDFE5F900A1223C4 /* GitHubPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GitHubPanelView.swift; sourceTree = "<group>"; };
+		AA1234560000000000000001 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		AABBCCDDEEAF60011B2334D5 /* CodeAnalysisPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CodeAnalysisPanelView.swift; sourceTree = "<group>"; };
 		B14C57F7549826EE7E9087F5 /* MLX Code Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "MLX Code Widget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3135C47FACB8AE8CB699414 /* ModelSecurityValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ModelSecurityValidator.swift; path = "MLX Code/Services/ModelSecurityValidator.swift"; sourceTree = "<group>"; };
 		B453CB92F39ABE521DEA0327 /* SlashCommandHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SlashCommandHandler.swift; path = "MLX Code/Services/SlashCommandHandler.swift"; sourceTree = "<group>"; };
-		B57C86C1B983667FB6632C96 /* Troubleshooting.md */ = {isa = PBXFileReference; includeInIndex = 1; name = Troubleshooting.md; path = Help/Troubleshooting.md; sourceTree = "<group>"; };
+		B57C86C1B983667FB6632C96 /* Troubleshooting.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = Troubleshooting.md; path = Help/Troubleshooting.md; sourceTree = "<group>"; };
 		B87A92AF8834D4EAB5ED2FED /* HelpTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HelpTool.swift; path = Tools/HelpTool.swift; sourceTree = "<group>"; };
 		B9DCFE1EB35E1587BE810984 /* CollapsibleToolResultView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CollapsibleToolResultView.swift; sourceTree = "<group>"; };
+		BB001CDEF123456789ABCDE000022222 /* XcodeActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeActionHandler.swift; sourceTree = "<group>"; };
+		BB2C3D4E5F6A7B8C9D0E1F2A /* ToolTier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolTier.swift; path = Tools/ToolTier.swift; sourceTree = "<group>"; };
 		BB69700D48233E87937D2E3E /* CommandValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CommandValidator.swift; path = "MLX Code/Utilities/CommandValidator.swift"; sourceTree = "<group>"; };
-		C03995484D94FA4FA6BD0F6C /* GitIntegrationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/GitIntegrationTool.swift; sourceTree = "<group>"; };
+		C03995484D94FA4FA6BD0F6C /* Tools/GitIntegrationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/GitIntegrationTool.swift; sourceTree = "<group>"; };
 		C04006EF5054DB124F485C96 /* XcodeTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = XcodeTool.swift; path = Tools/XcodeTool.swift; sourceTree = "<group>"; };
 		C1C6A5F77A186F5E418AC3C7 /* BuildErrorParser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BuildErrorParser.swift; path = "MLX Code/Utilities/BuildErrorParser.swift"; sourceTree = "<group>"; };
 		C2F90FA396C5680D706B96B9 /* MemorySystem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MemorySystem.swift; path = Tools/MemorySystem.swift; sourceTree = "<group>"; };
 		C9BCC3943B8F2927A51C67AB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		CC001DEF012345678901ABCD000033333 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD3516CF4FE359150087D766 /* WidgetData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WidgetData.swift; path = "MLX Code Widget/WidgetData.swift"; sourceTree = "<group>"; };
 		CE711B1853DA4E2BA36640574B1F559C /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		CF26AA705F097AAB5624397A /* RepetitionDetector.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RepetitionDetector.swift; path = "MLX Code/Utilities/RepetitionDetector.swift"; sourceTree = "<group>"; };
 		D005E0D461771E49D839C575 /* ContextManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ContextManager.swift; path = "MLX Code/Services/ContextManager.swift"; sourceTree = "<group>"; };
+		D02617DF2F58CDE1003A988A /* MLX Code Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "MLX Code Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D02617E02F58CDE1003A988A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		D02617E22F58CDE1003A988A /* XcodeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XcodeKit.framework; path = Library/Frameworks/XcodeKit.framework; sourceTree = DEVELOPER_DIR; };
 		D18CD3C400C3AD1177178192 /* ThinkingIndicatorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ThinkingIndicatorView.swift; sourceTree = "<group>"; };
+		D1E2F3A4B5C60718293A4B5C /* ContextAnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextAnalysisService.swift; sourceTree = "<group>"; };
 		D3FFCCE81A9942AD88F69691662852EC /* PythonService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PythonService.swift; sourceTree = "<group>"; };
 		D8C77339FE1D4E7FAA34113946220883 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		DA5F2AD2CCECEB26E6768C29 /* DiffView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DiffView.swift; path = "MLX Code/Views/DiffView.swift"; sourceTree = "<group>"; };
+		DD4E5F6A7B8C9D0E1F2A3B4C /* ToolApproval.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolApproval.swift; path = "MLX Code/Models/ToolApproval.swift"; sourceTree = SOURCE_ROOT; };
 		DEE14123640793BDCED74DE1 /* ChatViewModel+Tools.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "ChatViewModel+Tools.swift"; sourceTree = "<group>"; };
-		DFCA810E4451DA5EEB9EB66A /* GettingStarted.md */ = {isa = PBXFileReference; includeInIndex = 1; name = GettingStarted.md; path = Help/GettingStarted.md; sourceTree = "<group>"; };
+		DFCA810E4451DA5EEB9EB66A /* GettingStarted.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = GettingStarted.md; path = Help/GettingStarted.md; sourceTree = "<group>"; };
 		E4F9AF5449DB574FF1AF0CC4 /* InteractivePromptView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InteractivePromptView.swift; path = "MLX Code/Views/InteractivePromptView.swift"; sourceTree = "<group>"; };
 		E683FDA41933E9CBABE2AB4E /* GrepTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GrepTool.swift; path = Tools/GrepTool.swift; sourceTree = "<group>"; };
-		F723876CB29C9B2490C118FE /* CodeNavigationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/CodeNavigationTool.swift; sourceTree = "<group>"; };
+		F2A3B4C5D6E7081929304C5D /* UserMemories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMemories.swift; sourceTree = "<group>"; };
+		F723876CB29C9B2490C118FE /* Tools/CodeNavigationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/CodeNavigationTool.swift; sourceTree = "<group>"; };
 		FBF68411190D219F58CC40B0 /* ToolProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolProtocol.swift; path = Tools/ToolProtocol.swift; sourceTree = "<group>"; };
 		FD5FD20620CC8E07FFA1428A /* BashTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BashTool.swift; path = Tools/BashTool.swift; sourceTree = "<group>"; };
 		FDF863EF632E990FA28CCD29 /* MLX_Code_Widget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = MLX_Code_Widget.entitlements; sourceTree = "<group>"; };
 		FE07B6436E0D401DBA11F15F8CDA7B09 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		FEDDB0ED1A61C0892F6EDF1B /* huggingface_downloader.py */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.python; name = huggingface_downloader.py; path = Python/huggingface_downloader.py; sourceTree = "<group>"; };
+		FF6A7B8C9D0E1F2A3B4C5D6E /* ToolApprovalView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolApprovalView.swift; path = "MLX Code/Views/ToolApprovalView.swift"; sourceTree = SOURCE_ROOT; };
 		FF7455C7A2CE4EAA997C11353C876821 /* SecureLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureLogger.swift; sourceTree = "<group>"; };
 		FF9E24703A8FCDC2C9B4B0BA /* FileOperationsTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileOperationsTool.swift; path = Tools/FileOperationsTool.swift; sourceTree = "<group>"; };
 		FFF2B58504414094AD2F4B06D9B90954 /* ModelSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSelectorView.swift; sourceTree = "<group>"; };
-		BB2C3D4E5F6A7B8C9D0E1F2A /* ToolTier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolTier.swift; path = Tools/ToolTier.swift; sourceTree = "<group>"; };
-		DD4E5F6A7B8C9D0E1F2A3B4C /* ToolApproval.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolApproval.swift; path = "MLX Code/Models/ToolApproval.swift"; sourceTree = SOURCE_ROOT; };
-		FF6A7B8C9D0E1F2A3B4C5D6E /* ToolApprovalView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolApprovalView.swift; path = "MLX Code/Views/ToolApprovalView.swift"; sourceTree = SOURCE_ROOT; };
-		228C9D0E1F2A3B4C5D6E7F81 /* ContextBudget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ContextBudget.swift; path = "MLX Code/Services/ContextBudget.swift"; sourceTree = SOURCE_ROOT; };
-		A1B2C3D4E5F60718293A4B5C /* GitHubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubService.swift; sourceTree = "<group>"; };
-		A2B3C4D5E6F70829304B5C6D /* GitHubTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GitHubTool.swift; path = Tools/GitHubTool.swift; sourceTree = "<group>"; };
-		A3B4C5D6E7F8093A415C6D7E /* CodeAnalysisTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CodeAnalysisTool.swift; path = Tools/CodeAnalysisTool.swift; sourceTree = "<group>"; };
-		A4B5C6D7E8F90A4B526D7E8F /* ProjectViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProjectViewModel.swift; sourceTree = "<group>"; };
-		A5B6C7D8E9FA1B5C637E8F90 /* GitHubViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GitHubViewModel.swift; sourceTree = "<group>"; };
-		A6B7C8D9EAFB2C6D748F9001 /* CodeAnalysisViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CodeAnalysisViewModel.swift; sourceTree = "<group>"; };
-		A7B8C9DAEBFC3D7E859001A2 /* ProjectDashboardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProjectDashboardView.swift; sourceTree = "<group>"; };
-		A8B9CADBECED4E8F960112B3 /* BuildPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BuildPanelView.swift; sourceTree = "<group>"; };
-		A9BACBDCEDFE5F900A1223C4 /* GitHubPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GitHubPanelView.swift; sourceTree = "<group>"; };
-		AABBCCDDEEAF60011B2334D5 /* CodeAnalysisPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CodeAnalysisPanelView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D02617EF2F58CDE1003A988A /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D02617DE2F58CDE1003A988A /* MLX Code Extension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		D02617E42F58CDE1003A988A /* MLX Code Extension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (D02617EF2F58CDE1003A988A /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "MLX Code Extension"; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		23F92DF06CF7CC9F35EB02B9 /* Frameworks */ = {
@@ -242,6 +274,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D02617D92F58CCDB003A988A /* MLXLMCommon in Frameworks */,
+				D02617D82F58CCDB003A988A /* MLXLLM in Frameworks */,
+				D02617D72F58CCDB003A988A /* MLXNN in Frameworks */,
+				D02617D62F58CCDB003A988A /* MLX in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D02617DC2F58CDE1003A988A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D02617E12F58CDE1003A988A /* Cocoa.framework in Frameworks */,
+				D02617E32F58CDE1003A988A /* XcodeKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,7 +322,6 @@
 				FDF863EF632E990FA28CCD29 /* MLX_Code_Widget.entitlements */,
 				594327739243F92262A48BA3 /* Assets.xcassets */,
 			);
-			name = "MLX Code Widget";
 			path = "MLX Code Widget";
 			sourceTree = "<group>";
 		};
@@ -295,6 +339,8 @@
 			isa = PBXGroup;
 			children = (
 				7FC436C85AF36A9C1291E665 /* OS X */,
+				D02617E02F58CDE1003A988A /* Cocoa.framework */,
+				D02617E22F58CDE1003A988A /* XcodeKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -311,10 +357,10 @@
 				C04006EF5054DB124F485C96 /* XcodeTool.swift */,
 				41B587EC712978DCE17B395A /* ToolRegistry.swift */,
 				5D194CFFD68CDA5D646167A5 /* SystemPrompts.swift */,
-				5D0656116F5396EF9D9A7065 /* ErrorDiagnosisTool.swift */,
-				52CA5C71B521246C88421C5E /* TestGenerationTool.swift */,
-				F723876CB29C9B2490C118FE /* CodeNavigationTool.swift */,
-				C03995484D94FA4FA6BD0F6C /* GitIntegrationTool.swift */,
+				5D0656116F5396EF9D9A7065 /* Tools/ErrorDiagnosisTool.swift */,
+				52CA5C71B521246C88421C5E /* Tools/TestGenerationTool.swift */,
+				F723876CB29C9B2490C118FE /* Tools/CodeNavigationTool.swift */,
+				C03995484D94FA4FA6BD0F6C /* Tools/GitIntegrationTool.swift */,
 				64071C1709105BE6194D0570 /* DiffPreviewTool.swift */,
 				B87A92AF8834D4EAB5ED2FED /* HelpTool.swift */,
 				BB2C3D4E5F6A7B8C9D0E1F2A /* ToolTier.swift */,
@@ -399,12 +445,20 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		D02617DA2F58CCDB003A988A /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				CD3516CF4FE359150087D766 /* WidgetData.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		D2C2B1BC25F5420BB7EB187CA0EE3F26 /* MLX Code */ = {
 			isa = PBXGroup;
 			children = (
 				8BF344F827174583896C2F07BB4F77EF /* MLXCodeApp.swift */,
 				CC001DEF012345678901ABCD000033333 /* Info.plist */,
-					841118D351D54AEDA122F17C77816B9D /* Views */,
+				841118D351D54AEDA122F17C77816B9D /* Views */,
 				BB2E8ECFF03340A5AA4C415F066EB765 /* ViewModels */,
 				EAEFCCA240074A7FB65020791716A06B /* Models */,
 				8D7B12981853422D971FCAD3B063E827 /* Services */,
@@ -447,6 +501,7 @@
 			children = (
 				A618C93267C54CBEA8B15E4321B53726 /* MLX Code.app */,
 				B14C57F7549826EE7E9087F5 /* MLX Code Widget.appex */,
+				D02617DF2F58CDE1003A988A /* MLX Code Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -465,6 +520,7 @@
 			isa = PBXGroup;
 			children = (
 				D2C2B1BC25F5420BB7EB187CA0EE3F26 /* MLX Code */,
+				D02617E42F58CDE1003A988A /* MLX Code Extension */,
 				DBD46EBB13194FBBA1D0AADBCBBFE22B /* Products */,
 				E2EF41EA1A31A3E9484FC8C3 /* Views */,
 				6F0229DF0B6AF4821D6BC3FE /* Services */,
@@ -484,6 +540,7 @@
 				E4F9AF5449DB574FF1AF0CC4 /* InteractivePromptView.swift */,
 				6F349BF0E53B7097184E5FCE /* Frameworks */,
 				6B35EA916216071CF5CC28C7 /* MLX Code Widget */,
+				D02617DA2F58CCDB003A988A /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -533,6 +590,7 @@
 			);
 			dependencies = (
 				C2540D8987DB873726F4B1C2 /* PBXTargetDependency */,
+				D02617EB2F58CDE1003A988A /* PBXTargetDependency */,
 			);
 			name = "MLX Code";
 			packageProductDependencies = (
@@ -545,6 +603,28 @@
 			productReference = A618C93267C54CBEA8B15E4321B53726 /* MLX Code.app */;
 			productType = "com.apple.product-type.application";
 		};
+		D02617DE2F58CDE1003A988A /* MLX Code Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D02617F02F58CDE1003A988A /* Build configuration list for PBXNativeTarget "MLX Code Extension" */;
+			buildPhases = (
+				D02617DB2F58CDE1003A988A /* Sources */,
+				D02617DC2F58CDE1003A988A /* Frameworks */,
+				D02617DD2F58CDE1003A988A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				D02617E42F58CDE1003A988A /* MLX Code Extension */,
+			);
+			name = "MLX Code Extension";
+			packageProductDependencies = (
+			);
+			productName = "MLX Code Extension";
+			productReference = D02617DF2F58CDE1003A988A /* MLX Code Extension.appex */;
+			productType = "com.apple.product-type.xcode-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -552,11 +632,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					74F164AAE69F476C836B53F52E9AAE11 = {
 						CreatedOnToolsVersion = 16.0;
+					};
+					D02617DE2F58CDE1003A988A = {
+						CreatedOnToolsVersion = 26.3;
 					};
 				};
 			};
@@ -579,6 +662,7 @@
 			targets = (
 				74F164AAE69F476C836B53F52E9AAE11 /* MLX Code */,
 				6313FF5EB2260339630CD915 /* MLX Code Widget */,
+				D02617DE2F58CDE1003A988A /* MLX Code Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -589,13 +673,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				C95840B1287C494587897311FF59BBC8 /* Assets.xcassets in Resources */,
-					ECB016DEEB77015CF0327B53 /* mlx_inference.py in Resources */,
+				ECB016DEEB77015CF0327B53 /* mlx_inference.py in Resources */,
 				3E0C215F286586A6A3FB0DA1 /* rag_system.py in Resources */,
 				EEE1340E1501B4ACBEFF3472 /* GettingStarted.md in Resources */,
 				BC51340E6DC042F101EC852C /* Features.md in Resources */,
 				7A0F8C83531AC0524598D2AF /* KeyboardShortcuts.md in Resources */,
 				FFEA93AF903CFA3261DD0C56 /* Troubleshooting.md in Resources */,
-					054C45D18234B5AE6A2A3233 /* GettingStarted.md in Resources */,
+				054C45D18234B5AE6A2A3233 /* GettingStarted.md in Resources */,
 				E053530D29423C88386576C8 /* Features.md in Resources */,
 				C76BFA1F8B9FED3E7CEAC4CA /* KeyboardShortcuts.md in Resources */,
 				F552B2A0318CA58997F79EBA /* Troubleshooting.md in Resources */,
@@ -607,6 +691,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D968D8996FA1AE7F661C916 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D02617DD2F58CDE1003A988A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -623,6 +714,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D02617DB2F58CDE1003A988A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EB50EC56315542D98B773A1B7BC0E09B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -630,7 +728,7 @@
 				E2FCF04057F99E48BF46CCF3 /* CommandValidator.swift in Sources */,
 				A0013163E03EA758655F244E /* ModelSecurityValidator.swift in Sources */,
 				4A14B6380E9E4A44949059C9DE2D703A /* MLXCodeApp.swift in Sources */,
-					24010C4728F24595AD26D82143BDCF89 /* ChatView.swift in Sources */,
+				24010C4728F24595AD26D82143BDCF89 /* ChatView.swift in Sources */,
 				406CEA4CA10F45879033D10841AF85C6 /* MessageRowView.swift in Sources */,
 				340D62553A7C42F2A58D1FEF72A108C1 /* SettingsView.swift in Sources */,
 				B7A5DD6AFF8A40D0ADEADF847F388274 /* ModelSelectorView.swift in Sources */,
@@ -666,10 +764,10 @@
 				85C0E206977B63C594FA2506 /* ToolRegistry.swift in Sources */,
 				0AD3C3FF090FA319B50DF586 /* SystemPrompts.swift in Sources */,
 				DCB39028B0850848FD3B7322 /* RepetitionDetector.swift in Sources */,
-				25BA6913200BB43C2F05DE0E /* ErrorDiagnosisTool.swift in Sources */,
-				9E4728BDDB32D3698B567C19 /* TestGenerationTool.swift in Sources */,
-				3603B426862ED1AF7B591E9D /* CodeNavigationTool.swift in Sources */,
-				AC2321EF0112053798EF401E /* GitIntegrationTool.swift in Sources */,
+				25BA6913200BB43C2F05DE0E /* Tools/ErrorDiagnosisTool.swift in Sources */,
+				9E4728BDDB32D3698B567C19 /* Tools/TestGenerationTool.swift in Sources */,
+				3603B426862ED1AF7B591E9D /* Tools/CodeNavigationTool.swift in Sources */,
+				AC2321EF0112053798EF401E /* Tools/GitIntegrationTool.swift in Sources */,
 				6020E05AD9DFEFA09A7407D8 /* DiffPreviewTool.swift in Sources */,
 				12C39D162F6650606907452D /* HelpTool.swift in Sources */,
 				0475B2DD296EECD045126C17 /* PrerequisitesView.swift in Sources */,
@@ -712,6 +810,11 @@
 			name = "MLX Code Widget";
 			target = 6313FF5EB2260339630CD915 /* MLX Code Widget */;
 			targetProxy = A1D0CB7C86FD995521A1C244 /* PBXContainerItemProxy */;
+		};
+		D02617EB2F58CDE1003A988A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D02617DE2F58CDE1003A988A /* MLX Code Extension */;
+			targetProxy = D02617EA2F58CDE1003A988A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -917,6 +1020,74 @@
 			};
 			name = Debug;
 		};
+		D02617ED2F58CDE1003A988A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QRRCB8HB3W;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "MLX Code Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "MLX Code Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.local.mlxcode.xcodeeditor";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D02617EE2F58CDE1003A988A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QRRCB8HB3W;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "MLX Code Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "MLX Code Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.local.mlxcode.xcodeeditor";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		E7E15DB203DB43A790F24970D6FE7DF7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -967,6 +1138,15 @@
 			buildConfigurations = (
 				B2E5F88DE8D14DA5801FB2C1CFC21E00 /* Debug */,
 				4ECEC483AD8042A89EB6F6057A272B9E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D02617F02F58CDE1003A988A /* Build configuration list for PBXNativeTarget "MLX Code Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D02617ED2F58CDE1003A988A /* Debug */,
+				D02617EE2F58CDE1003A988A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
