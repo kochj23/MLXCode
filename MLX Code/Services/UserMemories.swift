@@ -284,6 +284,12 @@ actor UserMemories {
         Memory(category: .security, rule: "Principle of least privilege. Defense in depth. Fail securely (errors don't leak info)"),
         Memory(category: .security, rule: "Review for: injection, XSS, insecure data handling, auth bypasses, data exposure, retain cycles"),
         Memory(category: .security, rule: "Avoid unsafe C functions: strcpy, strcat, sprintf, gets. Use safe alternatives"),
+        Memory(category: .security, rule: "Documentation files leak secrets just as dangerously as code — scan ALL tracked files, not just source"),
+        Memory(category: .security, rule: "build.log files contain hundreds of home path references — never commit them"),
+        Memory(category: .security, rule: ".bak and .backup files often contain sensitive data — exclude from git"),
+        Memory(category: .security, rule: "Camera/IoT stream tokens are random alphanumeric strings with no recognizable prefix — hard to auto-detect, require manual review"),
+        Memory(category: .security, rule: "OAuth Client IDs look like random strings — no standard pattern, flag any long random-looking strings in docs"),
+        Memory(category: .security, rule: "Network scan outputs and IP inventory files should NEVER be committed to any repo (public or private)"),
 
         // ── Xcode & Build ──
 
@@ -302,6 +308,10 @@ actor UserMemories {
         Memory(category: .git, rule: "Scan for credentials before every push: API keys, Bearer tokens, JWTs, passwords, private keys"),
         Memory(category: .git, rule: "Comprehensive .gitignore: exclude certificates, provisioning profiles, secrets files, .env"),
         Memory(category: .git, rule: "Use SSH URLs for git remote operations. Never put tokens in URLs or files"),
+        Memory(category: .git, rule: "For git history scrubbing use git-filter-repo (pip install git-filter-repo). BFG Repo-Cleaner requires Java and is often unavailable"),
+        Memory(category: .git, rule: "gh CLI: use -F (capital) for typed boolean/int values, -f (lowercase) for strings in gh api calls"),
+        Memory(category: .git, rule: "gh CLI: --disable-wiki flag does not exist — use: gh api -X PATCH repos/owner/repo -F has_wiki=false"),
+        Memory(category: .git, rule: "gh CLI: branch protection payloads require JSON input via gh api, not simple -f flags"),
 
         // ── Testing ──
 
