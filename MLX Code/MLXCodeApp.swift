@@ -109,6 +109,9 @@ struct MLXCodeApp: App {
 
                         // Load user memories into system prompt cache
                         await refreshMemories()
+
+                        // Start Nova API server
+                        NovaAPIServer.shared.start()
                     }
                 }
                 .onOpenURL { url in
