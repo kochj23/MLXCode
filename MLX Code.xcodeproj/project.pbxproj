@@ -19,11 +19,11 @@
 		21B357BD3B307E30CF749E7D /* ToolProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF68411190D219F58CC40B0 /* ToolProtocol.swift */; };
 		22F2C54FAC424877BE6CD7758564446B /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C77339FE1D4E7FAA34113946220883 /* ChatViewModel.swift */; };
 		24010C4728F24595AD26D82143BDCF89 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE711B1853DA4E2BA36640574B1F559C /* ChatView.swift */; };
-		25BA6913200BB43C2F05DE0E /* Tools/ErrorDiagnosisTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0656116F5396EF9D9A7065 /* Tools/ErrorDiagnosisTool.swift */; };
+		25BA6913200BB43C2F05DE0E /* ErrorDiagnosisTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0656116F5396EF9D9A7065 /* ErrorDiagnosisTool.swift */; };
 		2705EDF1704D46E28F243D58796430B0 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7425F0C774CFFA6C81D44B4EEF006 /* Conversation.swift */; };
 		339D0E1F2A3B4C5D6E7F8192 /* ContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D005E0D461771E49D839C575 /* ContextManager.swift */; };
 		340D62553A7C42F2A58D1FEF72A108C1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705A916896E647D1B0382ABFCD69A97D /* SettingsView.swift */; };
-		3603B426862ED1AF7B591E9D /* Tools/CodeNavigationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = F723876CB29C9B2490C118FE /* Tools/CodeNavigationTool.swift */; };
+		3603B426862ED1AF7B591E9D /* CodeNavigationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = F723876CB29C9B2490C118FE /* CodeNavigationTool.swift */; };
 		375B23CD55B79FC1C62A5B23 /* MemorySystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F90FA396C5680D706B96B9 /* MemorySystem.swift */; };
 		3BB85EED3A53FFBB2C040746 /* GitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A056387C5D6883F0932FA4 /* GitService.swift */; };
 		3CEE60DFFD9C4E6F5C07E7A4 /* ModernDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76E1CC6DC5CF4943D05FF452 /* ModernDesign.swift */; };
@@ -51,12 +51,12 @@
 		8B5069DCF05D73C50F8BDF52 /* ConversationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4B7D93C0CD7188EECDFAF4 /* ConversationManager.swift */; };
 		8F451BFDE18F863DAF8EA9D5 /* CodeBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5675694C64139E1C905003 /* CodeBlockView.swift */; };
 		9D968D8996FA1AE7F661C916 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 594327739243F92262A48BA3 /* Assets.xcassets */; };
-		9E4728BDDB32D3698B567C19 /* Tools/TestGenerationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52CA5C71B521246C88421C5E /* Tools/TestGenerationTool.swift */; };
+		9E4728BDDB32D3698B567C19 /* TestGenerationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52CA5C71B521246C88421C5E /* TestGenerationTool.swift */; };
 		A0013163E03EA758655F244E /* ModelSecurityValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3135C47FACB8AE8CB699414 /* ModelSecurityValidator.swift */; };
 		AA001BCDEF123456789ABCDE00001111 /* XcodeActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB001CDEF123456789ABCDE000022222 /* XcodeActionHandler.swift */; };
 		AA1234560000000000000002 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1234560000000000000001 /* KeychainManager.swift */; };
 		AA1B2C3D4E5F6A7B8C9D0E1F /* ToolTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2C3D4E5F6A7B8C9D0E1F2A /* ToolTier.swift */; };
-		AC2321EF0112053798EF401E /* Tools/GitIntegrationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03995484D94FA4FA6BD0F6C /* Tools/GitIntegrationTool.swift */; };
+		AC2321EF0112053798EF401E /* GitIntegrationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03995484D94FA4FA6BD0F6C /* GitIntegrationTool.swift */; };
 		B1C2D3E4F5A60718293B4C5D /* GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B5C /* GitHubService.swift */; };
 		B227E7F3CC8520A366B0B7AF /* FileOperationsTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9E24703A8FCDC2C9B4B0BA /* FileOperationsTool.swift */; };
 		B2C3D4E5F6A70829304C5D6E /* GitHubTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3C4D5E6F70829304B5C6D /* GitHubTool.swift */; };
@@ -76,6 +76,7 @@
 		C76BFA1F8B9FED3E7CEAC4CA /* KeyboardShortcuts.md in Resources */ = {isa = PBXBuildFile; fileRef = 5E58FA9A583B64C6FC9C7631 /* KeyboardShortcuts.md */; };
 		C7FF6DE571FE5D0FDBF6C782 /* SlashCommandHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B453CB92F39ABE521DEA0327 /* SlashCommandHandler.swift */; };
 		C95840B1287C494587897311FF59BBC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1474EB3E75FB4E45BABB7722A52318FA /* Assets.xcassets */; };
+		CA7398DCBE9DDF48B2F403A6 /* NovaAPIServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F59085B2CFA96DD4FA87E4C /* NovaAPIServer.swift */; };
 		CC3A88644A13A397AC99108D /* EditTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A7B1B5482F0213E90D8921 /* EditTool.swift */; };
 		CC3D4E5F6A7B8C9D0E1F2A3B /* ToolApproval.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4E5F6A7B8C9D0E1F2A3B4C /* ToolApproval.swift */; };
 		CD29D0ECFD8746229E8ACE5616B6A134 /* MLXModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C94A9B46BF04BC586CC4248441C2968 /* MLXModel.swift */; };
@@ -166,12 +167,13 @@
 		4290A181319FB0316E2CD114 /* Features.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = Features.md; path = Help/Features.md; sourceTree = "<group>"; };
 		48562778370F4A07B8B69516078EE7A2 /* MLX_Code.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MLX_Code.entitlements; sourceTree = "<group>"; };
 		4B4B7D93C0CD7188EECDFAF4 /* ConversationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConversationManager.swift; path = "MLX Code/Services/ConversationManager.swift"; sourceTree = "<group>"; };
+		4F59085B2CFA96DD4FA87E4C /* NovaAPIServer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NovaAPIServer.swift; sourceTree = "<absolute>"; };
 		50B62FF9A14FFACDD5EA3434 /* MLXCodeWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MLXCodeWidget.swift; sourceTree = "<group>"; };
-		52CA5C71B521246C88421C5E /* Tools/TestGenerationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/TestGenerationTool.swift; sourceTree = "<group>"; };
+		52CA5C71B521246C88421C5E /* TestGenerationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/TestGenerationTool.swift; sourceTree = "<group>"; };
 		564D43E7BF13C063A567706B /* EnhancedMessageView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = EnhancedMessageView.swift; path = "MLX Code/Views/EnhancedMessageView.swift"; sourceTree = "<group>"; };
 		594327739243F92262A48BA3 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		599D04AA90CC3F02738DC984 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5D0656116F5396EF9D9A7065 /* Tools/ErrorDiagnosisTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/ErrorDiagnosisTool.swift; sourceTree = "<group>"; };
+		5D0656116F5396EF9D9A7065 /* ErrorDiagnosisTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/ErrorDiagnosisTool.swift; sourceTree = "<group>"; };
 		5D194CFFD68CDA5D646167A5 /* SystemPrompts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SystemPrompts.swift; path = Tools/SystemPrompts.swift; sourceTree = "<group>"; };
 		5E58FA9A583B64C6FC9C7631 /* KeyboardShortcuts.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = KeyboardShortcuts.md; path = Help/KeyboardShortcuts.md; sourceTree = "<group>"; };
 		61B7E2C6F89FEDAA54C278A7 /* HelpView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
@@ -211,7 +213,7 @@
 		BB001CDEF123456789ABCDE000022222 /* XcodeActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeActionHandler.swift; sourceTree = "<group>"; };
 		BB2C3D4E5F6A7B8C9D0E1F2A /* ToolTier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolTier.swift; path = Tools/ToolTier.swift; sourceTree = "<group>"; };
 		BB69700D48233E87937D2E3E /* CommandValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CommandValidator.swift; path = "MLX Code/Utilities/CommandValidator.swift"; sourceTree = "<group>"; };
-		C03995484D94FA4FA6BD0F6C /* Tools/GitIntegrationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/GitIntegrationTool.swift; sourceTree = "<group>"; };
+		C03995484D94FA4FA6BD0F6C /* GitIntegrationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/GitIntegrationTool.swift; sourceTree = "<group>"; };
 		C04006EF5054DB124F485C96 /* XcodeTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = XcodeTool.swift; path = Tools/XcodeTool.swift; sourceTree = "<group>"; };
 		C1C6A5F77A186F5E418AC3C7 /* BuildErrorParser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BuildErrorParser.swift; path = "MLX Code/Utilities/BuildErrorParser.swift"; sourceTree = "<group>"; };
 		C2F90FA396C5680D706B96B9 /* MemorySystem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MemorySystem.swift; path = Tools/MemorySystem.swift; sourceTree = "<group>"; };
@@ -235,7 +237,7 @@
 		E4F9AF5449DB574FF1AF0CC4 /* InteractivePromptView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InteractivePromptView.swift; path = "MLX Code/Views/InteractivePromptView.swift"; sourceTree = "<group>"; };
 		E683FDA41933E9CBABE2AB4E /* GrepTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GrepTool.swift; path = Tools/GrepTool.swift; sourceTree = "<group>"; };
 		F2A3B4C5D6E7081929304C5D /* UserMemories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMemories.swift; sourceTree = "<group>"; };
-		F723876CB29C9B2490C118FE /* Tools/CodeNavigationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/CodeNavigationTool.swift; sourceTree = "<group>"; };
+		F723876CB29C9B2490C118FE /* CodeNavigationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/CodeNavigationTool.swift; sourceTree = "<group>"; };
 		FBF68411190D219F58CC40B0 /* ToolProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolProtocol.swift; path = Tools/ToolProtocol.swift; sourceTree = "<group>"; };
 		FD5FD20620CC8E07FFA1428A /* BashTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BashTool.swift; path = Tools/BashTool.swift; sourceTree = "<group>"; };
 		FDF863EF632E990FA28CCD29 /* MLX_Code_Widget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = MLX_Code_Widget.entitlements; sourceTree = "<group>"; };
@@ -248,7 +250,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		D02617E42F58CDE1003A988A /* MLX Code Extension */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "MLX Code Extension"; sourceTree = "<group>"; };
+		D02617E42F58CDE1003A988A /* MLX Code Extension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = "MLX Code Extension";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -347,10 +359,10 @@
 				C04006EF5054DB124F485C96 /* XcodeTool.swift */,
 				41B587EC712978DCE17B395A /* ToolRegistry.swift */,
 				5D194CFFD68CDA5D646167A5 /* SystemPrompts.swift */,
-				5D0656116F5396EF9D9A7065 /* Tools/ErrorDiagnosisTool.swift */,
-				52CA5C71B521246C88421C5E /* Tools/TestGenerationTool.swift */,
-				F723876CB29C9B2490C118FE /* Tools/CodeNavigationTool.swift */,
-				C03995484D94FA4FA6BD0F6C /* Tools/GitIntegrationTool.swift */,
+				5D0656116F5396EF9D9A7065 /* ErrorDiagnosisTool.swift */,
+				52CA5C71B521246C88421C5E /* TestGenerationTool.swift */,
+				F723876CB29C9B2490C118FE /* CodeNavigationTool.swift */,
+				C03995484D94FA4FA6BD0F6C /* GitIntegrationTool.swift */,
 				64071C1709105BE6194D0570 /* DiffPreviewTool.swift */,
 				B87A92AF8834D4EAB5ED2FED /* HelpTool.swift */,
 				BB2C3D4E5F6A7B8C9D0E1F2A /* ToolTier.swift */,
@@ -411,6 +423,7 @@
 				A1B2C3D4E5F60718293A4B5C /* GitHubService.swift */,
 				D1E2F3A4B5C60718293A4B5C /* ContextAnalysisService.swift */,
 				F2A3B4C5D6E7081929304C5D /* UserMemories.swift */,
+				4F59085B2CFA96DD4FA87E4C /* NovaAPIServer.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -609,8 +622,6 @@
 				D02617E42F58CDE1003A988A /* MLX Code Extension */,
 			);
 			name = "MLX Code Extension";
-			packageProductDependencies = (
-			);
 			productName = "MLX Code Extension";
 			productReference = D02617DF2F58CDE1003A988A /* MLX Code Extension.appex */;
 			productType = "com.apple.product-type.xcode-extension";
@@ -754,10 +765,10 @@
 				85C0E206977B63C594FA2506 /* ToolRegistry.swift in Sources */,
 				0AD3C3FF090FA319B50DF586 /* SystemPrompts.swift in Sources */,
 				DCB39028B0850848FD3B7322 /* RepetitionDetector.swift in Sources */,
-				25BA6913200BB43C2F05DE0E /* Tools/ErrorDiagnosisTool.swift in Sources */,
-				9E4728BDDB32D3698B567C19 /* Tools/TestGenerationTool.swift in Sources */,
-				3603B426862ED1AF7B591E9D /* Tools/CodeNavigationTool.swift in Sources */,
-				AC2321EF0112053798EF401E /* Tools/GitIntegrationTool.swift in Sources */,
+				25BA6913200BB43C2F05DE0E /* ErrorDiagnosisTool.swift in Sources */,
+				9E4728BDDB32D3698B567C19 /* TestGenerationTool.swift in Sources */,
+				3603B426862ED1AF7B591E9D /* CodeNavigationTool.swift in Sources */,
+				AC2321EF0112053798EF401E /* GitIntegrationTool.swift in Sources */,
 				6020E05AD9DFEFA09A7407D8 /* DiffPreviewTool.swift in Sources */,
 				12C39D162F6650606907452D /* HelpTool.swift in Sources */,
 				0475B2DD296EECD045126C17 /* PrerequisitesView.swift in Sources */,
@@ -789,6 +800,7 @@
 				B8C9DAEBFBAD4E8F960213B4 /* BuildPanelView.swift in Sources */,
 				B9CADBECEBBE5F900A1324C5 /* GitHubPanelView.swift in Sources */,
 				BACBDCEDDCBF60011B2435D6 /* CodeAnalysisPanelView.swift in Sources */,
+				CA7398DCBE9DDF48B2F403A6 /* NovaAPIServer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
