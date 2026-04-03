@@ -144,6 +144,36 @@ class NovaAPIServer {
         case ("POST", "/api/cancel"):
             return json(200, ["status": "cancelled"])
 
+        // Prompt template library
+        case ("GET", "/api/prompts"):
+            let templates = PromptTemplateLibrary.all.map { t -> [String: Any] in [
+                "id": t.id, "name": t.name, "category": t.category.rawValue,
+                "description": t.description, "icon": t.icon, "tags": t.tags,
+                "variableCount": t.variables.count
+            ]}
+            return jsonArray(200, templates)
+
+        case ("GET", _) where req.path.hasPrefix("/api/prompts/"):
+            let templateId = req.path.replacingOccurrences(of: "/api/prompts/", with: "")
+            guard let t = PromptTemplateLibrary.template(id: templateId) else {
+                return json(404, ["error": "Template not found: \(templateId)"])
+            }
+            let vars = t.variables.map { v -> [String: Any] in
+                ["name": v.name, "label": v.label, "placeholder": v.placeholder, "required": v.required]
+            }
+            return json(200, ["id": t.id, "name": t.name, "category": t.category.rawValue,
+                              "template": t.template, "variables": vars, "tags": t.tags] as [String: Any])
+
+        case ("POST", "/api/prompts/render"):
+            guard let body = req.bodyJSON(),
+                  let templateId = body["id"] as? String,
+                  let t = PromptTemplateLibrary.template(id: templateId) else {
+                return json(400, ["error": "Body must include {\"id\": \"template-id\", \"variables\": {...}}"])
+            }
+            let values = body["variables"] as? [String: String] ?? [:]
+            let rendered = t.render(with: values)
+            return json(200, ["id": templateId, "rendered": rendered, "characterCount": rendered.count] as [String: Any])
+
         default:
             return json(404, ["error": "Not found: \(req.method) \(req.path)"])
         }

@@ -1,1210 +1,3667 @@
-// !$*UTF8*$!
-{
-	archiveVersion = 1;
-	classes = {
-	};
-	objectVersion = 70;
-	objects = {
-
-/* Begin PBXBuildFile section */
-		0475B2DD296EECD045126C17 /* PrerequisitesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BF0FCAFA31E5516E7B5EC6 /* PrerequisitesView.swift */; };
-		054C45D18234B5AE6A2A3233 /* GettingStarted.md in Resources */ = {isa = PBXBuildFile; fileRef = 3072558342FD102B940FF3DB /* GettingStarted.md */; };
-		0A2E78E67E37DA8FC4CCA009 /* XcodeTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04006EF5054DB124F485C96 /* XcodeTool.swift */; };
-		0AD3C3FF090FA319B50DF586 /* SystemPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D194CFFD68CDA5D646167A5 /* SystemPrompts.swift */; };
-		0E19E7D351E63FC38F41E41F /* GlobTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0804D53D58C342DA55886059 /* GlobTool.swift */; };
-		1015E08E1D210CB0D574ADE3 /* MLX Code Widget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B14C57F7549826EE7E9087F5 /* MLX Code Widget.appex */; };
-		117B8C9D0E1F2A3B4C5D6E7F /* ContextBudget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228C9D0E1F2A3B4C5D6E7F81 /* ContextBudget.swift */; };
-		12C39D162F6650606907452D /* HelpTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = B87A92AF8834D4EAB5ED2FED /* HelpTool.swift */; };
-		18791BFABC004C46B272FB28E9157DBF /* MLXService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0095C89C8F1E4539863AE74D96B702F4 /* MLXService.swift */; };
-		21B357BD3B307E30CF749E7D /* ToolProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF68411190D219F58CC40B0 /* ToolProtocol.swift */; };
-		22F2C54FAC424877BE6CD7758564446B /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C77339FE1D4E7FAA34113946220883 /* ChatViewModel.swift */; };
-		24010C4728F24595AD26D82143BDCF89 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE711B1853DA4E2BA36640574B1F559C /* ChatView.swift */; };
-		25BA6913200BB43C2F05DE0E /* ErrorDiagnosisTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0656116F5396EF9D9A7065 /* ErrorDiagnosisTool.swift */; };
-		2705EDF1704D46E28F243D58796430B0 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7425F0C774CFFA6C81D44B4EEF006 /* Conversation.swift */; };
-		339D0E1F2A3B4C5D6E7F8192 /* ContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D005E0D461771E49D839C575 /* ContextManager.swift */; };
-		340D62553A7C42F2A58D1FEF72A108C1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705A916896E647D1B0382ABFCD69A97D /* SettingsView.swift */; };
-		3603B426862ED1AF7B591E9D /* CodeNavigationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = F723876CB29C9B2490C118FE /* CodeNavigationTool.swift */; };
-		375B23CD55B79FC1C62A5B23 /* MemorySystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F90FA396C5680D706B96B9 /* MemorySystem.swift */; };
-		3BB85EED3A53FFBB2C040746 /* GitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A056387C5D6883F0932FA4 /* GitService.swift */; };
-		3CEE60DFFD9C4E6F5C07E7A4 /* ModernDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76E1CC6DC5CF4943D05FF452 /* ModernDesign.swift */; };
-		3E0C215F286586A6A3FB0DA1 /* rag_system.py in Resources */ = {isa = PBXBuildFile; fileRef = 36512DB9403F2C61AD03ECF3 /* rag_system.py */; };
-		406CEA4CA10F45879033D10841AF85C6 /* MessageRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7294A0A7EFE8407C852ADC2F428A1167 /* MessageRowView.swift */; };
-		4446DD89E33C99BFDB36347F /* LogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266478D14D864C5C22CB0D15 /* LogEntry.swift */; };
-		4700E085EAA2EFA6C7153D80 /* InteractivePromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F9AF5449DB574FF1AF0CC4 /* InteractivePromptView.swift */; };
-		4A14B6380E9E4A44949059C9DE2D703A /* MLXCodeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF344F827174583896C2F07BB4F77EF /* MLXCodeApp.swift */; };
-		4A4EF7C491BE4E56A5AD5F581F918DCB /* XcodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2113E8E02AFC404C917BDECE45AD0C31 /* XcodeService.swift */; };
-		4F86F5737C70701EC7B129A3 /* CollapsibleToolResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9DCFE1EB35E1587BE810984 /* CollapsibleToolResultView.swift */; };
-		52B2F7AE0952B6156B32E990 /* LogViewerPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64FB3692EC085C7E8F420ABC /* LogViewerPanel.swift */; };
-		5301C4E5322FAC6C374E71F3 /* PathsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F3CD889AF1A1B378575B71 /* PathsSettingsView.swift */; };
-		5CBCE9635FCD2E27B44553A8 /* ChatViewModel+Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE14123640793BDCED74DE1 /* ChatViewModel+Tools.swift */; };
-		5CFC6B92A94EB31C4A347BC5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9BCC3943B8F2927A51C67AB /* Cocoa.framework */; };
-		6020E05AD9DFEFA09A7407D8 /* DiffPreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64071C1709105BE6194D0570 /* DiffPreviewTool.swift */; };
-		685055FA9244459B8C843179E846C56E /* SecureLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7455C7A2CE4EAA997C11353C876821 /* SecureLogger.swift */; };
-		6FAF8CD052C387D4EC838164 /* EnhancedMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564D43E7BF13C063A567706B /* EnhancedMessageView.swift */; };
-		72638E65542E9F17DCCCB52B /* MultiFileOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382216063DCBF191AE08B34 /* MultiFileOperations.swift */; };
-		7A0F8C83531AC0524598D2AF /* KeyboardShortcuts.md in Resources */ = {isa = PBXBuildFile; fileRef = 96B9AC2491F2A5DCF94ABDA5 /* KeyboardShortcuts.md */; };
-		7E325ABB0701C66A18190BBF /* CodebaseIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86DA95C55CF31CAA085E0CD4 /* CodebaseIndexer.swift */; };
-		833AB57A49BF43199191D9F239BFECB7 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE07B6436E0D401DBA11F15F8CDA7B09 /* Message.swift */; };
-		84C70B8FEEA34CAA834FC30FCDA1E267 /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0674F2D9E84C4AC3AC8ED170619E99EA /* FileService.swift */; };
-		85C0E206977B63C594FA2506 /* ToolRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B587EC712978DCE17B395A /* ToolRegistry.swift */; };
-		8875413B90367ACAEB46DDED /* BuildErrorParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C6A5F77A186F5E418AC3C7 /* BuildErrorParser.swift */; };
-		8B5069DCF05D73C50F8BDF52 /* ConversationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4B7D93C0CD7188EECDFAF4 /* ConversationManager.swift */; };
-		8F451BFDE18F863DAF8EA9D5 /* CodeBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5675694C64139E1C905003 /* CodeBlockView.swift */; };
-		9D968D8996FA1AE7F661C916 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 594327739243F92262A48BA3 /* Assets.xcassets */; };
-		9E4728BDDB32D3698B567C19 /* TestGenerationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52CA5C71B521246C88421C5E /* TestGenerationTool.swift */; };
-		A0013163E03EA758655F244E /* ModelSecurityValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3135C47FACB8AE8CB699414 /* ModelSecurityValidator.swift */; };
-		AA001BCDEF123456789ABCDE00001111 /* XcodeActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB001CDEF123456789ABCDE000022222 /* XcodeActionHandler.swift */; };
-		AA1234560000000000000002 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1234560000000000000001 /* KeychainManager.swift */; };
-		AA1B2C3D4E5F6A7B8C9D0E1F /* ToolTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2C3D4E5F6A7B8C9D0E1F2A /* ToolTier.swift */; };
-		AC2321EF0112053798EF401E /* GitIntegrationTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03995484D94FA4FA6BD0F6C /* GitIntegrationTool.swift */; };
-		B1C2D3E4F5A60718293B4C5D /* GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B5C /* GitHubService.swift */; };
-		B227E7F3CC8520A366B0B7AF /* FileOperationsTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9E24703A8FCDC2C9B4B0BA /* FileOperationsTool.swift */; };
-		B2C3D4E5F6A70829304C5D6E /* GitHubTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3C4D5E6F70829304B5C6D /* GitHubTool.swift */; };
-		B383B9851026BBA9EB5D0534 /* WidgetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3516CF4FE359150087D766 /* WidgetData.swift */; };
-		B3C4D5E6F7A8093A415D6E7F /* CodeAnalysisTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B4C5D6E7F8093A415C6D7E /* CodeAnalysisTool.swift */; };
-		B4C5D6E7F8A90A4B526E7F80 /* ProjectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B5C6D7E8F90A4B526D7E8F /* ProjectViewModel.swift */; };
-		B5C6D7E8F9AA1B5C637F8091 /* GitHubViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B6C7D8E9FA1B5C637E8F90 /* GitHubViewModel.swift */; };
-		B6C7D8E9FAAB2C6D74809102 /* CodeAnalysisViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B7C8D9EAFB2C6D748F9001 /* CodeAnalysisViewModel.swift */; };
-		B7A5DD6AFF8A40D0ADEADF847F388274 /* ModelSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF2B58504414094AD2F4B06D9B90954 /* ModelSelectorView.swift */; };
-		B7C8D9EAFBAC3D7E859102A3 /* ProjectDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8C9DAEBFC3D7E859001A2 /* ProjectDashboardView.swift */; };
-		B8C9DAEBFBAD4E8F960213B4 /* BuildPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B9CADBECED4E8F960112B3 /* BuildPanelView.swift */; };
-		B9CADBECEBBE5F900A1324C5 /* GitHubPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BACBDCEDFE5F900A1223C4 /* GitHubPanelView.swift */; };
-		BACBDCEDDCBF60011B2435D6 /* CodeAnalysisPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCCDDEEAF60011B2334D5 /* CodeAnalysisPanelView.swift */; };
-		BC51340E6DC042F101EC852C /* Features.md in Resources */ = {isa = PBXBuildFile; fileRef = 416CC836CD6FD1509FE5E7E4 /* Features.md */; };
-		BFF3F2FD15788CAE731CD3B9 /* WidgetDataSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2484B300512B2B737C691AF5 /* WidgetDataSync.swift */; };
-		C1D2E3F4A5B6071829304C5D /* ContextAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E2F3A4B5C60718293A4B5C /* ContextAnalysisService.swift */; };
-		C76BFA1F8B9FED3E7CEAC4CA /* KeyboardShortcuts.md in Resources */ = {isa = PBXBuildFile; fileRef = 5E58FA9A583B64C6FC9C7631 /* KeyboardShortcuts.md */; };
-		C7FF6DE571FE5D0FDBF6C782 /* SlashCommandHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B453CB92F39ABE521DEA0327 /* SlashCommandHandler.swift */; };
-		C95840B1287C494587897311FF59BBC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1474EB3E75FB4E45BABB7722A52318FA /* Assets.xcassets */; };
-		CA7398DCBE9DDF48B2F403A6 /* NovaAPIServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F59085B2CFA96DD4FA87E4C /* NovaAPIServer.swift */; };
-		CC3A88644A13A397AC99108D /* EditTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A7B1B5482F0213E90D8921 /* EditTool.swift */; };
-		CC3D4E5F6A7B8C9D0E1F2A3B /* ToolApproval.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4E5F6A7B8C9D0E1F2A3B4C /* ToolApproval.swift */; };
-		CD29D0ECFD8746229E8ACE5616B6A134 /* MLXModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C94A9B46BF04BC586CC4248441C2968 /* MLXModel.swift */; };
-		D02617D62F58CCDB003A988A /* MLX in Frameworks */ = {isa = PBXBuildFile; productRef = B7CACEDCC504C0C98061D10B /* MLX */; };
-		D02617D72F58CCDB003A988A /* MLXNN in Frameworks */ = {isa = PBXBuildFile; productRef = B2CDB41D8A69A6A26D70BBE7 /* MLXNN */; };
-		D02617D82F58CCDB003A988A /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = B38BA712F974D727652E810F /* MLXLLM */; };
-		D02617D92F58CCDB003A988A /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 5BA7AB349C44E6745850757A /* MLXLMCommon */; };
-		D02617E12F58CDE1003A988A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D02617E02F58CDE1003A988A /* Cocoa.framework */; };
-		D02617E32F58CDE1003A988A /* XcodeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D02617E22F58CDE1003A988A /* XcodeKit.framework */; };
-		D02617EC2F58CDE1003A988A /* MLX Code Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D02617DF2F58CDE1003A988A /* MLX Code Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		D428F9CF79EFE40194B9FEFF /* GrepTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = E683FDA41933E9CBABE2AB4E /* GrepTool.swift */; };
-		DCB39028B0850848FD3B7322 /* RepetitionDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF26AA705F097AAB5624397A /* RepetitionDetector.swift */; };
-		DE5057A64D8310A442E26F74 /* MarkdownTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44598ECF006C6A3E72B011C /* MarkdownTextView.swift */; };
-		E053530D29423C88386576C8 /* Features.md in Resources */ = {isa = PBXBuildFile; fileRef = 4290A181319FB0316E2CD114 /* Features.md */; };
-		E1A07468A30C474ED64E5909 /* MLXCodeWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50B62FF9A14FFACDD5EA3434 /* MLXCodeWidget.swift */; };
-		E2F3A4B5C6D7081929304C5D /* UserMemories.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A3B4C5D6E7081929304C5D /* UserMemories.swift */; };
-		E2FCF04057F99E48BF46CCF3 /* CommandValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB69700D48233E87937D2E3E /* CommandValidator.swift */; };
-		E4398D6A77404E3091C859FA278A70AC /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976738B52C794CED94B0958A9B5294AC /* AppSettings.swift */; };
-		E9092BA47E894E33897524DF0DDAEF6E /* PythonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FFCCE81A9942AD88F69691662852EC /* PythonService.swift */; };
-		EA3DD729B1A1D45A5484F4CE /* ThinkingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18CD3C400C3AD1177178192 /* ThinkingIndicatorView.swift */; };
-		EC5EC65B8FD9A5025E274336 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B7E2C6F89FEDAA54C278A7 /* HelpView.swift */; };
-		ECB016DEEB77015CF0327B53 /* mlx_inference.py in Resources */ = {isa = PBXBuildFile; fileRef = 254D9DD9EEB20CA0D74A5E00 /* mlx_inference.py */; };
-		ED15B41EF1DB3130F9B71173 /* SharedDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8ECCA430CED7181E9845C7 /* SharedDataManager.swift */; };
-		ED42A86D2B4D4BCE84B60AA7411AEFCF /* SecurityUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7492C8D46DB847CFABCF1E5B031731B3 /* SecurityUtils.swift */; };
-		EE5F6A7B8C9D0E1F2A3B4C5D /* ToolApprovalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6A7B8C9D0E1F2A3B4C5D6E /* ToolApprovalView.swift */; };
-		EEE1340E1501B4ACBEFF3472 /* GettingStarted.md in Resources */ = {isa = PBXBuildFile; fileRef = DFCA810E4451DA5EEB9EB66A /* GettingStarted.md */; };
-		F552B2A0318CA58997F79EBA /* Troubleshooting.md in Resources */ = {isa = PBXBuildFile; fileRef = 6FD0BB3BC560F8D474C00FAC /* Troubleshooting.md */; };
-		FB45C232C00FB094E07E98A6 /* BashTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5FD20620CC8E07FFA1428A /* BashTool.swift */; };
-		FFEA93AF903CFA3261DD0C56 /* Troubleshooting.md in Resources */ = {isa = PBXBuildFile; fileRef = B57C86C1B983667FB6632C96 /* Troubleshooting.md */; };
-/* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		A1D0CB7C86FD995521A1C244 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F9BDA8E4425A4DF7A39133B70A11CD1F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6313FF5EB2260339630CD915;
-			remoteInfo = "MLX Code Widget";
-		};
-		D02617EA2F58CDE1003A988A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F9BDA8E4425A4DF7A39133B70A11CD1F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D02617DE2F58CDE1003A988A;
-			remoteInfo = "MLX Code Extension";
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		C1D4360CD64BF748989BE29C /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				1015E08E1D210CB0D574ADE3 /* MLX Code Widget.appex in Embed Foundation Extensions */,
-				D02617EC2F58CDE1003A988A /* MLX Code Extension.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
-/* Begin PBXFileReference section */
-		0095C89C8F1E4539863AE74D96B702F4 /* MLXService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLXService.swift; sourceTree = "<group>"; };
-		01A056387C5D6883F0932FA4 /* GitService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GitService.swift; path = "MLX Code/Services/GitService.swift"; sourceTree = "<group>"; };
-		0674F2D9E84C4AC3AC8ED170619E99EA /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
-		07F3CD889AF1A1B378575B71 /* PathsSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PathsSettingsView.swift; sourceTree = "<group>"; };
-		0804D53D58C342DA55886059 /* GlobTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GlobTool.swift; path = Tools/GlobTool.swift; sourceTree = "<group>"; };
-		0E5675694C64139E1C905003 /* CodeBlockView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CodeBlockView.swift; path = "MLX Code/Views/CodeBlockView.swift"; sourceTree = "<group>"; };
-		1474EB3E75FB4E45BABB7722A52318FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		1C94A9B46BF04BC586CC4248441C2968 /* MLXModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLXModel.swift; sourceTree = "<group>"; };
-		1EF7425F0C774CFFA6C81D44B4EEF006 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
-		2113E8E02AFC404C917BDECE45AD0C31 /* XcodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeService.swift; sourceTree = "<group>"; };
-		228C9D0E1F2A3B4C5D6E7F81 /* ContextBudget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ContextBudget.swift; path = "MLX Code/Services/ContextBudget.swift"; sourceTree = SOURCE_ROOT; };
-		22BF0FCAFA31E5516E7B5EC6 /* PrerequisitesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PrerequisitesView.swift; path = "MLX Code/Views/PrerequisitesView.swift"; sourceTree = "<group>"; };
-		2484B300512B2B737C691AF5 /* WidgetDataSync.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetDataSync.swift; sourceTree = "<group>"; };
-		254D9DD9EEB20CA0D74A5E00 /* mlx_inference.py */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.python; name = mlx_inference.py; path = Python/mlx_inference.py; sourceTree = "<group>"; };
-		266478D14D864C5C22CB0D15 /* LogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogEntry.swift; sourceTree = "<group>"; };
-		2B297A603876CBEB5317C8DE /* WidgetData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetData.swift; sourceTree = "<group>"; };
-		2C8ECCA430CED7181E9845C7 /* SharedDataManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SharedDataManager.swift; sourceTree = "<group>"; };
-		2D891BD2C79FA8CCEF2C5741 /* UndoManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UndoManager.swift; path = "MLX Code/Services/UndoManager.swift"; sourceTree = "<group>"; };
-		3072558342FD102B940FF3DB /* GettingStarted.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = GettingStarted.md; path = Help/GettingStarted.md; sourceTree = "<group>"; };
-		36512DB9403F2C61AD03ECF3 /* rag_system.py */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.python; name = rag_system.py; path = Python/rag_system.py; sourceTree = "<group>"; };
-		3BA6541CD08A3BD34802C064 /* HelpView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
-		416CC836CD6FD1509FE5E7E4 /* Features.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = Features.md; path = Help/Features.md; sourceTree = "<group>"; };
-		41B587EC712978DCE17B395A /* ToolRegistry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolRegistry.swift; path = Tools/ToolRegistry.swift; sourceTree = "<group>"; };
-		4290A181319FB0316E2CD114 /* Features.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = Features.md; path = Help/Features.md; sourceTree = "<group>"; };
-		48562778370F4A07B8B69516078EE7A2 /* MLX_Code.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MLX_Code.entitlements; sourceTree = "<group>"; };
-		4B4B7D93C0CD7188EECDFAF4 /* ConversationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConversationManager.swift; path = "MLX Code/Services/ConversationManager.swift"; sourceTree = "<group>"; };
-		4F59085B2CFA96DD4FA87E4C /* NovaAPIServer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NovaAPIServer.swift; path = "/Volumes/Data/xcode/MLX Code/MLX Code/Services/NovaAPIServer.swift"; sourceTree = "<absolute>"; };
-		50B62FF9A14FFACDD5EA3434 /* MLXCodeWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MLXCodeWidget.swift; sourceTree = "<group>"; };
-		52CA5C71B521246C88421C5E /* TestGenerationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/TestGenerationTool.swift; sourceTree = "<group>"; };
-		564D43E7BF13C063A567706B /* EnhancedMessageView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = EnhancedMessageView.swift; path = "MLX Code/Views/EnhancedMessageView.swift"; sourceTree = "<group>"; };
-		594327739243F92262A48BA3 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		599D04AA90CC3F02738DC984 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5D0656116F5396EF9D9A7065 /* ErrorDiagnosisTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/ErrorDiagnosisTool.swift; sourceTree = "<group>"; };
-		5D194CFFD68CDA5D646167A5 /* SystemPrompts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SystemPrompts.swift; path = Tools/SystemPrompts.swift; sourceTree = "<group>"; };
-		5E58FA9A583B64C6FC9C7631 /* KeyboardShortcuts.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = KeyboardShortcuts.md; path = Help/KeyboardShortcuts.md; sourceTree = "<group>"; };
-		61B7E2C6F89FEDAA54C278A7 /* HelpView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
-		64071C1709105BE6194D0570 /* DiffPreviewTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DiffPreviewTool.swift; path = Tools/DiffPreviewTool.swift; sourceTree = "<group>"; };
-		64FB3692EC085C7E8F420ABC /* LogViewerPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewerPanel.swift; sourceTree = "<group>"; };
-		6CC6C830E9E5801EFE2690F2 /* mlx_daemon.py */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.python; name = mlx_daemon.py; path = Python/mlx_daemon.py; sourceTree = "<group>"; };
-		6FD0BB3BC560F8D474C00FAC /* Troubleshooting.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = Troubleshooting.md; path = Help/Troubleshooting.md; sourceTree = "<group>"; };
-		705A916896E647D1B0382ABFCD69A97D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		7294A0A7EFE8407C852ADC2F428A1167 /* MessageRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRowView.swift; sourceTree = "<group>"; };
-		7382216063DCBF191AE08B34 /* MultiFileOperations.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MultiFileOperations.swift; path = "MLX Code/Services/MultiFileOperations.swift"; sourceTree = "<group>"; };
-		7492C8D46DB847CFABCF1E5B031731B3 /* SecurityUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityUtils.swift; sourceTree = "<group>"; };
-		76E1CC6DC5CF4943D05FF452 /* ModernDesign.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ModernDesign.swift; path = Design/ModernDesign.swift; sourceTree = "<group>"; };
-		86DA95C55CF31CAA085E0CD4 /* CodebaseIndexer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CodebaseIndexer.swift; path = "MLX Code/Services/CodebaseIndexer.swift"; sourceTree = "<group>"; };
-		8BF344F827174583896C2F07BB4F77EF /* MLXCodeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLXCodeApp.swift; sourceTree = "<group>"; };
-		96B9AC2491F2A5DCF94ABDA5 /* KeyboardShortcuts.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = KeyboardShortcuts.md; path = Help/KeyboardShortcuts.md; sourceTree = "<group>"; };
-		976738B52C794CED94B0958A9B5294AC /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
-		A1A7B1B5482F0213E90D8921 /* EditTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = EditTool.swift; path = "MLX Code/Tools/EditTool.swift"; sourceTree = "<group>"; };
-		A1B2C3D4E5F60718293A4B5C /* GitHubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubService.swift; sourceTree = "<group>"; };
-		A2B3C4D5E6F70829304B5C6D /* GitHubTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GitHubTool.swift; path = Tools/GitHubTool.swift; sourceTree = "<group>"; };
-		A3B4C5D6E7F8093A415C6D7E /* CodeAnalysisTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CodeAnalysisTool.swift; path = Tools/CodeAnalysisTool.swift; sourceTree = "<group>"; };
-		A44598ECF006C6A3E72B011C /* MarkdownTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MarkdownTextView.swift; path = "MLX Code/Views/MarkdownTextView.swift"; sourceTree = "<group>"; };
-		A4B5C6D7E8F90A4B526D7E8F /* ProjectViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProjectViewModel.swift; sourceTree = "<group>"; };
-		A5B6C7D8E9FA1B5C637E8F90 /* GitHubViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GitHubViewModel.swift; sourceTree = "<group>"; };
-		A618C93267C54CBEA8B15E4321B53726 /* MLX Code.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MLX Code.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A6B7C8D9EAFB2C6D748F9001 /* CodeAnalysisViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CodeAnalysisViewModel.swift; sourceTree = "<group>"; };
-		A7B8C9DAEBFC3D7E859001A2 /* ProjectDashboardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProjectDashboardView.swift; sourceTree = "<group>"; };
-		A8B9CADBECED4E8F960112B3 /* BuildPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BuildPanelView.swift; sourceTree = "<group>"; };
-		A9BACBDCEDFE5F900A1223C4 /* GitHubPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GitHubPanelView.swift; sourceTree = "<group>"; };
-		AA1234560000000000000001 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
-		AABBCCDDEEAF60011B2334D5 /* CodeAnalysisPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CodeAnalysisPanelView.swift; sourceTree = "<group>"; };
-		B14C57F7549826EE7E9087F5 /* MLX Code Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "MLX Code Widget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3135C47FACB8AE8CB699414 /* ModelSecurityValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ModelSecurityValidator.swift; path = "MLX Code/Services/ModelSecurityValidator.swift"; sourceTree = "<group>"; };
-		B453CB92F39ABE521DEA0327 /* SlashCommandHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SlashCommandHandler.swift; path = "MLX Code/Services/SlashCommandHandler.swift"; sourceTree = "<group>"; };
-		B57C86C1B983667FB6632C96 /* Troubleshooting.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = Troubleshooting.md; path = Help/Troubleshooting.md; sourceTree = "<group>"; };
-		B87A92AF8834D4EAB5ED2FED /* HelpTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HelpTool.swift; path = Tools/HelpTool.swift; sourceTree = "<group>"; };
-		B9DCFE1EB35E1587BE810984 /* CollapsibleToolResultView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CollapsibleToolResultView.swift; sourceTree = "<group>"; };
-		BB001CDEF123456789ABCDE000022222 /* XcodeActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeActionHandler.swift; sourceTree = "<group>"; };
-		BB2C3D4E5F6A7B8C9D0E1F2A /* ToolTier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolTier.swift; path = Tools/ToolTier.swift; sourceTree = "<group>"; };
-		BB69700D48233E87937D2E3E /* CommandValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CommandValidator.swift; path = "MLX Code/Utilities/CommandValidator.swift"; sourceTree = "<group>"; };
-		C03995484D94FA4FA6BD0F6C /* GitIntegrationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/GitIntegrationTool.swift; sourceTree = "<group>"; };
-		C04006EF5054DB124F485C96 /* XcodeTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = XcodeTool.swift; path = Tools/XcodeTool.swift; sourceTree = "<group>"; };
-		C1C6A5F77A186F5E418AC3C7 /* BuildErrorParser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BuildErrorParser.swift; path = "MLX Code/Utilities/BuildErrorParser.swift"; sourceTree = "<group>"; };
-		C2F90FA396C5680D706B96B9 /* MemorySystem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MemorySystem.swift; path = Tools/MemorySystem.swift; sourceTree = "<group>"; };
-		C9BCC3943B8F2927A51C67AB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
-		CC001DEF012345678901ABCD000033333 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CD3516CF4FE359150087D766 /* WidgetData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WidgetData.swift; path = "MLX Code Widget/WidgetData.swift"; sourceTree = "<group>"; };
-		CE711B1853DA4E2BA36640574B1F559C /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
-		CF26AA705F097AAB5624397A /* RepetitionDetector.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RepetitionDetector.swift; path = "MLX Code/Utilities/RepetitionDetector.swift"; sourceTree = "<group>"; };
-		D005E0D461771E49D839C575 /* ContextManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ContextManager.swift; path = "MLX Code/Services/ContextManager.swift"; sourceTree = "<group>"; };
-		D02617DF2F58CDE1003A988A /* MLX Code Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "MLX Code Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D02617E02F58CDE1003A988A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		D02617E22F58CDE1003A988A /* XcodeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XcodeKit.framework; path = Library/Frameworks/XcodeKit.framework; sourceTree = DEVELOPER_DIR; };
-		D18CD3C400C3AD1177178192 /* ThinkingIndicatorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ThinkingIndicatorView.swift; sourceTree = "<group>"; };
-		D1E2F3A4B5C60718293A4B5C /* ContextAnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextAnalysisService.swift; sourceTree = "<group>"; };
-		D3FFCCE81A9942AD88F69691662852EC /* PythonService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PythonService.swift; sourceTree = "<group>"; };
-		D8C77339FE1D4E7FAA34113946220883 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
-		DA5F2AD2CCECEB26E6768C29 /* DiffView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DiffView.swift; path = "MLX Code/Views/DiffView.swift"; sourceTree = "<group>"; };
-		DD4E5F6A7B8C9D0E1F2A3B4C /* ToolApproval.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolApproval.swift; path = "MLX Code/Models/ToolApproval.swift"; sourceTree = SOURCE_ROOT; };
-		DEE14123640793BDCED74DE1 /* ChatViewModel+Tools.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "ChatViewModel+Tools.swift"; sourceTree = "<group>"; };
-		DFCA810E4451DA5EEB9EB66A /* GettingStarted.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = GettingStarted.md; path = Help/GettingStarted.md; sourceTree = "<group>"; };
-		E4F9AF5449DB574FF1AF0CC4 /* InteractivePromptView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InteractivePromptView.swift; path = "MLX Code/Views/InteractivePromptView.swift"; sourceTree = "<group>"; };
-		E683FDA41933E9CBABE2AB4E /* GrepTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GrepTool.swift; path = Tools/GrepTool.swift; sourceTree = "<group>"; };
-		F2A3B4C5D6E7081929304C5D /* UserMemories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMemories.swift; sourceTree = "<group>"; };
-		F723876CB29C9B2490C118FE /* CodeNavigationTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tools/CodeNavigationTool.swift; sourceTree = "<group>"; };
-		FBF68411190D219F58CC40B0 /* ToolProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolProtocol.swift; path = Tools/ToolProtocol.swift; sourceTree = "<group>"; };
-		FD5FD20620CC8E07FFA1428A /* BashTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BashTool.swift; path = Tools/BashTool.swift; sourceTree = "<group>"; };
-		FDF863EF632E990FA28CCD29 /* MLX_Code_Widget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = MLX_Code_Widget.entitlements; sourceTree = "<group>"; };
-		FE07B6436E0D401DBA11F15F8CDA7B09 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		FEDDB0ED1A61C0892F6EDF1B /* huggingface_downloader.py */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.python; name = huggingface_downloader.py; path = Python/huggingface_downloader.py; sourceTree = "<group>"; };
-		FF6A7B8C9D0E1F2A3B4C5D6E /* ToolApprovalView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolApprovalView.swift; path = "MLX Code/Views/ToolApprovalView.swift"; sourceTree = SOURCE_ROOT; };
-		FF7455C7A2CE4EAA997C11353C876821 /* SecureLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureLogger.swift; sourceTree = "<group>"; };
-		FF9E24703A8FCDC2C9B4B0BA /* FileOperationsTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileOperationsTool.swift; path = Tools/FileOperationsTool.swift; sourceTree = "<group>"; };
-		FFF2B58504414094AD2F4B06D9B90954 /* ModelSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSelectorView.swift; sourceTree = "<group>"; };
-/* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		D02617E42F58CDE1003A988A /* MLX Code Extension */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = "MLX Code Extension";
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		23F92DF06CF7CC9F35EB02B9 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				5CFC6B92A94EB31C4A347BC5 /* Cocoa.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6499B3B47E4141A6B7CA1B549FF63C0C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D02617D92F58CCDB003A988A /* MLXLMCommon in Frameworks */,
-				D02617D82F58CCDB003A988A /* MLXLLM in Frameworks */,
-				D02617D72F58CCDB003A988A /* MLXNN in Frameworks */,
-				D02617D62F58CCDB003A988A /* MLX in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D02617DC2F58CDE1003A988A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D02617E12F58CDE1003A988A /* Cocoa.framework in Frameworks */,
-				D02617E32F58CDE1003A988A /* XcodeKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
-/* Begin PBXGroup section */
-		09954456C83943A7BF55406C1988E6B1 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				1474EB3E75FB4E45BABB7722A52318FA /* Assets.xcassets */,
-				D4F2A01B6B01B323C4C1971B /* Help */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		512191759EAFD5368C431D56 /* Python */ = {
-			isa = PBXGroup;
-			children = (
-				FEDDB0ED1A61C0892F6EDF1B /* huggingface_downloader.py */,
-				254D9DD9EEB20CA0D74A5E00 /* mlx_inference.py */,
-				36512DB9403F2C61AD03ECF3 /* rag_system.py */,
-			);
-			name = Python;
-			sourceTree = SOURCE_ROOT;
-		};
-		6B35EA916216071CF5CC28C7 /* MLX Code Widget */ = {
-			isa = PBXGroup;
-			children = (
-				50B62FF9A14FFACDD5EA3434 /* MLXCodeWidget.swift */,
-				2B297A603876CBEB5317C8DE /* WidgetData.swift */,
-				2C8ECCA430CED7181E9845C7 /* SharedDataManager.swift */,
-				599D04AA90CC3F02738DC984 /* Info.plist */,
-				FDF863EF632E990FA28CCD29 /* MLX_Code_Widget.entitlements */,
-				594327739243F92262A48BA3 /* Assets.xcassets */,
-			);
-			path = "MLX Code Widget";
-			sourceTree = "<group>";
-		};
-		6F0229DF0B6AF4821D6BC3FE /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				B3135C47FACB8AE8CB699414 /* ModelSecurityValidator.swift */,
-				01A056387C5D6883F0932FA4 /* GitService.swift */,
-				228C9D0E1F2A3B4C5D6E7F81 /* ContextBudget.swift */,
-			);
-			name = Services;
-			sourceTree = "<group>";
-		};
-		6F349BF0E53B7097184E5FCE /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				7FC436C85AF36A9C1291E665 /* OS X */,
-				D02617E02F58CDE1003A988A /* Cocoa.framework */,
-				D02617E22F58CDE1003A988A /* XcodeKit.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		7D34E1B98B0D1BBD7FFBC41C /* Tools */ = {
-			isa = PBXGroup;
-			children = (
-				FBF68411190D219F58CC40B0 /* ToolProtocol.swift */,
-				C2F90FA396C5680D706B96B9 /* MemorySystem.swift */,
-				FF9E24703A8FCDC2C9B4B0BA /* FileOperationsTool.swift */,
-				FD5FD20620CC8E07FFA1428A /* BashTool.swift */,
-				E683FDA41933E9CBABE2AB4E /* GrepTool.swift */,
-				0804D53D58C342DA55886059 /* GlobTool.swift */,
-				C04006EF5054DB124F485C96 /* XcodeTool.swift */,
-				41B587EC712978DCE17B395A /* ToolRegistry.swift */,
-				5D194CFFD68CDA5D646167A5 /* SystemPrompts.swift */,
-				5D0656116F5396EF9D9A7065 /* ErrorDiagnosisTool.swift */,
-				52CA5C71B521246C88421C5E /* TestGenerationTool.swift */,
-				F723876CB29C9B2490C118FE /* CodeNavigationTool.swift */,
-				C03995484D94FA4FA6BD0F6C /* GitIntegrationTool.swift */,
-				64071C1709105BE6194D0570 /* DiffPreviewTool.swift */,
-				B87A92AF8834D4EAB5ED2FED /* HelpTool.swift */,
-				BB2C3D4E5F6A7B8C9D0E1F2A /* ToolTier.swift */,
-				A2B3C4D5E6F70829304B5C6D /* GitHubTool.swift */,
-				A3B4C5D6E7F8093A415C6D7E /* CodeAnalysisTool.swift */,
-			);
-			name = Tools;
-			sourceTree = "<group>";
-		};
-		7E5FCD73CEE595B2B243ACB7 /* Utilities */ = {
-			isa = PBXGroup;
-			children = (
-				BB69700D48233E87937D2E3E /* CommandValidator.swift */,
-				C1C6A5F77A186F5E418AC3C7 /* BuildErrorParser.swift */,
-				CF26AA705F097AAB5624397A /* RepetitionDetector.swift */,
-			);
-			name = Utilities;
-			sourceTree = "<group>";
-		};
-		7FC436C85AF36A9C1291E665 /* OS X */ = {
-			isa = PBXGroup;
-			children = (
-				C9BCC3943B8F2927A51C67AB /* Cocoa.framework */,
-			);
-			name = "OS X";
-			sourceTree = "<group>";
-		};
-		841118D351D54AEDA122F17C77816B9D /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				CE711B1853DA4E2BA36640574B1F559C /* ChatView.swift */,
-				7294A0A7EFE8407C852ADC2F428A1167 /* MessageRowView.swift */,
-				705A916896E647D1B0382ABFCD69A97D /* SettingsView.swift */,
-				FFF2B58504414094AD2F4B06D9B90954 /* ModelSelectorView.swift */,
-				07F3CD889AF1A1B378575B71 /* PathsSettingsView.swift */,
-				64FB3692EC085C7E8F420ABC /* LogViewerPanel.swift */,
-				61B7E2C6F89FEDAA54C278A7 /* HelpView.swift */,
-				D18CD3C400C3AD1177178192 /* ThinkingIndicatorView.swift */,
-				B9DCFE1EB35E1587BE810984 /* CollapsibleToolResultView.swift */,
-				3BA6541CD08A3BD34802C064 /* HelpView.swift */,
-				A7B8C9DAEBFC3D7E859001A2 /* ProjectDashboardView.swift */,
-				A8B9CADBECED4E8F960112B3 /* BuildPanelView.swift */,
-				A9BACBDCEDFE5F900A1223C4 /* GitHubPanelView.swift */,
-				AABBCCDDEEAF60011B2334D5 /* CodeAnalysisPanelView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		8D7B12981853422D971FCAD3B063E827 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				0095C89C8F1E4539863AE74D96B702F4 /* MLXService.swift */,
-				BB001CDEF123456789ABCDE000022222 /* XcodeActionHandler.swift */,
-				2113E8E02AFC404C917BDECE45AD0C31 /* XcodeService.swift */,
-				0674F2D9E84C4AC3AC8ED170619E99EA /* FileService.swift */,
-				D3FFCCE81A9942AD88F69691662852EC /* PythonService.swift */,
-				2484B300512B2B737C691AF5 /* WidgetDataSync.swift */,
-				A1B2C3D4E5F60718293A4B5C /* GitHubService.swift */,
-				D1E2F3A4B5C60718293A4B5C /* ContextAnalysisService.swift */,
-				F2A3B4C5D6E7081929304C5D /* UserMemories.swift */,
-				4F59085B2CFA96DD4FA87E4C /* NovaAPIServer.swift */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
-		B87735253DD0CAE36F5A3A26 /* Design */ = {
-			isa = PBXGroup;
-			children = (
-				76E1CC6DC5CF4943D05FF452 /* ModernDesign.swift */,
-			);
-			name = Design;
-			sourceTree = "<group>";
-		};
-		BB2E8ECFF03340A5AA4C415F066EB765 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				D8C77339FE1D4E7FAA34113946220883 /* ChatViewModel.swift */,
-				DEE14123640793BDCED74DE1 /* ChatViewModel+Tools.swift */,
-				A4B5C6D7E8F90A4B526D7E8F /* ProjectViewModel.swift */,
-				A5B6C7D8E9FA1B5C637E8F90 /* GitHubViewModel.swift */,
-				A6B7C8D9EAFB2C6D748F9001 /* CodeAnalysisViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		D02617DA2F58CCDB003A988A /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				CD3516CF4FE359150087D766 /* WidgetData.swift */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
-		D2C2B1BC25F5420BB7EB187CA0EE3F26 /* MLX Code */ = {
-			isa = PBXGroup;
-			children = (
-				8BF344F827174583896C2F07BB4F77EF /* MLXCodeApp.swift */,
-				CC001DEF012345678901ABCD000033333 /* Info.plist */,
-				841118D351D54AEDA122F17C77816B9D /* Views */,
-				BB2E8ECFF03340A5AA4C415F066EB765 /* ViewModels */,
-				EAEFCCA240074A7FB65020791716A06B /* Models */,
-				8D7B12981853422D971FCAD3B063E827 /* Services */,
-				D3EDDB8006F24B08845B89374695FC62 /* Utilities */,
-				09954456C83943A7BF55406C1988E6B1 /* Resources */,
-				48562778370F4A07B8B69516078EE7A2 /* MLX_Code.entitlements */,
-				7D34E1B98B0D1BBD7FFBC41C /* Tools */,
-				B87735253DD0CAE36F5A3A26 /* Design */,
-			);
-			path = "MLX Code";
-			sourceTree = "<group>";
-		};
-		D3EDDB8006F24B08845B89374695FC62 /* Utilities */ = {
-			isa = PBXGroup;
-			children = (
-				AA1234560000000000000001 /* KeychainManager.swift */,
-				7492C8D46DB847CFABCF1E5B031731B3 /* SecurityUtils.swift */,
-				FF7455C7A2CE4EAA997C11353C876821 /* SecureLogger.swift */,
-			);
-			path = Utilities;
-			sourceTree = "<group>";
-		};
-		D4F2A01B6B01B323C4C1971B /* Help */ = {
-			isa = PBXGroup;
-			children = (
-				DFCA810E4451DA5EEB9EB66A /* GettingStarted.md */,
-				416CC836CD6FD1509FE5E7E4 /* Features.md */,
-				96B9AC2491F2A5DCF94ABDA5 /* KeyboardShortcuts.md */,
-				B57C86C1B983667FB6632C96 /* Troubleshooting.md */,
-				3072558342FD102B940FF3DB /* GettingStarted.md */,
-				4290A181319FB0316E2CD114 /* Features.md */,
-				5E58FA9A583B64C6FC9C7631 /* KeyboardShortcuts.md */,
-				6FD0BB3BC560F8D474C00FAC /* Troubleshooting.md */,
-			);
-			name = Help;
-			sourceTree = "<group>";
-		};
-		DBD46EBB13194FBBA1D0AADBCBBFE22B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				A618C93267C54CBEA8B15E4321B53726 /* MLX Code.app */,
-				B14C57F7549826EE7E9087F5 /* MLX Code Widget.appex */,
-				D02617DF2F58CDE1003A988A /* MLX Code Extension.appex */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		E2EF41EA1A31A3E9484FC8C3 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				A44598ECF006C6A3E72B011C /* MarkdownTextView.swift */,
-				22BF0FCAFA31E5516E7B5EC6 /* PrerequisitesView.swift */,
-				FF6A7B8C9D0E1F2A3B4C5D6E /* ToolApprovalView.swift */,
-			);
-			name = Views;
-			sourceTree = "<group>";
-		};
-		E4F73696938443CA96E715094ADAA086 = {
-			isa = PBXGroup;
-			children = (
-				D2C2B1BC25F5420BB7EB187CA0EE3F26 /* MLX Code */,
-				D02617E42F58CDE1003A988A /* MLX Code Extension */,
-				DBD46EBB13194FBBA1D0AADBCBBFE22B /* Products */,
-				E2EF41EA1A31A3E9484FC8C3 /* Views */,
-				6F0229DF0B6AF4821D6BC3FE /* Services */,
-				7E5FCD73CEE595B2B243ACB7 /* Utilities */,
-				512191759EAFD5368C431D56 /* Python */,
-				6CC6C830E9E5801EFE2690F2 /* mlx_daemon.py */,
-				0E5675694C64139E1C905003 /* CodeBlockView.swift */,
-				564D43E7BF13C063A567706B /* EnhancedMessageView.swift */,
-				86DA95C55CF31CAA085E0CD4 /* CodebaseIndexer.swift */,
-				4B4B7D93C0CD7188EECDFAF4 /* ConversationManager.swift */,
-				7382216063DCBF191AE08B34 /* MultiFileOperations.swift */,
-				DA5F2AD2CCECEB26E6768C29 /* DiffView.swift */,
-				D005E0D461771E49D839C575 /* ContextManager.swift */,
-				2D891BD2C79FA8CCEF2C5741 /* UndoManager.swift */,
-				A1A7B1B5482F0213E90D8921 /* EditTool.swift */,
-				B453CB92F39ABE521DEA0327 /* SlashCommandHandler.swift */,
-				E4F9AF5449DB574FF1AF0CC4 /* InteractivePromptView.swift */,
-				6F349BF0E53B7097184E5FCE /* Frameworks */,
-				6B35EA916216071CF5CC28C7 /* MLX Code Widget */,
-				D02617DA2F58CCDB003A988A /* Recovered References */,
-			);
-			sourceTree = "<group>";
-		};
-		EAEFCCA240074A7FB65020791716A06B /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				FE07B6436E0D401DBA11F15F8CDA7B09 /* Message.swift */,
-				1EF7425F0C774CFFA6C81D44B4EEF006 /* Conversation.swift */,
-				976738B52C794CED94B0958A9B5294AC /* AppSettings.swift */,
-				1C94A9B46BF04BC586CC4248441C2968 /* MLXModel.swift */,
-				266478D14D864C5C22CB0D15 /* LogEntry.swift */,
-				DD4E5F6A7B8C9D0E1F2A3B4C /* ToolApproval.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-/* End PBXGroup section */
-
-/* Begin PBXNativeTarget section */
-		6313FF5EB2260339630CD915 /* MLX Code Widget */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = FAF5451FE751095F2C95F090 /* Build configuration list for PBXNativeTarget "MLX Code Widget" */;
-			buildPhases = (
-				0EF346976E68ECD214415FCD /* Sources */,
-				23F92DF06CF7CC9F35EB02B9 /* Frameworks */,
-				981DEAE5D0E40818A468A317 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "MLX Code Widget";
-			productName = "MLX Code Widget";
-			productReference = B14C57F7549826EE7E9087F5 /* MLX Code Widget.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
-		74F164AAE69F476C836B53F52E9AAE11 /* MLX Code */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 7C67F8FE94314C63A39C31384FFDCCE8 /* Build configuration list for PBXNativeTarget "MLX Code" */;
-			buildPhases = (
-				EB50EC56315542D98B773A1B7BC0E09B /* Sources */,
-				6499B3B47E4141A6B7CA1B549FF63C0C /* Frameworks */,
-				4DDF61413FB84AF9BD9C66EE21F86D0D /* Resources */,
-				C1D4360CD64BF748989BE29C /* Embed Foundation Extensions */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C2540D8987DB873726F4B1C2 /* PBXTargetDependency */,
-				D02617EB2F58CDE1003A988A /* PBXTargetDependency */,
-			);
-			name = "MLX Code";
-			packageProductDependencies = (
-				B7CACEDCC504C0C98061D10B /* MLX */,
-				B2CDB41D8A69A6A26D70BBE7 /* MLXNN */,
-				B38BA712F974D727652E810F /* MLXLLM */,
-				5BA7AB349C44E6745850757A /* MLXLMCommon */,
-			);
-			productName = "MLX Code";
-			productReference = A618C93267C54CBEA8B15E4321B53726 /* MLX Code.app */;
-			productType = "com.apple.product-type.application";
-		};
-		D02617DE2F58CDE1003A988A /* MLX Code Extension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D02617F02F58CDE1003A988A /* Build configuration list for PBXNativeTarget "MLX Code Extension" */;
-			buildPhases = (
-				D02617DB2F58CDE1003A988A /* Sources */,
-				D02617DC2F58CDE1003A988A /* Frameworks */,
-				D02617DD2F58CDE1003A988A /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				D02617E42F58CDE1003A988A /* MLX Code Extension */,
-			);
-			name = "MLX Code Extension";
-			productName = "MLX Code Extension";
-			productReference = D02617DF2F58CDE1003A988A /* MLX Code Extension.appex */;
-			productType = "com.apple.product-type.xcode-extension";
-		};
-/* End PBXNativeTarget section */
-
-/* Begin PBXProject section */
-		F9BDA8E4425A4DF7A39133B70A11CD1F /* Project object */ = {
-			isa = PBXProject;
-			attributes = {
-				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2630;
-				LastUpgradeCheck = 1600;
-				TargetAttributes = {
-					74F164AAE69F476C836B53F52E9AAE11 = {
-						CreatedOnToolsVersion = 16.0;
-					};
-					D02617DE2F58CDE1003A988A = {
-						CreatedOnToolsVersion = 26.3;
-					};
-				};
-			};
-			buildConfigurationList = CE93A4A9DAAA4758B50E9889049AE544 /* Build configuration list for PBXProject "MLX Code" */;
-			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
-			hasScannedForEncodings = 0;
-			knownRegions = (
-				en,
-				Base,
-			);
-			mainGroup = E4F73696938443CA96E715094ADAA086;
-			packageReferences = (
-				2A5EF90852B06B563B319AD6 /* XCRemoteSwiftPackageReference "mlx-swift" */,
-				588B05B0E11878C953EE0334 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */,
-			);
-			productRefGroup = DBD46EBB13194FBBA1D0AADBCBBFE22B /* Products */;
-			projectDirPath = "";
-			projectRoot = "";
-			targets = (
-				74F164AAE69F476C836B53F52E9AAE11 /* MLX Code */,
-				6313FF5EB2260339630CD915 /* MLX Code Widget */,
-				D02617DE2F58CDE1003A988A /* MLX Code Extension */,
-			);
-		};
-/* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		4DDF61413FB84AF9BD9C66EE21F86D0D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C95840B1287C494587897311FF59BBC8 /* Assets.xcassets in Resources */,
-				ECB016DEEB77015CF0327B53 /* mlx_inference.py in Resources */,
-				3E0C215F286586A6A3FB0DA1 /* rag_system.py in Resources */,
-				EEE1340E1501B4ACBEFF3472 /* GettingStarted.md in Resources */,
-				BC51340E6DC042F101EC852C /* Features.md in Resources */,
-				7A0F8C83531AC0524598D2AF /* KeyboardShortcuts.md in Resources */,
-				FFEA93AF903CFA3261DD0C56 /* Troubleshooting.md in Resources */,
-				054C45D18234B5AE6A2A3233 /* GettingStarted.md in Resources */,
-				E053530D29423C88386576C8 /* Features.md in Resources */,
-				C76BFA1F8B9FED3E7CEAC4CA /* KeyboardShortcuts.md in Resources */,
-				F552B2A0318CA58997F79EBA /* Troubleshooting.md in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		981DEAE5D0E40818A468A317 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9D968D8996FA1AE7F661C916 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D02617DD2F58CDE1003A988A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
-		0EF346976E68ECD214415FCD /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B383B9851026BBA9EB5D0534 /* WidgetData.swift in Sources */,
-				E1A07468A30C474ED64E5909 /* MLXCodeWidget.swift in Sources */,
-				ED15B41EF1DB3130F9B71173 /* SharedDataManager.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D02617DB2F58CDE1003A988A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		EB50EC56315542D98B773A1B7BC0E09B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E2FCF04057F99E48BF46CCF3 /* CommandValidator.swift in Sources */,
-				A0013163E03EA758655F244E /* ModelSecurityValidator.swift in Sources */,
-				4A14B6380E9E4A44949059C9DE2D703A /* MLXCodeApp.swift in Sources */,
-				24010C4728F24595AD26D82143BDCF89 /* ChatView.swift in Sources */,
-				406CEA4CA10F45879033D10841AF85C6 /* MessageRowView.swift in Sources */,
-				340D62553A7C42F2A58D1FEF72A108C1 /* SettingsView.swift in Sources */,
-				B7A5DD6AFF8A40D0ADEADF847F388274 /* ModelSelectorView.swift in Sources */,
-				22F2C54FAC424877BE6CD7758564446B /* ChatViewModel.swift in Sources */,
-				833AB57A49BF43199191D9F239BFECB7 /* Message.swift in Sources */,
-				2705EDF1704D46E28F243D58796430B0 /* Conversation.swift in Sources */,
-				E4398D6A77404E3091C859FA278A70AC /* AppSettings.swift in Sources */,
-				CD29D0ECFD8746229E8ACE5616B6A134 /* MLXModel.swift in Sources */,
-				18791BFABC004C46B272FB28E9157DBF /* MLXService.swift in Sources */,
-				AA001BCDEF123456789ABCDE00001111 /* XcodeActionHandler.swift in Sources */,
-				4A4EF7C491BE4E56A5AD5F581F918DCB /* XcodeService.swift in Sources */,
-				84C70B8FEEA34CAA834FC30FCDA1E267 /* FileService.swift in Sources */,
-				E9092BA47E894E33897524DF0DDAEF6E /* PythonService.swift in Sources */,
-				ED42A86D2B4D4BCE84B60AA7411AEFCF /* SecurityUtils.swift in Sources */,
-				AA1234560000000000000002 /* KeychainManager.swift in Sources */,
-				685055FA9244459B8C843179E846C56E /* SecureLogger.swift in Sources */,
-				DE5057A64D8310A442E26F74 /* MarkdownTextView.swift in Sources */,
-				3BB85EED3A53FFBB2C040746 /* GitService.swift in Sources */,
-				8875413B90367ACAEB46DDED /* BuildErrorParser.swift in Sources */,
-				5301C4E5322FAC6C374E71F3 /* PathsSettingsView.swift in Sources */,
-				4446DD89E33C99BFDB36347F /* LogEntry.swift in Sources */,
-				52B2F7AE0952B6156B32E990 /* LogViewerPanel.swift in Sources */,
-				EC5EC65B8FD9A5025E274336 /* HelpView.swift in Sources */,
-				EA3DD729B1A1D45A5484F4CE /* ThinkingIndicatorView.swift in Sources */,
-				5CBCE9635FCD2E27B44553A8 /* ChatViewModel+Tools.swift in Sources */,
-				21B357BD3B307E30CF749E7D /* ToolProtocol.swift in Sources */,
-				375B23CD55B79FC1C62A5B23 /* MemorySystem.swift in Sources */,
-				B227E7F3CC8520A366B0B7AF /* FileOperationsTool.swift in Sources */,
-				FB45C232C00FB094E07E98A6 /* BashTool.swift in Sources */,
-				D428F9CF79EFE40194B9FEFF /* GrepTool.swift in Sources */,
-				0E19E7D351E63FC38F41E41F /* GlobTool.swift in Sources */,
-				0A2E78E67E37DA8FC4CCA009 /* XcodeTool.swift in Sources */,
-				85C0E206977B63C594FA2506 /* ToolRegistry.swift in Sources */,
-				0AD3C3FF090FA319B50DF586 /* SystemPrompts.swift in Sources */,
-				DCB39028B0850848FD3B7322 /* RepetitionDetector.swift in Sources */,
-				25BA6913200BB43C2F05DE0E /* ErrorDiagnosisTool.swift in Sources */,
-				9E4728BDDB32D3698B567C19 /* TestGenerationTool.swift in Sources */,
-				3603B426862ED1AF7B591E9D /* CodeNavigationTool.swift in Sources */,
-				AC2321EF0112053798EF401E /* GitIntegrationTool.swift in Sources */,
-				6020E05AD9DFEFA09A7407D8 /* DiffPreviewTool.swift in Sources */,
-				12C39D162F6650606907452D /* HelpTool.swift in Sources */,
-				0475B2DD296EECD045126C17 /* PrerequisitesView.swift in Sources */,
-				4F86F5737C70701EC7B129A3 /* CollapsibleToolResultView.swift in Sources */,
-				8F451BFDE18F863DAF8EA9D5 /* CodeBlockView.swift in Sources */,
-				6FAF8CD052C387D4EC838164 /* EnhancedMessageView.swift in Sources */,
-				7E325ABB0701C66A18190BBF /* CodebaseIndexer.swift in Sources */,
-				8B5069DCF05D73C50F8BDF52 /* ConversationManager.swift in Sources */,
-				72638E65542E9F17DCCCB52B /* MultiFileOperations.swift in Sources */,
-				CC3A88644A13A397AC99108D /* EditTool.swift in Sources */,
-				C7FF6DE571FE5D0FDBF6C782 /* SlashCommandHandler.swift in Sources */,
-				4700E085EAA2EFA6C7153D80 /* InteractivePromptView.swift in Sources */,
-				3CEE60DFFD9C4E6F5C07E7A4 /* ModernDesign.swift in Sources */,
-				BFF3F2FD15788CAE731CD3B9 /* WidgetDataSync.swift in Sources */,
-				AA1B2C3D4E5F6A7B8C9D0E1F /* ToolTier.swift in Sources */,
-				CC3D4E5F6A7B8C9D0E1F2A3B /* ToolApproval.swift in Sources */,
-				EE5F6A7B8C9D0E1F2A3B4C5D /* ToolApprovalView.swift in Sources */,
-				117B8C9D0E1F2A3B4C5D6E7F /* ContextBudget.swift in Sources */,
-				339D0E1F2A3B4C5D6E7F8192 /* ContextManager.swift in Sources */,
-				C1D2E3F4A5B6071829304C5D /* ContextAnalysisService.swift in Sources */,
-				E2F3A4B5C6D7081929304C5D /* UserMemories.swift in Sources */,
-				B1C2D3E4F5A60718293B4C5D /* GitHubService.swift in Sources */,
-				B2C3D4E5F6A70829304C5D6E /* GitHubTool.swift in Sources */,
-				B3C4D5E6F7A8093A415D6E7F /* CodeAnalysisTool.swift in Sources */,
-				B4C5D6E7F8A90A4B526E7F80 /* ProjectViewModel.swift in Sources */,
-				B5C6D7E8F9AA1B5C637F8091 /* GitHubViewModel.swift in Sources */,
-				B6C7D8E9FAAB2C6D74809102 /* CodeAnalysisViewModel.swift in Sources */,
-				B7C8D9EAFBAC3D7E859102A3 /* ProjectDashboardView.swift in Sources */,
-				B8C9DAEBFBAD4E8F960213B4 /* BuildPanelView.swift in Sources */,
-				B9CADBECEBBE5F900A1324C5 /* GitHubPanelView.swift in Sources */,
-				BACBDCEDDCBF60011B2435D6 /* CodeAnalysisPanelView.swift in Sources */,
-				CA7398DCBE9DDF48B2F403A6 /* NovaAPIServer.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		C2540D8987DB873726F4B1C2 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "MLX Code Widget";
-			target = 6313FF5EB2260339630CD915 /* MLX Code Widget */;
-			targetProxy = A1D0CB7C86FD995521A1C244 /* PBXContainerItemProxy */;
-		};
-		D02617EB2F58CDE1003A988A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D02617DE2F58CDE1003A988A /* MLX Code Extension */;
-			targetProxy = D02617EA2F58CDE1003A988A /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
-/* Begin XCBuildConfiguration section */
-		2B8760B1300444B2B5F83176CCD4FDE8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASUPP_CODE_SIGN_STYLE = Automatic;
-				CODE_SIGN_ENTITLEMENTS = "MLX Code/MLX_Code.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 8;
-				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = QRRCB8HB3W;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "MLX Code/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "MLX Code";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 6.3.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		4ECEC483AD8042A89EB6F6057A272B9E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASUPP_CODE_SIGN_IDENTITY_AUTOMATIC = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				SDKROOT = macosx;
-				SWIFT_COMPILATION_MODE = wholemodule;
-			};
-			name = Release;
-		};
-		9C6295CF7B92A0805D17F394 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = "MLX Code Widget/MLX_Code_Widget.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
-				DEVELOPMENT_TEAM = QRRCB8HB3W;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "MLX Code Widget/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 6.3.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode.widget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		B2E5F88DE8D14DA5801FB2C1CFC21E00 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASUPP_CODE_SIGN_IDENTITY_AUTOMATIC = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-			};
-			name = Debug;
-		};
-		C2A892DD5CE787FC268759CC /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = "MLX Code Widget/MLX_Code_Widget.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
-				DEVELOPMENT_TEAM = QRRCB8HB3W;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "MLX Code Widget/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 6.3.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode.widget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		D02617ED2F58CDE1003A988A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = QRRCB8HB3W;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "MLX Code Extension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "MLX Code Extension";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 26.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode.xcodeeditor;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		D02617EE2F58CDE1003A988A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = QRRCB8HB3W;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "MLX Code Extension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "MLX Code Extension";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 26.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode.xcodeeditor;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		E7E15DB203DB43A790F24970D6FE7DF7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASUPP_CODE_SIGN_STYLE = Automatic;
-				CODE_SIGN_ENTITLEMENTS = "MLX Code/MLX_Code.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 8;
-				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = QRRCB8HB3W;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "MLX Code/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "MLX Code";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 6.3.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-/* End XCBuildConfiguration section */
-
-/* Begin XCConfigurationList section */
-		7C67F8FE94314C63A39C31384FFDCCE8 /* Build configuration list for PBXNativeTarget "MLX Code" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E7E15DB203DB43A790F24970D6FE7DF7 /* Debug */,
-				2B8760B1300444B2B5F83176CCD4FDE8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		CE93A4A9DAAA4758B50E9889049AE544 /* Build configuration list for PBXProject "MLX Code" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B2E5F88DE8D14DA5801FB2C1CFC21E00 /* Debug */,
-				4ECEC483AD8042A89EB6F6057A272B9E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D02617F02F58CDE1003A988A /* Build configuration list for PBXNativeTarget "MLX Code Extension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D02617ED2F58CDE1003A988A /* Debug */,
-				D02617EE2F58CDE1003A988A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		FAF5451FE751095F2C95F090 /* Build configuration list for PBXNativeTarget "MLX Code Widget" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9C6295CF7B92A0805D17F394 /* Release */,
-				C2A892DD5CE787FC268759CC /* Debug */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-/* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		2A5EF90852B06B563B319AD6 /* XCRemoteSwiftPackageReference "mlx-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ml-explore/mlx-swift";
-			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 0.30.3;
-			};
-		};
-		588B05B0E11878C953EE0334 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ml-explore/mlx-swift-lm";
-			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 2.30.3;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		5BA7AB349C44E6745850757A /* MLXLMCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 588B05B0E11878C953EE0334 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
-			productName = MLXLMCommon;
-		};
-		B2CDB41D8A69A6A26D70BBE7 /* MLXNN */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2A5EF90852B06B563B319AD6 /* XCRemoteSwiftPackageReference "mlx-swift" */;
-			productName = MLXNN;
-		};
-		B38BA712F974D727652E810F /* MLXLLM */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 588B05B0E11878C953EE0334 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
-			productName = MLXLLM;
-		};
-		B7CACEDCC504C0C98061D10B /* MLX */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2A5EF90852B06B563B319AD6 /* XCRemoteSwiftPackageReference "mlx-swift" */;
-			productName = MLX;
-		};
-/* End XCSwiftPackageProductDependency section */
-	};
-	rootObject = F9BDA8E4425A4DF7A39133B70A11CD1F /* Project object */;
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>archiveVersion</key>
+	<string>1</string>
+	<key>classes</key>
+	<dict/>
+	<key>objectVersion</key>
+	<string>70</string>
+	<key>objects</key>
+	<dict>
+		<key>0095C89C8F1E4539863AE74D96B702F4</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>MLXService.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>01A056387C5D6883F0932FA4</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>GitService.swift</string>
+			<key>path</key>
+			<string>MLX Code/Services/GitService.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>043C4E7F3FCA17ECD6EB1A51</key>
+		<dict>
+			<key>fileRef</key>
+			<string>942A3F3878CD789BDF616A78</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>0475B2DD296EECD045126C17</key>
+		<dict>
+			<key>fileRef</key>
+			<string>22BF0FCAFA31E5516E7B5EC6</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>054C45D18234B5AE6A2A3233</key>
+		<dict>
+			<key>fileRef</key>
+			<string>3072558342FD102B940FF3DB</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>0674F2D9E84C4AC3AC8ED170619E99EA</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>FileService.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>07F3CD889AF1A1B378575B71</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>PathsSettingsView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>0804D53D58C342DA55886059</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>GlobTool.swift</string>
+			<key>path</key>
+			<string>Tools/GlobTool.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>09954456C83943A7BF55406C1988E6B1</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>1474EB3E75FB4E45BABB7722A52318FA</string>
+				<string>D4F2A01B6B01B323C4C1971B</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Resources</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>0A2E78E67E37DA8FC4CCA009</key>
+		<dict>
+			<key>fileRef</key>
+			<string>C04006EF5054DB124F485C96</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>0AD3C3FF090FA319B50DF586</key>
+		<dict>
+			<key>fileRef</key>
+			<string>5D194CFFD68CDA5D646167A5</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>0E19E7D351E63FC38F41E41F</key>
+		<dict>
+			<key>fileRef</key>
+			<string>0804D53D58C342DA55886059</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>0E5675694C64139E1C905003</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>CodeBlockView.swift</string>
+			<key>path</key>
+			<string>MLX Code/Views/CodeBlockView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>0EF346976E68ECD214415FCD</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>B383B9851026BBA9EB5D0534</string>
+				<string>E1A07468A30C474ED64E5909</string>
+				<string>ED15B41EF1DB3130F9B71173</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>1015E08E1D210CB0D574ADE3</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B14C57F7549826EE7E9087F5</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>117B8C9D0E1F2A3B4C5D6E7F</key>
+		<dict>
+			<key>fileRef</key>
+			<string>228C9D0E1F2A3B4C5D6E7F81</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>12C39D162F6650606907452D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B87A92AF8834D4EAB5ED2FED</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>1474EB3E75FB4E45BABB7722A52318FA</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>folder.assetcatalog</string>
+			<key>path</key>
+			<string>Assets.xcassets</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>18791BFABC004C46B272FB28E9157DBF</key>
+		<dict>
+			<key>fileRef</key>
+			<string>0095C89C8F1E4539863AE74D96B702F4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>1C94A9B46BF04BC586CC4248441C2968</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>MLXModel.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>1EF7425F0C774CFFA6C81D44B4EEF006</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>Conversation.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2113E8E02AFC404C917BDECE45AD0C31</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>XcodeService.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>21B357BD3B307E30CF749E7D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>FBF68411190D219F58CC40B0</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>228C9D0E1F2A3B4C5D6E7F81</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>ContextBudget.swift</string>
+			<key>path</key>
+			<string>MLX Code/Services/ContextBudget.swift</string>
+			<key>sourceTree</key>
+			<string>SOURCE_ROOT</string>
+		</dict>
+		<key>22BF0FCAFA31E5516E7B5EC6</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>PrerequisitesView.swift</string>
+			<key>path</key>
+			<string>MLX Code/Views/PrerequisitesView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>22F2C54FAC424877BE6CD7758564446B</key>
+		<dict>
+			<key>fileRef</key>
+			<string>D8C77339FE1D4E7FAA34113946220883</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>23F92DF06CF7CC9F35EB02B9</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>5CFC6B92A94EB31C4A347BC5</string>
+			</array>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>24010C4728F24595AD26D82143BDCF89</key>
+		<dict>
+			<key>fileRef</key>
+			<string>CE711B1853DA4E2BA36640574B1F559C</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2484B300512B2B737C691AF5</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>WidgetDataSync.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>254D9DD9EEB20CA0D74A5E00</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.script.python</string>
+			<key>name</key>
+			<string>mlx_inference.py</string>
+			<key>path</key>
+			<string>Python/mlx_inference.py</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>25BA6913200BB43C2F05DE0E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>5D0656116F5396EF9D9A7065</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>266478D14D864C5C22CB0D15</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>LogEntry.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2705EDF1704D46E28F243D58796430B0</key>
+		<dict>
+			<key>fileRef</key>
+			<string>1EF7425F0C774CFFA6C81D44B4EEF006</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2A5EF90852B06B563B319AD6</key>
+		<dict>
+			<key>isa</key>
+			<string>XCRemoteSwiftPackageReference</string>
+			<key>repositoryURL</key>
+			<string>https://github.com/ml-explore/mlx-swift</string>
+			<key>requirement</key>
+			<dict>
+				<key>kind</key>
+				<string>upToNextMinorVersion</string>
+				<key>minimumVersion</key>
+				<string>0.30.3</string>
+			</dict>
+		</dict>
+		<key>2B297A603876CBEB5317C8DE</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>WidgetData.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2B8760B1300444B2B5F83176CCD4FDE8</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+				<string>AppIcon</string>
+				<key>ASUPP_CODE_SIGN_STYLE</key>
+				<string>Automatic</string>
+				<key>CODE_SIGN_ENTITLEMENTS</key>
+				<string>MLX Code/MLX_Code.entitlements</string>
+				<key>CODE_SIGN_IDENTITY</key>
+				<string>Apple Development</string>
+				<key>CODE_SIGN_IDENTITY[sdk=macosx*]</key>
+				<string>Apple Development</string>
+				<key>CODE_SIGN_STYLE</key>
+				<string>Automatic</string>
+				<key>COMBINE_HIDPI_IMAGES</key>
+				<string>YES</string>
+				<key>CURRENT_PROJECT_VERSION</key>
+				<string>8</string>
+				<key>DEVELOPMENT_ASSET_PATHS</key>
+				<string></string>
+				<key>DEVELOPMENT_TEAM</key>
+				<string>QRRCB8HB3W</string>
+				<key>ENABLE_HARDENED_RUNTIME</key>
+				<string>YES</string>
+				<key>ENABLE_PREVIEWS</key>
+				<string>YES</string>
+				<key>GENERATE_INFOPLIST_FILE</key>
+				<string>NO</string>
+				<key>INFOPLIST_FILE</key>
+				<string>MLX Code/Info.plist</string>
+				<key>INFOPLIST_KEY_CFBundleDisplayName</key>
+				<string>MLX Code</string>
+				<key>INFOPLIST_KEY_LSApplicationCategoryType</key>
+				<string>public.app-category.developer-tools</string>
+				<key>INFOPLIST_KEY_NSHumanReadableCopyright</key>
+				<string></string>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>@executable_path/../Frameworks</string>
+				</array>
+				<key>MACOSX_DEPLOYMENT_TARGET</key>
+				<string>14.0</string>
+				<key>MARKETING_VERSION</key>
+				<string>6.3.0</string>
+				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+				<string>com.local.mlxcode</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>SWIFT_EMIT_LOC_STRINGS</key>
+				<string>YES</string>
+				<key>SWIFT_VERSION</key>
+				<string>5.0</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>2C8ECCA430CED7181E9845C7</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>SharedDataManager.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2D891BD2C79FA8CCEF2C5741</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>UndoManager.swift</string>
+			<key>path</key>
+			<string>MLX Code/Services/UndoManager.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>3072558342FD102B940FF3DB</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>net.daringfireball.markdown</string>
+			<key>name</key>
+			<string>GettingStarted.md</string>
+			<key>path</key>
+			<string>Help/GettingStarted.md</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>339D0E1F2A3B4C5D6E7F8192</key>
+		<dict>
+			<key>fileRef</key>
+			<string>D005E0D461771E49D839C575</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>340D62553A7C42F2A58D1FEF72A108C1</key>
+		<dict>
+			<key>fileRef</key>
+			<string>705A916896E647D1B0382ABFCD69A97D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>3603B426862ED1AF7B591E9D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F723876CB29C9B2490C118FE</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>36512DB9403F2C61AD03ECF3</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.script.python</string>
+			<key>name</key>
+			<string>rag_system.py</string>
+			<key>path</key>
+			<string>Python/rag_system.py</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>375B23CD55B79FC1C62A5B23</key>
+		<dict>
+			<key>fileRef</key>
+			<string>C2F90FA396C5680D706B96B9</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>3BA6541CD08A3BD34802C064</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>HelpView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>3BB85EED3A53FFBB2C040746</key>
+		<dict>
+			<key>fileRef</key>
+			<string>01A056387C5D6883F0932FA4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>3CEE60DFFD9C4E6F5C07E7A4</key>
+		<dict>
+			<key>fileRef</key>
+			<string>76E1CC6DC5CF4943D05FF452</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>3E0C215F286586A6A3FB0DA1</key>
+		<dict>
+			<key>fileRef</key>
+			<string>36512DB9403F2C61AD03ECF3</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>406CEA4CA10F45879033D10841AF85C6</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7294A0A7EFE8407C852ADC2F428A1167</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>416CC836CD6FD1509FE5E7E4</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>net.daringfireball.markdown</string>
+			<key>name</key>
+			<string>Features.md</string>
+			<key>path</key>
+			<string>Help/Features.md</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>41B587EC712978DCE17B395A</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>ToolRegistry.swift</string>
+			<key>path</key>
+			<string>Tools/ToolRegistry.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4290A181319FB0316E2CD114</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>net.daringfireball.markdown</string>
+			<key>name</key>
+			<string>Features.md</string>
+			<key>path</key>
+			<string>Help/Features.md</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4446DD89E33C99BFDB36347F</key>
+		<dict>
+			<key>fileRef</key>
+			<string>266478D14D864C5C22CB0D15</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>4700E085EAA2EFA6C7153D80</key>
+		<dict>
+			<key>fileRef</key>
+			<string>E4F9AF5449DB574FF1AF0CC4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>48562778370F4A07B8B69516078EE7A2</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.entitlements</string>
+			<key>path</key>
+			<string>MLX_Code.entitlements</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4A14B6380E9E4A44949059C9DE2D703A</key>
+		<dict>
+			<key>fileRef</key>
+			<string>8BF344F827174583896C2F07BB4F77EF</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>4A4EF7C491BE4E56A5AD5F581F918DCB</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2113E8E02AFC404C917BDECE45AD0C31</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>4B4B7D93C0CD7188EECDFAF4</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>ConversationManager.swift</string>
+			<key>path</key>
+			<string>MLX Code/Services/ConversationManager.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4DDF61413FB84AF9BD9C66EE21F86D0D</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>C95840B1287C494587897311FF59BBC8</string>
+				<string>ECB016DEEB77015CF0327B53</string>
+				<string>3E0C215F286586A6A3FB0DA1</string>
+				<string>EEE1340E1501B4ACBEFF3472</string>
+				<string>BC51340E6DC042F101EC852C</string>
+				<string>7A0F8C83531AC0524598D2AF</string>
+				<string>FFEA93AF903CFA3261DD0C56</string>
+				<string>054C45D18234B5AE6A2A3233</string>
+				<string>E053530D29423C88386576C8</string>
+				<string>C76BFA1F8B9FED3E7CEAC4CA</string>
+				<string>F552B2A0318CA58997F79EBA</string>
+			</array>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>4ECEC483AD8042A89EB6F6057A272B9E</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>ASUPP_CODE_SIGN_IDENTITY_AUTOMATIC</key>
+				<string>YES</string>
+				<key>CLANG_ANALYZER_NONNULL</key>
+				<string>YES</string>
+				<key>CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++20</string>
+				<key>CLANG_ENABLE_MODULES</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_WEAK</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_COMMA</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_DOCUMENTATION_COMMENTS</key>
+				<string>YES</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INFINITE_RECURSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_NON_LITERAL_NULL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_LITERAL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER</key>
+				<string>YES</string>
+				<key>CLANG_WARN_RANGE_LOOP_ANALYSIS</key>
+				<string>YES</string>
+				<key>CLANG_WARN_STRICT_PROTOTYPES</key>
+				<string>YES</string>
+				<key>CLANG_WARN_SUSPICIOUS_MOVE</key>
+				<string>YES</string>
+				<key>CLANG_WARN_UNGUARDED_AVAILABILITY</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>CLANG_WARN_UNREACHABLE_CODE</key>
+				<string>YES</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>NO</string>
+				<key>DEBUG_INFORMATION_FORMAT</key>
+				<string>dwarf-with-dsym</string>
+				<key>ENABLE_NS_ASSERTIONS</key>
+				<string>NO</string>
+				<key>ENABLE_STRICT_OBJC_MSGSEND</key>
+				<string>YES</string>
+				<key>ENABLE_USER_SCRIPT_SANDBOXING</key>
+				<string>YES</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu17</string>
+				<key>GCC_NO_COMMON_BLOCKS</key>
+				<string>YES</string>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES_ERROR</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>LOCALIZATION_PREFERS_STRING_CATALOGS</key>
+				<string>YES</string>
+				<key>MACOSX_DEPLOYMENT_TARGET</key>
+				<string>14.0</string>
+				<key>MTL_ENABLE_DEBUG_INFO</key>
+				<string>NO</string>
+				<key>MTL_FAST_MATH</key>
+				<string>YES</string>
+				<key>SDKROOT</key>
+				<string>macosx</string>
+				<key>SWIFT_COMPILATION_MODE</key>
+				<string>wholemodule</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>4F59085B2CFA96DD4FA87E4C</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>NovaAPIServer.swift</string>
+			<key>path</key>
+			<string>/Volumes/Data/xcode/MLX Code/MLX Code/Services/NovaAPIServer.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;absolute&gt;</string>
+		</dict>
+		<key>4F86F5737C70701EC7B129A3</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B9DCFE1EB35E1587BE810984</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>50B62FF9A14FFACDD5EA3434</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>MLXCodeWidget.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>512191759EAFD5368C431D56</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>FEDDB0ED1A61C0892F6EDF1B</string>
+				<string>254D9DD9EEB20CA0D74A5E00</string>
+				<string>36512DB9403F2C61AD03ECF3</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Python</string>
+			<key>sourceTree</key>
+			<string>SOURCE_ROOT</string>
+		</dict>
+		<key>52B2F7AE0952B6156B32E990</key>
+		<dict>
+			<key>fileRef</key>
+			<string>64FB3692EC085C7E8F420ABC</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>52CA5C71B521246C88421C5E</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>Tools/TestGenerationTool.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>5301C4E5322FAC6C374E71F3</key>
+		<dict>
+			<key>fileRef</key>
+			<string>07F3CD889AF1A1B378575B71</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>564D43E7BF13C063A567706B</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>EnhancedMessageView.swift</string>
+			<key>path</key>
+			<string>MLX Code/Views/EnhancedMessageView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>588B05B0E11878C953EE0334</key>
+		<dict>
+			<key>isa</key>
+			<string>XCRemoteSwiftPackageReference</string>
+			<key>repositoryURL</key>
+			<string>https://github.com/ml-explore/mlx-swift-lm</string>
+			<key>requirement</key>
+			<dict>
+				<key>kind</key>
+				<string>upToNextMinorVersion</string>
+				<key>minimumVersion</key>
+				<string>2.30.3</string>
+			</dict>
+		</dict>
+		<key>594327739243F92262A48BA3</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>folder.assetcatalog</string>
+			<key>path</key>
+			<string>Assets.xcassets</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>599D04AA90CC3F02738DC984</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>path</key>
+			<string>Info.plist</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>5BA7AB349C44E6745850757A</key>
+		<dict>
+			<key>isa</key>
+			<string>XCSwiftPackageProductDependency</string>
+			<key>package</key>
+			<string>588B05B0E11878C953EE0334</string>
+			<key>productName</key>
+			<string>MLXLMCommon</string>
+		</dict>
+		<key>5CBCE9635FCD2E27B44553A8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DEE14123640793BDCED74DE1</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>5CFC6B92A94EB31C4A347BC5</key>
+		<dict>
+			<key>fileRef</key>
+			<string>C9BCC3943B8F2927A51C67AB</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>5D0656116F5396EF9D9A7065</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>Tools/ErrorDiagnosisTool.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>5D194CFFD68CDA5D646167A5</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>SystemPrompts.swift</string>
+			<key>path</key>
+			<string>Tools/SystemPrompts.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>5E58FA9A583B64C6FC9C7631</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>net.daringfireball.markdown</string>
+			<key>name</key>
+			<string>KeyboardShortcuts.md</string>
+			<key>path</key>
+			<string>Help/KeyboardShortcuts.md</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>6020E05AD9DFEFA09A7407D8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>64071C1709105BE6194D0570</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>61B7E2C6F89FEDAA54C278A7</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>HelpView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>6313FF5EB2260339630CD915</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>FAF5451FE751095F2C95F090</string>
+			<key>buildPhases</key>
+			<array>
+				<string>0EF346976E68ECD214415FCD</string>
+				<string>23F92DF06CF7CC9F35EB02B9</string>
+				<string>981DEAE5D0E40818A468A317</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>MLX Code Widget</string>
+			<key>productName</key>
+			<string>MLX Code Widget</string>
+			<key>productReference</key>
+			<string>B14C57F7549826EE7E9087F5</string>
+			<key>productType</key>
+			<string>com.apple.product-type.app-extension</string>
+		</dict>
+		<key>64071C1709105BE6194D0570</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>DiffPreviewTool.swift</string>
+			<key>path</key>
+			<string>Tools/DiffPreviewTool.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>6499B3B47E4141A6B7CA1B549FF63C0C</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>D02617D92F58CCDB003A988A</string>
+				<string>D02617D82F58CCDB003A988A</string>
+				<string>D02617D72F58CCDB003A988A</string>
+				<string>D02617D62F58CCDB003A988A</string>
+			</array>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>64FB3692EC085C7E8F420ABC</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>LogViewerPanel.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>685055FA9244459B8C843179E846C56E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>FF7455C7A2CE4EAA997C11353C876821</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>6B35EA916216071CF5CC28C7</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>50B62FF9A14FFACDD5EA3434</string>
+				<string>2B297A603876CBEB5317C8DE</string>
+				<string>2C8ECCA430CED7181E9845C7</string>
+				<string>599D04AA90CC3F02738DC984</string>
+				<string>FDF863EF632E990FA28CCD29</string>
+				<string>594327739243F92262A48BA3</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>MLX Code Widget</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>6CC6C830E9E5801EFE2690F2</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.script.python</string>
+			<key>name</key>
+			<string>mlx_daemon.py</string>
+			<key>path</key>
+			<string>Python/mlx_daemon.py</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>6F0229DF0B6AF4821D6BC3FE</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>B3135C47FACB8AE8CB699414</string>
+				<string>01A056387C5D6883F0932FA4</string>
+				<string>228C9D0E1F2A3B4C5D6E7F81</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Services</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>6F349BF0E53B7097184E5FCE</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>7FC436C85AF36A9C1291E665</string>
+				<string>D02617E02F58CDE1003A988A</string>
+				<string>D02617E22F58CDE1003A988A</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Frameworks</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>6FAF8CD052C387D4EC838164</key>
+		<dict>
+			<key>fileRef</key>
+			<string>564D43E7BF13C063A567706B</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>6FD0BB3BC560F8D474C00FAC</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>net.daringfireball.markdown</string>
+			<key>name</key>
+			<string>Troubleshooting.md</string>
+			<key>path</key>
+			<string>Help/Troubleshooting.md</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>705A916896E647D1B0382ABFCD69A97D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>SettingsView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>72638E65542E9F17DCCCB52B</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7382216063DCBF191AE08B34</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7294A0A7EFE8407C852ADC2F428A1167</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>MessageRowView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7382216063DCBF191AE08B34</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>MultiFileOperations.swift</string>
+			<key>path</key>
+			<string>MLX Code/Services/MultiFileOperations.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7492C8D46DB847CFABCF1E5B031731B3</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>SecurityUtils.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>74F164AAE69F476C836B53F52E9AAE11</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>7C67F8FE94314C63A39C31384FFDCCE8</string>
+			<key>buildPhases</key>
+			<array>
+				<string>EB50EC56315542D98B773A1B7BC0E09B</string>
+				<string>6499B3B47E4141A6B7CA1B549FF63C0C</string>
+				<string>4DDF61413FB84AF9BD9C66EE21F86D0D</string>
+				<string>C1D4360CD64BF748989BE29C</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array>
+				<string>C2540D8987DB873726F4B1C2</string>
+				<string>D02617EB2F58CDE1003A988A</string>
+			</array>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>MLX Code</string>
+			<key>packageProductDependencies</key>
+			<array>
+				<string>B7CACEDCC504C0C98061D10B</string>
+				<string>B2CDB41D8A69A6A26D70BBE7</string>
+				<string>B38BA712F974D727652E810F</string>
+				<string>5BA7AB349C44E6745850757A</string>
+			</array>
+			<key>productName</key>
+			<string>MLX Code</string>
+			<key>productReference</key>
+			<string>A618C93267C54CBEA8B15E4321B53726</string>
+			<key>productType</key>
+			<string>com.apple.product-type.application</string>
+		</dict>
+		<key>76E1CC6DC5CF4943D05FF452</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>ModernDesign.swift</string>
+			<key>path</key>
+			<string>Design/ModernDesign.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7A0F8C83531AC0524598D2AF</key>
+		<dict>
+			<key>fileRef</key>
+			<string>96B9AC2491F2A5DCF94ABDA5</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7C67F8FE94314C63A39C31384FFDCCE8</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>E7E15DB203DB43A790F24970D6FE7DF7</string>
+				<string>2B8760B1300444B2B5F83176CCD4FDE8</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>7D34E1B98B0D1BBD7FFBC41C</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>FBF68411190D219F58CC40B0</string>
+				<string>C2F90FA396C5680D706B96B9</string>
+				<string>FF9E24703A8FCDC2C9B4B0BA</string>
+				<string>FD5FD20620CC8E07FFA1428A</string>
+				<string>E683FDA41933E9CBABE2AB4E</string>
+				<string>0804D53D58C342DA55886059</string>
+				<string>C04006EF5054DB124F485C96</string>
+				<string>41B587EC712978DCE17B395A</string>
+				<string>5D194CFFD68CDA5D646167A5</string>
+				<string>5D0656116F5396EF9D9A7065</string>
+				<string>52CA5C71B521246C88421C5E</string>
+				<string>F723876CB29C9B2490C118FE</string>
+				<string>C03995484D94FA4FA6BD0F6C</string>
+				<string>64071C1709105BE6194D0570</string>
+				<string>B87A92AF8834D4EAB5ED2FED</string>
+				<string>BB2C3D4E5F6A7B8C9D0E1F2A</string>
+				<string>A2B3C4D5E6F70829304B5C6D</string>
+				<string>A3B4C5D6E7F8093A415C6D7E</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Tools</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7E325ABB0701C66A18190BBF</key>
+		<dict>
+			<key>fileRef</key>
+			<string>86DA95C55CF31CAA085E0CD4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7E5FCD73CEE595B2B243ACB7</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>BB69700D48233E87937D2E3E</string>
+				<string>C1C6A5F77A186F5E418AC3C7</string>
+				<string>CF26AA705F097AAB5624397A</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Utilities</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7FC436C85AF36A9C1291E665</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>C9BCC3943B8F2927A51C67AB</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>OS X</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>833AB57A49BF43199191D9F239BFECB7</key>
+		<dict>
+			<key>fileRef</key>
+			<string>FE07B6436E0D401DBA11F15F8CDA7B09</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>841118D351D54AEDA122F17C77816B9D</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>CE711B1853DA4E2BA36640574B1F559C</string>
+				<string>7294A0A7EFE8407C852ADC2F428A1167</string>
+				<string>705A916896E647D1B0382ABFCD69A97D</string>
+				<string>FFF2B58504414094AD2F4B06D9B90954</string>
+				<string>07F3CD889AF1A1B378575B71</string>
+				<string>64FB3692EC085C7E8F420ABC</string>
+				<string>61B7E2C6F89FEDAA54C278A7</string>
+				<string>D18CD3C400C3AD1177178192</string>
+				<string>B9DCFE1EB35E1587BE810984</string>
+				<string>3BA6541CD08A3BD34802C064</string>
+				<string>A7B8C9DAEBFC3D7E859001A2</string>
+				<string>A8B9CADBECED4E8F960112B3</string>
+				<string>A9BACBDCEDFE5F900A1223C4</string>
+				<string>AABBCCDDEEAF60011B2334D5</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Views</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>84C70B8FEEA34CAA834FC30FCDA1E267</key>
+		<dict>
+			<key>fileRef</key>
+			<string>0674F2D9E84C4AC3AC8ED170619E99EA</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>85C0E206977B63C594FA2506</key>
+		<dict>
+			<key>fileRef</key>
+			<string>41B587EC712978DCE17B395A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>86DA95C55CF31CAA085E0CD4</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>CodebaseIndexer.swift</string>
+			<key>path</key>
+			<string>MLX Code/Services/CodebaseIndexer.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>8875413B90367ACAEB46DDED</key>
+		<dict>
+			<key>fileRef</key>
+			<string>C1C6A5F77A186F5E418AC3C7</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>8B5069DCF05D73C50F8BDF52</key>
+		<dict>
+			<key>fileRef</key>
+			<string>4B4B7D93C0CD7188EECDFAF4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>8BF344F827174583896C2F07BB4F77EF</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>MLXCodeApp.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>8D7B12981853422D971FCAD3B063E827</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>0095C89C8F1E4539863AE74D96B702F4</string>
+				<string>BB001CDEF123456789ABCDE000022222</string>
+				<string>2113E8E02AFC404C917BDECE45AD0C31</string>
+				<string>0674F2D9E84C4AC3AC8ED170619E99EA</string>
+				<string>D3FFCCE81A9942AD88F69691662852EC</string>
+				<string>2484B300512B2B737C691AF5</string>
+				<string>A1B2C3D4E5F60718293A4B5C</string>
+				<string>D1E2F3A4B5C60718293A4B5C</string>
+				<string>F2A3B4C5D6E7081929304C5D</string>
+				<string>4F59085B2CFA96DD4FA87E4C</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Services</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>8F451BFDE18F863DAF8EA9D5</key>
+		<dict>
+			<key>fileRef</key>
+			<string>0E5675694C64139E1C905003</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>942A3F3878CD789BDF616A78</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>PromptTemplatesView.swift</string>
+			<key>path</key>
+			<string>MLX Code/Views/PromptTemplatesView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>96B9AC2491F2A5DCF94ABDA5</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>net.daringfireball.markdown</string>
+			<key>name</key>
+			<string>KeyboardShortcuts.md</string>
+			<key>path</key>
+			<string>Help/KeyboardShortcuts.md</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>976738B52C794CED94B0958A9B5294AC</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>AppSettings.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>981DEAE5D0E40818A468A317</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>9D968D8996FA1AE7F661C916</string>
+			</array>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>9C6295CF7B92A0805D17F394</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME</key>
+				<string>WidgetBackground</string>
+				<key>CODE_SIGN_ENTITLEMENTS</key>
+				<string>MLX Code Widget/MLX_Code_Widget.entitlements</string>
+				<key>CODE_SIGN_STYLE</key>
+				<string>Automatic</string>
+				<key>CURRENT_PROJECT_VERSION</key>
+				<string>8</string>
+				<key>DEVELOPMENT_TEAM</key>
+				<string>QRRCB8HB3W</string>
+				<key>GENERATE_INFOPLIST_FILE</key>
+				<string>NO</string>
+				<key>INFOPLIST_FILE</key>
+				<string>MLX Code Widget/Info.plist</string>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>@executable_path/../Frameworks</string>
+					<string>@executable_path/../../../../Frameworks</string>
+				</array>
+				<key>MACOSX_DEPLOYMENT_TARGET</key>
+				<string>14.0</string>
+				<key>MARKETING_VERSION</key>
+				<string>6.3.0</string>
+				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+				<string>com.local.mlxcode.widget</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>SDKROOT</key>
+				<string>macosx</string>
+				<key>SKIP_INSTALL</key>
+				<string>YES</string>
+				<key>SWIFT_VERSION</key>
+				<string>5.0</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>9D968D8996FA1AE7F661C916</key>
+		<dict>
+			<key>fileRef</key>
+			<string>594327739243F92262A48BA3</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>9E4728BDDB32D3698B567C19</key>
+		<dict>
+			<key>fileRef</key>
+			<string>52CA5C71B521246C88421C5E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>A0013163E03EA758655F244E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B3135C47FACB8AE8CB699414</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>A1A7B1B5482F0213E90D8921</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>EditTool.swift</string>
+			<key>path</key>
+			<string>MLX Code/Tools/EditTool.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>A1B2C3D4E5F60718293A4B5C</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>GitHubService.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>A1D0CB7C86FD995521A1C244</key>
+		<dict>
+			<key>containerPortal</key>
+			<string>F9BDA8E4425A4DF7A39133B70A11CD1F</string>
+			<key>isa</key>
+			<string>PBXContainerItemProxy</string>
+			<key>proxyType</key>
+			<string>1</string>
+			<key>remoteGlobalIDString</key>
+			<string>6313FF5EB2260339630CD915</string>
+			<key>remoteInfo</key>
+			<string>MLX Code Widget</string>
+		</dict>
+		<key>A2B3C4D5E6F70829304B5C6D</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>GitHubTool.swift</string>
+			<key>path</key>
+			<string>Tools/GitHubTool.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>A3B4C5D6E7F8093A415C6D7E</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>CodeAnalysisTool.swift</string>
+			<key>path</key>
+			<string>Tools/CodeAnalysisTool.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>A44598ECF006C6A3E72B011C</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>MarkdownTextView.swift</string>
+			<key>path</key>
+			<string>MLX Code/Views/MarkdownTextView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>A4B5C6D7E8F90A4B526D7E8F</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>ProjectViewModel.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>A5B6C7D8E9FA1B5C637E8F90</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>GitHubViewModel.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>A618C93267C54CBEA8B15E4321B53726</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.application</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>MLX Code.app</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>A6B7C8D9EAFB2C6D748F9001</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>CodeAnalysisViewModel.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>A79518FA8F80EE82D62C31CA</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F757A5782A6AB6872D9D6E14</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>A7B8C9DAEBFC3D7E859001A2</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>ProjectDashboardView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>A8B9CADBECED4E8F960112B3</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>BuildPanelView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>A9BACBDCEDFE5F900A1223C4</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>GitHubPanelView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>AA001BCDEF123456789ABCDE00001111</key>
+		<dict>
+			<key>fileRef</key>
+			<string>BB001CDEF123456789ABCDE000022222</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>AA1234560000000000000001</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>KeychainManager.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>AA1234560000000000000002</key>
+		<dict>
+			<key>fileRef</key>
+			<string>AA1234560000000000000001</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>AA1B2C3D4E5F6A7B8C9D0E1F</key>
+		<dict>
+			<key>fileRef</key>
+			<string>BB2C3D4E5F6A7B8C9D0E1F2A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>AABBCCDDEEAF60011B2334D5</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>CodeAnalysisPanelView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>AC2321EF0112053798EF401E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>C03995484D94FA4FA6BD0F6C</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B14C57F7549826EE7E9087F5</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.app-extension</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>MLX Code Widget.appex</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>B1C2D3E4F5A60718293B4C5D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A1B2C3D4E5F60718293A4B5C</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B227E7F3CC8520A366B0B7AF</key>
+		<dict>
+			<key>fileRef</key>
+			<string>FF9E24703A8FCDC2C9B4B0BA</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B2C3D4E5F6A70829304C5D6E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A2B3C4D5E6F70829304B5C6D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B2CDB41D8A69A6A26D70BBE7</key>
+		<dict>
+			<key>isa</key>
+			<string>XCSwiftPackageProductDependency</string>
+			<key>package</key>
+			<string>2A5EF90852B06B563B319AD6</string>
+			<key>productName</key>
+			<string>MLXNN</string>
+		</dict>
+		<key>B2E5F88DE8D14DA5801FB2C1CFC21E00</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>ASUPP_CODE_SIGN_IDENTITY_AUTOMATIC</key>
+				<string>YES</string>
+				<key>CLANG_ANALYZER_NONNULL</key>
+				<string>YES</string>
+				<key>CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++20</string>
+				<key>CLANG_ENABLE_MODULES</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_WEAK</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_COMMA</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_DOCUMENTATION_COMMENTS</key>
+				<string>YES</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INFINITE_RECURSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_NON_LITERAL_NULL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_LITERAL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER</key>
+				<string>YES</string>
+				<key>CLANG_WARN_RANGE_LOOP_ANALYSIS</key>
+				<string>YES</string>
+				<key>CLANG_WARN_STRICT_PROTOTYPES</key>
+				<string>YES</string>
+				<key>CLANG_WARN_SUSPICIOUS_MOVE</key>
+				<string>YES</string>
+				<key>CLANG_WARN_UNGUARDED_AVAILABILITY</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>CLANG_WARN_UNREACHABLE_CODE</key>
+				<string>YES</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>NO</string>
+				<key>DEBUG_INFORMATION_FORMAT</key>
+				<string>dwarf</string>
+				<key>ENABLE_STRICT_OBJC_MSGSEND</key>
+				<string>YES</string>
+				<key>ENABLE_TESTABILITY</key>
+				<string>YES</string>
+				<key>ENABLE_USER_SCRIPT_SANDBOXING</key>
+				<string>YES</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu17</string>
+				<key>GCC_DYNAMIC_NO_PIC</key>
+				<string>NO</string>
+				<key>GCC_NO_COMMON_BLOCKS</key>
+				<string>YES</string>
+				<key>GCC_OPTIMIZATION_LEVEL</key>
+				<string>0</string>
+				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
+				<array>
+					<string>DEBUG=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES_ERROR</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>LOCALIZATION_PREFERS_STRING_CATALOGS</key>
+				<string>YES</string>
+				<key>MACOSX_DEPLOYMENT_TARGET</key>
+				<string>14.0</string>
+				<key>MTL_ENABLE_DEBUG_INFO</key>
+				<string>INCLUDE_SOURCE</string>
+				<key>MTL_FAST_MATH</key>
+				<string>YES</string>
+				<key>ONLY_ACTIVE_ARCH</key>
+				<string>YES</string>
+				<key>SDKROOT</key>
+				<string>macosx</string>
+				<key>SWIFT_ACTIVE_COMPILATION_CONDITIONS</key>
+				<string>DEBUG $(inherited)</string>
+				<key>SWIFT_OPTIMIZATION_LEVEL</key>
+				<string>-Onone</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>B3135C47FACB8AE8CB699414</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>ModelSecurityValidator.swift</string>
+			<key>path</key>
+			<string>MLX Code/Services/ModelSecurityValidator.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>B383B9851026BBA9EB5D0534</key>
+		<dict>
+			<key>fileRef</key>
+			<string>CD3516CF4FE359150087D766</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B38BA712F974D727652E810F</key>
+		<dict>
+			<key>isa</key>
+			<string>XCSwiftPackageProductDependency</string>
+			<key>package</key>
+			<string>588B05B0E11878C953EE0334</string>
+			<key>productName</key>
+			<string>MLXLLM</string>
+		</dict>
+		<key>B3C4D5E6F7A8093A415D6E7F</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A3B4C5D6E7F8093A415C6D7E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B453CB92F39ABE521DEA0327</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>SlashCommandHandler.swift</string>
+			<key>path</key>
+			<string>MLX Code/Services/SlashCommandHandler.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>B4C5D6E7F8A90A4B526E7F80</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A4B5C6D7E8F90A4B526D7E8F</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B57C86C1B983667FB6632C96</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>net.daringfireball.markdown</string>
+			<key>name</key>
+			<string>Troubleshooting.md</string>
+			<key>path</key>
+			<string>Help/Troubleshooting.md</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>B5C6D7E8F9AA1B5C637F8091</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A5B6C7D8E9FA1B5C637E8F90</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B6C7D8E9FAAB2C6D74809102</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A6B7C8D9EAFB2C6D748F9001</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B7A5DD6AFF8A40D0ADEADF847F388274</key>
+		<dict>
+			<key>fileRef</key>
+			<string>FFF2B58504414094AD2F4B06D9B90954</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B7C8D9EAFBAC3D7E859102A3</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A7B8C9DAEBFC3D7E859001A2</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B7CACEDCC504C0C98061D10B</key>
+		<dict>
+			<key>isa</key>
+			<string>XCSwiftPackageProductDependency</string>
+			<key>package</key>
+			<string>2A5EF90852B06B563B319AD6</string>
+			<key>productName</key>
+			<string>MLX</string>
+		</dict>
+		<key>B87735253DD0CAE36F5A3A26</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>76E1CC6DC5CF4943D05FF452</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Design</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>B87A92AF8834D4EAB5ED2FED</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>HelpTool.swift</string>
+			<key>path</key>
+			<string>Tools/HelpTool.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>B8C9DAEBFBAD4E8F960213B4</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A8B9CADBECED4E8F960112B3</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B9CADBECEBBE5F900A1324C5</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A9BACBDCEDFE5F900A1223C4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B9DCFE1EB35E1587BE810984</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>CollapsibleToolResultView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BACBDCEDDCBF60011B2435D6</key>
+		<dict>
+			<key>fileRef</key>
+			<string>AABBCCDDEEAF60011B2334D5</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>BB001CDEF123456789ABCDE000022222</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>XcodeActionHandler.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BB2C3D4E5F6A7B8C9D0E1F2A</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>ToolTier.swift</string>
+			<key>path</key>
+			<string>Tools/ToolTier.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BB2E8ECFF03340A5AA4C415F066EB765</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>D8C77339FE1D4E7FAA34113946220883</string>
+				<string>DEE14123640793BDCED74DE1</string>
+				<string>A4B5C6D7E8F90A4B526D7E8F</string>
+				<string>A5B6C7D8E9FA1B5C637E8F90</string>
+				<string>A6B7C8D9EAFB2C6D748F9001</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>ViewModels</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BB69700D48233E87937D2E3E</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>CommandValidator.swift</string>
+			<key>path</key>
+			<string>MLX Code/Utilities/CommandValidator.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BC51340E6DC042F101EC852C</key>
+		<dict>
+			<key>fileRef</key>
+			<string>416CC836CD6FD1509FE5E7E4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>BFF3F2FD15788CAE731CD3B9</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2484B300512B2B737C691AF5</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>C03995484D94FA4FA6BD0F6C</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>Tools/GitIntegrationTool.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>C04006EF5054DB124F485C96</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>XcodeTool.swift</string>
+			<key>path</key>
+			<string>Tools/XcodeTool.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>C1C6A5F77A186F5E418AC3C7</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>BuildErrorParser.swift</string>
+			<key>path</key>
+			<string>MLX Code/Utilities/BuildErrorParser.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>C1D2E3F4A5B6071829304C5D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>D1E2F3A4B5C60718293A4B5C</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>C1D4360CD64BF748989BE29C</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>dstPath</key>
+			<string></string>
+			<key>dstSubfolderSpec</key>
+			<string>13</string>
+			<key>files</key>
+			<array>
+				<string>1015E08E1D210CB0D574ADE3</string>
+				<string>D02617EC2F58CDE1003A988A</string>
+			</array>
+			<key>isa</key>
+			<string>PBXCopyFilesBuildPhase</string>
+			<key>name</key>
+			<string>Embed Foundation Extensions</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>C2540D8987DB873726F4B1C2</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXTargetDependency</string>
+			<key>name</key>
+			<string>MLX Code Widget</string>
+			<key>target</key>
+			<string>6313FF5EB2260339630CD915</string>
+			<key>targetProxy</key>
+			<string>A1D0CB7C86FD995521A1C244</string>
+		</dict>
+		<key>C2A892DD5CE787FC268759CC</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME</key>
+				<string>WidgetBackground</string>
+				<key>CODE_SIGN_ENTITLEMENTS</key>
+				<string>MLX Code Widget/MLX_Code_Widget.entitlements</string>
+				<key>CODE_SIGN_STYLE</key>
+				<string>Automatic</string>
+				<key>CURRENT_PROJECT_VERSION</key>
+				<string>8</string>
+				<key>DEVELOPMENT_TEAM</key>
+				<string>QRRCB8HB3W</string>
+				<key>GENERATE_INFOPLIST_FILE</key>
+				<string>NO</string>
+				<key>INFOPLIST_FILE</key>
+				<string>MLX Code Widget/Info.plist</string>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>@executable_path/../Frameworks</string>
+					<string>@executable_path/../../../../Frameworks</string>
+				</array>
+				<key>MACOSX_DEPLOYMENT_TARGET</key>
+				<string>14.0</string>
+				<key>MARKETING_VERSION</key>
+				<string>6.3.0</string>
+				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+				<string>com.local.mlxcode.widget</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>SDKROOT</key>
+				<string>macosx</string>
+				<key>SKIP_INSTALL</key>
+				<string>YES</string>
+				<key>SWIFT_VERSION</key>
+				<string>5.0</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>C2F90FA396C5680D706B96B9</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>MemorySystem.swift</string>
+			<key>path</key>
+			<string>Tools/MemorySystem.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>C76BFA1F8B9FED3E7CEAC4CA</key>
+		<dict>
+			<key>fileRef</key>
+			<string>5E58FA9A583B64C6FC9C7631</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>C7FF6DE571FE5D0FDBF6C782</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B453CB92F39ABE521DEA0327</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>C95840B1287C494587897311FF59BBC8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>1474EB3E75FB4E45BABB7722A52318FA</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>C9BCC3943B8F2927A51C67AB</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>Cocoa.framework</string>
+			<key>path</key>
+			<string>Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework</string>
+			<key>sourceTree</key>
+			<string>DEVELOPER_DIR</string>
+		</dict>
+		<key>CA7398DCBE9DDF48B2F403A6</key>
+		<dict>
+			<key>fileRef</key>
+			<string>4F59085B2CFA96DD4FA87E4C</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>CC001DEF012345678901ABCD000033333</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>path</key>
+			<string>Info.plist</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>CC3A88644A13A397AC99108D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A1A7B1B5482F0213E90D8921</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>CC3D4E5F6A7B8C9D0E1F2A3B</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DD4E5F6A7B8C9D0E1F2A3B4C</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>CD29D0ECFD8746229E8ACE5616B6A134</key>
+		<dict>
+			<key>fileRef</key>
+			<string>1C94A9B46BF04BC586CC4248441C2968</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>CD3516CF4FE359150087D766</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>WidgetData.swift</string>
+			<key>path</key>
+			<string>MLX Code Widget/WidgetData.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>CE711B1853DA4E2BA36640574B1F559C</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>ChatView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>CE93A4A9DAAA4758B50E9889049AE544</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>B2E5F88DE8D14DA5801FB2C1CFC21E00</string>
+				<string>4ECEC483AD8042A89EB6F6057A272B9E</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>CF26AA705F097AAB5624397A</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>RepetitionDetector.swift</string>
+			<key>path</key>
+			<string>MLX Code/Utilities/RepetitionDetector.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>D005E0D461771E49D839C575</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>ContextManager.swift</string>
+			<key>path</key>
+			<string>MLX Code/Services/ContextManager.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>D02617D62F58CCDB003A988A</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>productRef</key>
+			<string>B7CACEDCC504C0C98061D10B</string>
+		</dict>
+		<key>D02617D72F58CCDB003A988A</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>productRef</key>
+			<string>B2CDB41D8A69A6A26D70BBE7</string>
+		</dict>
+		<key>D02617D82F58CCDB003A988A</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>productRef</key>
+			<string>B38BA712F974D727652E810F</string>
+		</dict>
+		<key>D02617D92F58CCDB003A988A</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>productRef</key>
+			<string>5BA7AB349C44E6745850757A</string>
+		</dict>
+		<key>D02617DA2F58CCDB003A988A</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>CD3516CF4FE359150087D766</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Recovered References</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>D02617DB2F58CDE1003A988A</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>D02617DC2F58CDE1003A988A</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>D02617E12F58CDE1003A988A</string>
+				<string>D02617E32F58CDE1003A988A</string>
+			</array>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>D02617DD2F58CDE1003A988A</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>D02617DE2F58CDE1003A988A</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>D02617F02F58CDE1003A988A</string>
+			<key>buildPhases</key>
+			<array>
+				<string>D02617DB2F58CDE1003A988A</string>
+				<string>D02617DC2F58CDE1003A988A</string>
+				<string>D02617DD2F58CDE1003A988A</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array/>
+			<key>fileSystemSynchronizedGroups</key>
+			<array>
+				<string>D02617E42F58CDE1003A988A</string>
+			</array>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>MLX Code Extension</string>
+			<key>productName</key>
+			<string>MLX Code Extension</string>
+			<key>productReference</key>
+			<string>D02617DF2F58CDE1003A988A</string>
+			<key>productType</key>
+			<string>com.apple.product-type.xcode-extension</string>
+		</dict>
+		<key>D02617DF2F58CDE1003A988A</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.app-extension</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>MLX Code Extension.appex</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>D02617E02F58CDE1003A988A</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>Cocoa.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/Cocoa.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>D02617E12F58CDE1003A988A</key>
+		<dict>
+			<key>fileRef</key>
+			<string>D02617E02F58CDE1003A988A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>D02617E22F58CDE1003A988A</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>XcodeKit.framework</string>
+			<key>path</key>
+			<string>Library/Frameworks/XcodeKit.framework</string>
+			<key>sourceTree</key>
+			<string>DEVELOPER_DIR</string>
+		</dict>
+		<key>D02617E32F58CDE1003A988A</key>
+		<dict>
+			<key>fileRef</key>
+			<string>D02617E22F58CDE1003A988A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>D02617E42F58CDE1003A988A</key>
+		<dict>
+			<key>exceptions</key>
+			<array/>
+			<key>explicitFileTypes</key>
+			<dict/>
+			<key>explicitFolders</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXFileSystemSynchronizedRootGroup</string>
+			<key>path</key>
+			<string>MLX Code Extension</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>D02617EA2F58CDE1003A988A</key>
+		<dict>
+			<key>containerPortal</key>
+			<string>F9BDA8E4425A4DF7A39133B70A11CD1F</string>
+			<key>isa</key>
+			<string>PBXContainerItemProxy</string>
+			<key>proxyType</key>
+			<string>1</string>
+			<key>remoteGlobalIDString</key>
+			<string>D02617DE2F58CDE1003A988A</string>
+			<key>remoteInfo</key>
+			<string>MLX Code Extension</string>
+		</dict>
+		<key>D02617EB2F58CDE1003A988A</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXTargetDependency</string>
+			<key>target</key>
+			<string>D02617DE2F58CDE1003A988A</string>
+			<key>targetProxy</key>
+			<string>D02617EA2F58CDE1003A988A</string>
+		</dict>
+		<key>D02617EC2F58CDE1003A988A</key>
+		<dict>
+			<key>fileRef</key>
+			<string>D02617DF2F58CDE1003A988A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>ATTRIBUTES</key>
+				<array>
+					<string>RemoveHeadersOnCopy</string>
+				</array>
+			</dict>
+		</dict>
+		<key>D02617ED2F58CDE1003A988A</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS</key>
+				<string>YES</string>
+				<key>CODE_SIGN_IDENTITY</key>
+				<string>Apple Development</string>
+				<key>CODE_SIGN_IDENTITY[sdk=macosx*]</key>
+				<string>Apple Development</string>
+				<key>CODE_SIGN_STYLE</key>
+				<string>Automatic</string>
+				<key>COMBINE_HIDPI_IMAGES</key>
+				<string>YES</string>
+				<key>CURRENT_PROJECT_VERSION</key>
+				<string>1</string>
+				<key>DEVELOPMENT_TEAM</key>
+				<string>QRRCB8HB3W</string>
+				<key>ENABLE_APP_SANDBOX</key>
+				<string>YES</string>
+				<key>ENABLE_HARDENED_RUNTIME</key>
+				<string>YES</string>
+				<key>GENERATE_INFOPLIST_FILE</key>
+				<string>YES</string>
+				<key>INFOPLIST_FILE</key>
+				<string>MLX Code Extension/Info.plist</string>
+				<key>INFOPLIST_KEY_CFBundleDisplayName</key>
+				<string>MLX Code Extension</string>
+				<key>INFOPLIST_KEY_NSHumanReadableCopyright</key>
+				<string></string>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>@executable_path/../Frameworks</string>
+					<string>@executable_path/../../../../Frameworks</string>
+				</array>
+				<key>MACOSX_DEPLOYMENT_TARGET</key>
+				<string>26.2</string>
+				<key>MARKETING_VERSION</key>
+				<string>1.0</string>
+				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+				<string>com.local.mlxcode.xcodeeditor</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>SKIP_INSTALL</key>
+				<string>YES</string>
+				<key>STRING_CATALOG_GENERATE_SYMBOLS</key>
+				<string>YES</string>
+				<key>SWIFT_APPROACHABLE_CONCURRENCY</key>
+				<string>YES</string>
+				<key>SWIFT_EMIT_LOC_STRINGS</key>
+				<string>YES</string>
+				<key>SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY</key>
+				<string>YES</string>
+				<key>SWIFT_VERSION</key>
+				<string>5.0</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>D02617EE2F58CDE1003A988A</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS</key>
+				<string>YES</string>
+				<key>CODE_SIGN_IDENTITY</key>
+				<string>Apple Development</string>
+				<key>CODE_SIGN_IDENTITY[sdk=macosx*]</key>
+				<string>Apple Development</string>
+				<key>CODE_SIGN_STYLE</key>
+				<string>Automatic</string>
+				<key>COMBINE_HIDPI_IMAGES</key>
+				<string>YES</string>
+				<key>CURRENT_PROJECT_VERSION</key>
+				<string>1</string>
+				<key>DEVELOPMENT_TEAM</key>
+				<string>QRRCB8HB3W</string>
+				<key>ENABLE_APP_SANDBOX</key>
+				<string>YES</string>
+				<key>ENABLE_HARDENED_RUNTIME</key>
+				<string>YES</string>
+				<key>GENERATE_INFOPLIST_FILE</key>
+				<string>YES</string>
+				<key>INFOPLIST_FILE</key>
+				<string>MLX Code Extension/Info.plist</string>
+				<key>INFOPLIST_KEY_CFBundleDisplayName</key>
+				<string>MLX Code Extension</string>
+				<key>INFOPLIST_KEY_NSHumanReadableCopyright</key>
+				<string></string>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>@executable_path/../Frameworks</string>
+					<string>@executable_path/../../../../Frameworks</string>
+				</array>
+				<key>MACOSX_DEPLOYMENT_TARGET</key>
+				<string>26.2</string>
+				<key>MARKETING_VERSION</key>
+				<string>1.0</string>
+				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+				<string>com.local.mlxcode.xcodeeditor</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>SKIP_INSTALL</key>
+				<string>YES</string>
+				<key>STRING_CATALOG_GENERATE_SYMBOLS</key>
+				<string>YES</string>
+				<key>SWIFT_APPROACHABLE_CONCURRENCY</key>
+				<string>YES</string>
+				<key>SWIFT_EMIT_LOC_STRINGS</key>
+				<string>YES</string>
+				<key>SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY</key>
+				<string>YES</string>
+				<key>SWIFT_VERSION</key>
+				<string>5.0</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>D02617F02F58CDE1003A988A</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>D02617ED2F58CDE1003A988A</string>
+				<string>D02617EE2F58CDE1003A988A</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>D18CD3C400C3AD1177178192</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>ThinkingIndicatorView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>D1E2F3A4B5C60718293A4B5C</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>ContextAnalysisService.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>D2C2B1BC25F5420BB7EB187CA0EE3F26</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>8BF344F827174583896C2F07BB4F77EF</string>
+				<string>CC001DEF012345678901ABCD000033333</string>
+				<string>841118D351D54AEDA122F17C77816B9D</string>
+				<string>BB2E8ECFF03340A5AA4C415F066EB765</string>
+				<string>EAEFCCA240074A7FB65020791716A06B</string>
+				<string>8D7B12981853422D971FCAD3B063E827</string>
+				<string>D3EDDB8006F24B08845B89374695FC62</string>
+				<string>09954456C83943A7BF55406C1988E6B1</string>
+				<string>48562778370F4A07B8B69516078EE7A2</string>
+				<string>7D34E1B98B0D1BBD7FFBC41C</string>
+				<string>B87735253DD0CAE36F5A3A26</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>MLX Code</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>D3EDDB8006F24B08845B89374695FC62</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>AA1234560000000000000001</string>
+				<string>7492C8D46DB847CFABCF1E5B031731B3</string>
+				<string>FF7455C7A2CE4EAA997C11353C876821</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Utilities</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>D3FFCCE81A9942AD88F69691662852EC</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>PythonService.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>D428F9CF79EFE40194B9FEFF</key>
+		<dict>
+			<key>fileRef</key>
+			<string>E683FDA41933E9CBABE2AB4E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>D4F2A01B6B01B323C4C1971B</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>DFCA810E4451DA5EEB9EB66A</string>
+				<string>416CC836CD6FD1509FE5E7E4</string>
+				<string>96B9AC2491F2A5DCF94ABDA5</string>
+				<string>B57C86C1B983667FB6632C96</string>
+				<string>3072558342FD102B940FF3DB</string>
+				<string>4290A181319FB0316E2CD114</string>
+				<string>5E58FA9A583B64C6FC9C7631</string>
+				<string>6FD0BB3BC560F8D474C00FAC</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Help</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>D8C77339FE1D4E7FAA34113946220883</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>ChatViewModel.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DA5F2AD2CCECEB26E6768C29</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>DiffView.swift</string>
+			<key>path</key>
+			<string>MLX Code/Views/DiffView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DBD46EBB13194FBBA1D0AADBCBBFE22B</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>A618C93267C54CBEA8B15E4321B53726</string>
+				<string>B14C57F7549826EE7E9087F5</string>
+				<string>D02617DF2F58CDE1003A988A</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Products</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCB39028B0850848FD3B7322</key>
+		<dict>
+			<key>fileRef</key>
+			<string>CF26AA705F097AAB5624397A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>DD4E5F6A7B8C9D0E1F2A3B4C</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>ToolApproval.swift</string>
+			<key>path</key>
+			<string>MLX Code/Models/ToolApproval.swift</string>
+			<key>sourceTree</key>
+			<string>SOURCE_ROOT</string>
+		</dict>
+		<key>DE5057A64D8310A442E26F74</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A44598ECF006C6A3E72B011C</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>DEE14123640793BDCED74DE1</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>ChatViewModel+Tools.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DFCA810E4451DA5EEB9EB66A</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>net.daringfireball.markdown</string>
+			<key>name</key>
+			<string>GettingStarted.md</string>
+			<key>path</key>
+			<string>Help/GettingStarted.md</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>E053530D29423C88386576C8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>4290A181319FB0316E2CD114</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>E1A07468A30C474ED64E5909</key>
+		<dict>
+			<key>fileRef</key>
+			<string>50B62FF9A14FFACDD5EA3434</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>E2EF41EA1A31A3E9484FC8C3</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>A44598ECF006C6A3E72B011C</string>
+				<string>22BF0FCAFA31E5516E7B5EC6</string>
+				<string>FF6A7B8C9D0E1F2A3B4C5D6E</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Views</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>E2F3A4B5C6D7081929304C5D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F2A3B4C5D6E7081929304C5D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>E2FCF04057F99E48BF46CCF3</key>
+		<dict>
+			<key>fileRef</key>
+			<string>BB69700D48233E87937D2E3E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>E4398D6A77404E3091C859FA278A70AC</key>
+		<dict>
+			<key>fileRef</key>
+			<string>976738B52C794CED94B0958A9B5294AC</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>E4F73696938443CA96E715094ADAA086</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>D2C2B1BC25F5420BB7EB187CA0EE3F26</string>
+				<string>D02617E42F58CDE1003A988A</string>
+				<string>DBD46EBB13194FBBA1D0AADBCBBFE22B</string>
+				<string>E2EF41EA1A31A3E9484FC8C3</string>
+				<string>6F0229DF0B6AF4821D6BC3FE</string>
+				<string>7E5FCD73CEE595B2B243ACB7</string>
+				<string>512191759EAFD5368C431D56</string>
+				<string>6CC6C830E9E5801EFE2690F2</string>
+				<string>0E5675694C64139E1C905003</string>
+				<string>564D43E7BF13C063A567706B</string>
+				<string>86DA95C55CF31CAA085E0CD4</string>
+				<string>4B4B7D93C0CD7188EECDFAF4</string>
+				<string>7382216063DCBF191AE08B34</string>
+				<string>DA5F2AD2CCECEB26E6768C29</string>
+				<string>D005E0D461771E49D839C575</string>
+				<string>2D891BD2C79FA8CCEF2C5741</string>
+				<string>A1A7B1B5482F0213E90D8921</string>
+				<string>B453CB92F39ABE521DEA0327</string>
+				<string>E4F9AF5449DB574FF1AF0CC4</string>
+				<string>6F349BF0E53B7097184E5FCE</string>
+				<string>6B35EA916216071CF5CC28C7</string>
+				<string>D02617DA2F58CCDB003A988A</string>
+				<string>F757A5782A6AB6872D9D6E14</string>
+				<string>942A3F3878CD789BDF616A78</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>E4F9AF5449DB574FF1AF0CC4</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>InteractivePromptView.swift</string>
+			<key>path</key>
+			<string>MLX Code/Views/InteractivePromptView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>E683FDA41933E9CBABE2AB4E</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>GrepTool.swift</string>
+			<key>path</key>
+			<string>Tools/GrepTool.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>E7E15DB203DB43A790F24970D6FE7DF7</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+				<string>AppIcon</string>
+				<key>ASUPP_CODE_SIGN_STYLE</key>
+				<string>Automatic</string>
+				<key>CODE_SIGN_ENTITLEMENTS</key>
+				<string>MLX Code/MLX_Code.entitlements</string>
+				<key>CODE_SIGN_IDENTITY</key>
+				<string>Apple Development</string>
+				<key>CODE_SIGN_IDENTITY[sdk=macosx*]</key>
+				<string>Apple Development</string>
+				<key>CODE_SIGN_STYLE</key>
+				<string>Automatic</string>
+				<key>COMBINE_HIDPI_IMAGES</key>
+				<string>YES</string>
+				<key>CURRENT_PROJECT_VERSION</key>
+				<string>8</string>
+				<key>DEVELOPMENT_ASSET_PATHS</key>
+				<string></string>
+				<key>DEVELOPMENT_TEAM</key>
+				<string>QRRCB8HB3W</string>
+				<key>ENABLE_HARDENED_RUNTIME</key>
+				<string>YES</string>
+				<key>ENABLE_PREVIEWS</key>
+				<string>YES</string>
+				<key>GENERATE_INFOPLIST_FILE</key>
+				<string>NO</string>
+				<key>INFOPLIST_FILE</key>
+				<string>MLX Code/Info.plist</string>
+				<key>INFOPLIST_KEY_CFBundleDisplayName</key>
+				<string>MLX Code</string>
+				<key>INFOPLIST_KEY_LSApplicationCategoryType</key>
+				<string>public.app-category.developer-tools</string>
+				<key>INFOPLIST_KEY_NSHumanReadableCopyright</key>
+				<string></string>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>@executable_path/../Frameworks</string>
+				</array>
+				<key>MACOSX_DEPLOYMENT_TARGET</key>
+				<string>14.0</string>
+				<key>MARKETING_VERSION</key>
+				<string>6.3.0</string>
+				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+				<string>com.local.mlxcode</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>SWIFT_EMIT_LOC_STRINGS</key>
+				<string>YES</string>
+				<key>SWIFT_VERSION</key>
+				<string>5.0</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>E9092BA47E894E33897524DF0DDAEF6E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>D3FFCCE81A9942AD88F69691662852EC</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>EA3DD729B1A1D45A5484F4CE</key>
+		<dict>
+			<key>fileRef</key>
+			<string>D18CD3C400C3AD1177178192</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>EAEFCCA240074A7FB65020791716A06B</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>FE07B6436E0D401DBA11F15F8CDA7B09</string>
+				<string>1EF7425F0C774CFFA6C81D44B4EEF006</string>
+				<string>976738B52C794CED94B0958A9B5294AC</string>
+				<string>1C94A9B46BF04BC586CC4248441C2968</string>
+				<string>266478D14D864C5C22CB0D15</string>
+				<string>DD4E5F6A7B8C9D0E1F2A3B4C</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Models</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>EB50EC56315542D98B773A1B7BC0E09B</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>E2FCF04057F99E48BF46CCF3</string>
+				<string>A0013163E03EA758655F244E</string>
+				<string>4A14B6380E9E4A44949059C9DE2D703A</string>
+				<string>24010C4728F24595AD26D82143BDCF89</string>
+				<string>406CEA4CA10F45879033D10841AF85C6</string>
+				<string>340D62553A7C42F2A58D1FEF72A108C1</string>
+				<string>B7A5DD6AFF8A40D0ADEADF847F388274</string>
+				<string>22F2C54FAC424877BE6CD7758564446B</string>
+				<string>833AB57A49BF43199191D9F239BFECB7</string>
+				<string>2705EDF1704D46E28F243D58796430B0</string>
+				<string>E4398D6A77404E3091C859FA278A70AC</string>
+				<string>CD29D0ECFD8746229E8ACE5616B6A134</string>
+				<string>18791BFABC004C46B272FB28E9157DBF</string>
+				<string>AA001BCDEF123456789ABCDE00001111</string>
+				<string>4A4EF7C491BE4E56A5AD5F581F918DCB</string>
+				<string>84C70B8FEEA34CAA834FC30FCDA1E267</string>
+				<string>E9092BA47E894E33897524DF0DDAEF6E</string>
+				<string>ED42A86D2B4D4BCE84B60AA7411AEFCF</string>
+				<string>AA1234560000000000000002</string>
+				<string>685055FA9244459B8C843179E846C56E</string>
+				<string>DE5057A64D8310A442E26F74</string>
+				<string>3BB85EED3A53FFBB2C040746</string>
+				<string>8875413B90367ACAEB46DDED</string>
+				<string>5301C4E5322FAC6C374E71F3</string>
+				<string>4446DD89E33C99BFDB36347F</string>
+				<string>52B2F7AE0952B6156B32E990</string>
+				<string>EC5EC65B8FD9A5025E274336</string>
+				<string>EA3DD729B1A1D45A5484F4CE</string>
+				<string>5CBCE9635FCD2E27B44553A8</string>
+				<string>21B357BD3B307E30CF749E7D</string>
+				<string>375B23CD55B79FC1C62A5B23</string>
+				<string>B227E7F3CC8520A366B0B7AF</string>
+				<string>FB45C232C00FB094E07E98A6</string>
+				<string>D428F9CF79EFE40194B9FEFF</string>
+				<string>0E19E7D351E63FC38F41E41F</string>
+				<string>0A2E78E67E37DA8FC4CCA009</string>
+				<string>85C0E206977B63C594FA2506</string>
+				<string>0AD3C3FF090FA319B50DF586</string>
+				<string>DCB39028B0850848FD3B7322</string>
+				<string>25BA6913200BB43C2F05DE0E</string>
+				<string>9E4728BDDB32D3698B567C19</string>
+				<string>3603B426862ED1AF7B591E9D</string>
+				<string>AC2321EF0112053798EF401E</string>
+				<string>6020E05AD9DFEFA09A7407D8</string>
+				<string>12C39D162F6650606907452D</string>
+				<string>0475B2DD296EECD045126C17</string>
+				<string>4F86F5737C70701EC7B129A3</string>
+				<string>8F451BFDE18F863DAF8EA9D5</string>
+				<string>6FAF8CD052C387D4EC838164</string>
+				<string>7E325ABB0701C66A18190BBF</string>
+				<string>8B5069DCF05D73C50F8BDF52</string>
+				<string>72638E65542E9F17DCCCB52B</string>
+				<string>CC3A88644A13A397AC99108D</string>
+				<string>C7FF6DE571FE5D0FDBF6C782</string>
+				<string>4700E085EAA2EFA6C7153D80</string>
+				<string>3CEE60DFFD9C4E6F5C07E7A4</string>
+				<string>BFF3F2FD15788CAE731CD3B9</string>
+				<string>AA1B2C3D4E5F6A7B8C9D0E1F</string>
+				<string>CC3D4E5F6A7B8C9D0E1F2A3B</string>
+				<string>EE5F6A7B8C9D0E1F2A3B4C5D</string>
+				<string>117B8C9D0E1F2A3B4C5D6E7F</string>
+				<string>339D0E1F2A3B4C5D6E7F8192</string>
+				<string>C1D2E3F4A5B6071829304C5D</string>
+				<string>E2F3A4B5C6D7081929304C5D</string>
+				<string>B1C2D3E4F5A60718293B4C5D</string>
+				<string>B2C3D4E5F6A70829304C5D6E</string>
+				<string>B3C4D5E6F7A8093A415D6E7F</string>
+				<string>B4C5D6E7F8A90A4B526E7F80</string>
+				<string>B5C6D7E8F9AA1B5C637F8091</string>
+				<string>B6C7D8E9FAAB2C6D74809102</string>
+				<string>B7C8D9EAFBAC3D7E859102A3</string>
+				<string>B8C9DAEBFBAD4E8F960213B4</string>
+				<string>B9CADBECEBBE5F900A1324C5</string>
+				<string>BACBDCEDDCBF60011B2435D6</string>
+				<string>CA7398DCBE9DDF48B2F403A6</string>
+				<string>A79518FA8F80EE82D62C31CA</string>
+				<string>043C4E7F3FCA17ECD6EB1A51</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>EC5EC65B8FD9A5025E274336</key>
+		<dict>
+			<key>fileRef</key>
+			<string>61B7E2C6F89FEDAA54C278A7</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>ECB016DEEB77015CF0327B53</key>
+		<dict>
+			<key>fileRef</key>
+			<string>254D9DD9EEB20CA0D74A5E00</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>ED15B41EF1DB3130F9B71173</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2C8ECCA430CED7181E9845C7</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>ED42A86D2B4D4BCE84B60AA7411AEFCF</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7492C8D46DB847CFABCF1E5B031731B3</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>EE5F6A7B8C9D0E1F2A3B4C5D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>FF6A7B8C9D0E1F2A3B4C5D6E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>EEE1340E1501B4ACBEFF3472</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DFCA810E4451DA5EEB9EB66A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F2A3B4C5D6E7081929304C5D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>UserMemories.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F552B2A0318CA58997F79EBA</key>
+		<dict>
+			<key>fileRef</key>
+			<string>6FD0BB3BC560F8D474C00FAC</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F723876CB29C9B2490C118FE</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>Tools/CodeNavigationTool.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F757A5782A6AB6872D9D6E14</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>PromptTemplates.swift</string>
+			<key>path</key>
+			<string>MLX Code/Tools/PromptTemplates.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F9BDA8E4425A4DF7A39133B70A11CD1F</key>
+		<dict>
+			<key>attributes</key>
+			<dict>
+				<key>BuildIndependentTargetsInParallel</key>
+				<string>1</string>
+				<key>LastSwiftUpdateCheck</key>
+				<string>2630</string>
+				<key>LastUpgradeCheck</key>
+				<string>1600</string>
+				<key>TargetAttributes</key>
+				<dict>
+					<key>74F164AAE69F476C836B53F52E9AAE11</key>
+					<dict>
+						<key>CreatedOnToolsVersion</key>
+						<string>16.0</string>
+					</dict>
+					<key>D02617DE2F58CDE1003A988A</key>
+					<dict>
+						<key>CreatedOnToolsVersion</key>
+						<string>26.3</string>
+					</dict>
+				</dict>
+			</dict>
+			<key>buildConfigurationList</key>
+			<string>CE93A4A9DAAA4758B50E9889049AE544</string>
+			<key>compatibilityVersion</key>
+			<string>Xcode 14.0</string>
+			<key>developmentRegion</key>
+			<string>en</string>
+			<key>hasScannedForEncodings</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXProject</string>
+			<key>knownRegions</key>
+			<array>
+				<string>en</string>
+				<string>Base</string>
+			</array>
+			<key>mainGroup</key>
+			<string>E4F73696938443CA96E715094ADAA086</string>
+			<key>packageReferences</key>
+			<array>
+				<string>2A5EF90852B06B563B319AD6</string>
+				<string>588B05B0E11878C953EE0334</string>
+			</array>
+			<key>productRefGroup</key>
+			<string>DBD46EBB13194FBBA1D0AADBCBBFE22B</string>
+			<key>projectDirPath</key>
+			<string></string>
+			<key>projectRoot</key>
+			<string></string>
+			<key>targets</key>
+			<array>
+				<string>74F164AAE69F476C836B53F52E9AAE11</string>
+				<string>6313FF5EB2260339630CD915</string>
+				<string>D02617DE2F58CDE1003A988A</string>
+			</array>
+		</dict>
+		<key>FAF5451FE751095F2C95F090</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>9C6295CF7B92A0805D17F394</string>
+				<string>C2A892DD5CE787FC268759CC</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>FB45C232C00FB094E07E98A6</key>
+		<dict>
+			<key>fileRef</key>
+			<string>FD5FD20620CC8E07FFA1428A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>FBF68411190D219F58CC40B0</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>ToolProtocol.swift</string>
+			<key>path</key>
+			<string>Tools/ToolProtocol.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>FD5FD20620CC8E07FFA1428A</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>BashTool.swift</string>
+			<key>path</key>
+			<string>Tools/BashTool.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>FDF863EF632E990FA28CCD29</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.entitlements</string>
+			<key>path</key>
+			<string>MLX_Code_Widget.entitlements</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>FE07B6436E0D401DBA11F15F8CDA7B09</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>Message.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>FEDDB0ED1A61C0892F6EDF1B</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.script.python</string>
+			<key>name</key>
+			<string>huggingface_downloader.py</string>
+			<key>path</key>
+			<string>Python/huggingface_downloader.py</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>FF6A7B8C9D0E1F2A3B4C5D6E</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>ToolApprovalView.swift</string>
+			<key>path</key>
+			<string>MLX Code/Views/ToolApprovalView.swift</string>
+			<key>sourceTree</key>
+			<string>SOURCE_ROOT</string>
+		</dict>
+		<key>FF7455C7A2CE4EAA997C11353C876821</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>SecureLogger.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>FF9E24703A8FCDC2C9B4B0BA</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>name</key>
+			<string>FileOperationsTool.swift</string>
+			<key>path</key>
+			<string>Tools/FileOperationsTool.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>FFEA93AF903CFA3261DD0C56</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B57C86C1B983667FB6632C96</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>FFF2B58504414094AD2F4B06D9B90954</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>ModelSelectorView.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+	</dict>
+	<key>rootObject</key>
+	<string>F9BDA8E4425A4DF7A39133B70A11CD1F</string>
+</dict>
+</plist>
