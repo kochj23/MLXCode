@@ -1,8 +1,9 @@
-# MLX Code v6.3.0
+# MLX Code v6.4.0
 
 ![Build](https://github.com/kochj23/MLXCode/actions/workflows/build.yml/badge.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS%2014%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-6.4.0-purple)
 
 **Local AI coding assistant for macOS, powered by Apple MLX (Machine Learning eXtensions).**
 
@@ -45,6 +46,45 @@ MLX Code is a chat-based coding assistant with tool calling and Xcode integratio
 4. The model responds with findings or takes the next action
 
 Read-only tools (grep, glob, file read, code navigation) auto-approve. Write/execute tools (bash, file write, xcode build) ask for confirmation.
+
+---
+
+## What's New in v6.4.0 (April 2026)
+
+### Prompt Engineering Toolkit
+
+**15 curated prompt templates** across 9 categories, engineered for local LLMs (qwen3, phi4, Mistral). Browse, fill in variables, preview, and send — all without leaving MLX Code.
+
+**Template categories:**
+
+| Category | Templates |
+|----------|-----------|
+| Review | Swift Code Review, Review PR / Diff |
+| Debug | Fix a Bug, Fix Build Error |
+| Generate | Implement Feature, Add API Endpoint, Create Data Model |
+| Refactor | Refactor File |
+| Test | Add Unit Tests |
+| Document | Add Documentation, Explain Code |
+| Security | Security Audit, Add Error Handling |
+| Performance | Performance Analysis |
+| Deploy | Migration Plan |
+
+**API endpoints** (port 37422):
+
+```bash
+# List all templates
+curl http://127.0.0.1:37422/api/prompts
+
+# Get a template with variables
+curl http://127.0.0.1:37422/api/prompts/swift-code-review
+
+# Render with filled variables
+curl -X POST http://127.0.0.1:37422/api/prompts/render \
+  -H "Content-Type: application/json" \
+  -d '{"id":"swift-code-review","variables":{"FILE_PATH":"Sources/MyView.swift"}}'
+```
+
+**In-app browser** — Open from the command palette or toolbar. Filter by category, search by name/tag, fill variables in a form, see the rendered prompt before sending.
 
 ---
 
