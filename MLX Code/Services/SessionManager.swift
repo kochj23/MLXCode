@@ -17,7 +17,11 @@ class SessionManager: ObservableObject {
 
     private let fileManager = FileManager.default
     private var sessionFile: URL {
-        let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        guard let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+            let fallback = fileManager.homeDirectoryForCurrentUser.appendingPathComponent(".mlxcode/Sessions")
+            try? fileManager.createDirectory(at: fallback, withIntermediateDirectories: true)
+            return fallback.appendingPathComponent("current_session.json")
+        }
         let dir = appSupport.appendingPathComponent("MLX Code/Sessions")
         try? fileManager.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir.appendingPathComponent("current_session.json")

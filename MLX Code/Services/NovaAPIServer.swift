@@ -31,6 +31,17 @@ class NovaAPIServer {
     private var listener: NWListener?
     private let startTime = Date()
 
+    /// Local-only anti-CSRF bearer token (not a secret — just prevents drive-by POST from browser JS)
+    private let apiToken: String = {
+        let key = "NovaAPIToken"
+        if let existing = UserDefaults.standard.string(forKey: key), !existing.isEmpty {
+            return existing
+        }
+        let token = UUID().uuidString
+        UserDefaults.standard.set(token, forKey: key)
+        return token
+    }()
+
     private init() {}
 
     func start() {
@@ -68,6 +79,13 @@ class NovaAPIServer {
 
     private func route(_ req: NovaRequest) async -> String {
         if req.method == "OPTIONS" { return http(200, "") }
+
+        // Require bearer token for all POST/DELETE requests (anti-CSRF)
+        if req.method == "POST" || req.method == "DELETE" {
+            guard let auth = req.headers["authorization"], auth == "Bearer \(apiToken)" else {
+                return json(401, ["error": "Unauthorized — missing or invalid Bearer token"])
+            }
+        }
 
         switch (req.method, req.path) {
 
@@ -185,6 +203,7 @@ class NovaAPIServer {
         let method: String
         let path: String
         let body: String
+        let headers: [String: String]
         func bodyJSON() -> [String: Any]? {
             guard let data = body.data(using: .utf8) else { return nil }
             return try? JSONSerialization.jsonObject(with: data) as? [String: Any]
@@ -206,6 +225,7 @@ class NovaAPIServer {
             method = tokens[0]
             path = tokens[1].components(separatedBy: "?").first ?? tokens[1]
             body = rawBody
+            headers = hdrs
         }
     }
 
@@ -222,7 +242,7 @@ class NovaAPIServer {
     }
 
     private func http(_ status: Int, _ body: String, _ ct: String = "text/plain") -> String {
-        let st = [200:"OK",201:"Created",400:"Bad Request",404:"Not Found",500:"Internal Server Error"][status] ?? "Unknown"
-        return "HTTP/1.1 \(status) \(st)\r\nContent-Type: \(ct); charset=utf-8\r\nContent-Length: \(body.utf8.count)\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n\(body)"
+        let st = [200:"OK",201:"Created",400:"Bad Request",401:"Unauthorized",404:"Not Found",500:"Internal Server Error"][status] ?? "Unknown"
+        return "HTTP/1.1 \(status) \(st)\r\nContent-Type: \(ct); charset=utf-8\r\nContent-Length: \(body.utf8.count)\r\nConnection: close\r\n\r\n\(body)"
     }
 }

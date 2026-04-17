@@ -93,7 +93,7 @@ class GitIntegrationTool: BaseTool {
     // MARK: - Git Operations
 
     private func gitStatus(context: ToolContext) async throws -> ToolResult {
-        let output = try await runGitCommand("status --porcelain -b", in: context.workingDirectory)
+        let output = try await runGitCommand(["status", "--porcelain", "-b"], in: context.workingDirectory)
 
         let lines = output.components(separatedBy: .newlines).filter { !$0.isEmpty }
         var branch = "unknown"
@@ -170,9 +170,13 @@ class GitIntegrationTool: BaseTool {
 
     private func gitDiff(parameters: [String: Any], context: ToolContext) async throws -> ToolResult {
         let filePath = parameters["file_path"] as? String
-        let command = filePath != nil ? "diff \(filePath!)" : "diff"
+        var args = ["diff"]
+        if let filePath = filePath {
+            args.append("--")
+            args.append(filePath)
+        }
 
-        let output = try await runGitCommand(command, in: context.workingDirectory)
+        let output = try await runGitCommand(args, in: context.workingDirectory)
 
         var result = "# Git Diff\n\n"
 
@@ -190,9 +194,10 @@ class GitIntegrationTool: BaseTool {
 
     private func gitAdd(parameters: [String: Any], context: ToolContext) async throws -> ToolResult {
         let files = parameters["files"] as? [String] ?? ["."]
-        let filesStr = files.joined(separator: " ")
+        var args = ["add", "--"]
+        args.append(contentsOf: files)
 
-        _ = try await runGitCommand("add \(filesStr)", in: context.workingDirectory)
+        _ = try await runGitCommand(args, in: context.workingDirectory)
 
         var result = "# Files Staged\n\n"
         for file in files {
@@ -208,7 +213,7 @@ class GitIntegrationTool: BaseTool {
 
         if generateMessage || message == nil {
             // Generate commit message from diff
-            let diff = try await runGitCommand("diff --cached", in: context.workingDirectory)
+            let diff = try await runGitCommand(["diff", "--cached"], in: context.workingDirectory)
             message = generateCommitMessage(from: diff)
         }
 
@@ -216,8 +221,7 @@ class GitIntegrationTool: BaseTool {
             throw ToolError.missingParameter("Commit message is required")
         }
 
-        let escapedMessage = commitMessage.replacingOccurrences(of: "\"", with: "\\\"")
-        _ = try await runGitCommand("commit -m \"\(escapedMessage)\"", in: context.workingDirectory)
+        _ = try await runGitCommand(["commit", "-m", commitMessage], in: context.workingDirectory)
 
         var result = "# Commit Created\n\n"
         result += "**Message**:\n```\n\(commitMessage)\n```\n\n"
@@ -227,7 +231,7 @@ class GitIntegrationTool: BaseTool {
     }
 
     private func gitPush(context: ToolContext) async throws -> ToolResult {
-        let output = try await runGitCommand("push", in: context.workingDirectory)
+        let output = try await runGitCommand(["push"], in: context.workingDirectory)
 
         var result = "# Push Complete\n\n"
         result += "```\n\(output)\n```\n"
@@ -236,7 +240,7 @@ class GitIntegrationTool: BaseTool {
     }
 
     private func gitPull(context: ToolContext) async throws -> ToolResult {
-        let output = try await runGitCommand("pull", in: context.workingDirectory)
+        let output = try await runGitCommand(["pull"], in: context.workingDirectory)
 
         var result = "# Pull Complete\n\n"
         result += "```\n\(output)\n```\n"
@@ -246,7 +250,7 @@ class GitIntegrationTool: BaseTool {
 
     private func gitLog(parameters: [String: Any], context: ToolContext) async throws -> ToolResult {
         let limit = parameters["limit"] as? Int ?? 10
-        let output = try await runGitCommand("log --oneline -n \(limit)", in: context.workingDirectory)
+        let output = try await runGitCommand(["log", "--oneline", "-n", "\(limit)"], in: context.workingDirectory)
 
         var result = "# Git Log (last \(limit) commits)\n\n"
         result += "```\n\(output)\n```\n"
@@ -257,8 +261,8 @@ class GitIntegrationTool: BaseTool {
     private func gitBranch(parameters: [String: Any], context: ToolContext) async throws -> ToolResult {
         let branchName = parameters["branch"] as? String
 
-        let command = branchName != nil ? "branch \(branchName!)" : "branch -a"
-        let output = try await runGitCommand(command, in: context.workingDirectory)
+        let args: [String] = branchName != nil ? ["branch", branchName!] : ["branch", "-a"]
+        let output = try await runGitCommand(args, in: context.workingDirectory)
 
         var result = "# Git Branches\n\n"
         result += "```\n\(output)\n```\n"
@@ -271,7 +275,7 @@ class GitIntegrationTool: BaseTool {
             throw ToolError.missingParameter("Branch name required for checkout")
         }
 
-        let output = try await runGitCommand("checkout \(branch)", in: context.workingDirectory)
+        let output = try await runGitCommand(["checkout", branch], in: context.workingDirectory)
 
         var result = "# Checked Out Branch\n\n"
         result += "**Branch**: \(branch)\n\n"
@@ -285,7 +289,7 @@ class GitIntegrationTool: BaseTool {
             throw ToolError.missingParameter("Branch name required for merge")
         }
 
-        let output = try await runGitCommand("merge \(branch)", in: context.workingDirectory)
+        let output = try await runGitCommand(["merge", branch], in: context.workingDirectory)
 
         var result = "# Merge Complete\n\n"
         result += "**Merged**: \(branch) into current branch\n\n"
@@ -299,7 +303,7 @@ class GitIntegrationTool: BaseTool {
             throw ToolError.missingParameter("file_path required for blame")
         }
 
-        let output = try await runGitCommand("blame \(filePath)", in: context.workingDirectory)
+        let output = try await runGitCommand(["blame", "--", filePath], in: context.workingDirectory)
 
         var result = "# Git Blame\n\n"
         result += "**File**: \(filePath)\n\n"
@@ -309,7 +313,7 @@ class GitIntegrationTool: BaseTool {
     }
 
     private func gitStash(parameters: [String: Any], context: ToolContext) async throws -> ToolResult {
-        let output = try await runGitCommand("stash", in: context.workingDirectory)
+        let output = try await runGitCommand(["stash"], in: context.workingDirectory)
 
         var result = "# Changes Stashed\n\n"
         result += "```\n\(output)\n```\n"
@@ -319,21 +323,27 @@ class GitIntegrationTool: BaseTool {
 
     // MARK: - Helper Methods
 
-    private func runGitCommand(_ command: String, in directory: String) async throws -> String {
+    /// Execute a git command safely using Process.arguments array form.
+    /// SECURITY: Never passes arguments through a shell — prevents command injection.
+    private func runGitCommand(_ args: [String], in directory: String) async throws -> String {
         let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/bin/bash")
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/git")
         process.currentDirectoryURL = URL(fileURLWithPath: directory)
-        process.arguments = ["-c", "git \(command) 2>&1"]
+        process.arguments = args
 
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = pipe
+        let stdoutPipe = Pipe()
+        let stderrPipe = Pipe()
+        process.standardOutput = stdoutPipe
+        process.standardError = stderrPipe
 
         try process.run()
         process.waitUntilExit()
 
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8) ?? ""
+        let stdoutData = stdoutPipe.fileHandleForReading.readDataToEndOfFile()
+        let stderrData = stderrPipe.fileHandleForReading.readDataToEndOfFile()
+        let stdout = String(data: stdoutData, encoding: .utf8) ?? ""
+        let stderr = String(data: stderrData, encoding: .utf8) ?? ""
+        let output = stdout + (stderr.isEmpty ? "" : "\n" + stderr)
 
         if process.terminationStatus != 0 && !output.isEmpty && output.contains("fatal") {
             throw ToolError.executionFailed("Git command failed: \(output)")

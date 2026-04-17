@@ -192,7 +192,7 @@ struct LogViewerPanel: View {
         if logManager.selectedCategories.isEmpty {
             return "All"
         } else if logManager.selectedCategories.count == 1 {
-            return logManager.selectedCategories.first!
+            return logManager.selectedCategories.first ?? "All"
         } else {
             return "\(logManager.selectedCategories.count) selected"
         }
