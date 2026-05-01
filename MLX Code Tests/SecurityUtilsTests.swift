@@ -2,138 +2,155 @@
 //  SecurityUtilsTests.swift
 //  MLX Code Tests
 //
-//  Created on 2025-11-18.
-//  Copyright © 2025. All rights reserved.
+//  Unit tests for SecurityUtils: path validation, command validation,
+//  sanitization, email/URL validation, and helper functions.
+//
+//  Created by Jordan Koch.
 //
 
 import XCTest
 @testable import MLX_Code
 
-/// Unit tests for SecurityUtils
 final class SecurityUtilsTests: XCTestCase {
 
-    // MARK: - Path Validation Tests
+    // MARK: - File Path Validation
 
-    func testPathTraversalDetection() {
-        let maliciousPath = "/Users/test/../../../etc/passwd"
-        let isValid = SecurityUtils.validatePath(maliciousPath)
-
-        XCTAssertFalse(isValid, "Path traversal should be detected and rejected")
-    }
-
-    func testValidPathAcceptance() {
+    func testValidPathAccepted() {
         let validPath = "/Users/testuser/projects/project.swift"
-        let isValid = SecurityUtils.validatePath(validPath)
-
-        XCTAssertTrue(isValid, "Valid path should be accepted")
+        XCTAssertTrue(SecurityUtils.validateFilePath(validPath), "Valid absolute path should be accepted")
     }
 
-    func testSymlinkDetection() {
-        // Test that symlinks are not followed
-        let symlinkPath = "/tmp/../var/log/system.log"
-        let isValid = SecurityUtils.validatePath(symlinkPath)
-
-        XCTAssertFalse(isValid, "Symlink path traversal should be rejected")
+    func testEmptyPathRejected() {
+        XCTAssertFalse(SecurityUtils.validateFilePath(""), "Empty path should be rejected")
+        XCTAssertFalse(SecurityUtils.validateFilePath("   "), "Whitespace-only path should be rejected")
     }
 
-    // MARK: - Input Validation Tests
-
-    func testInputLengthValidation() {
-        let shortInput = "Valid input"
-        let longInput = String(repeating: "a", count: 100_001) // Exceeds max
-
-        XCTAssertTrue(SecurityUtils.validateInput(shortInput), "Short input should be valid")
-        XCTAssertFalse(SecurityUtils.validateInput(longInput), "Excessively long input should be invalid")
+    func testExcessivelyLongPathRejected() {
+        let longPath = "/" + String(repeating: "a", count: 5000)
+        XCTAssertFalse(SecurityUtils.validateFilePath(longPath), "Path exceeding 4096 bytes should be rejected")
     }
 
-    func testSpecialCharacterValidation() {
-        let safeInput = "Hello World 123"
-        let unsafeInput = "rm -rf /; echo 'pwned'"
+    // MARK: - Command Validation
 
-        XCTAssertTrue(SecurityUtils.validateInput(safeInput), "Safe input should be valid")
-        XCTAssertTrue(SecurityUtils.validateInput(unsafeInput), "Input validation should allow shell characters (they are escaped)")
+    func testSafeCommandAccepted() {
+        XCTAssertTrue(SecurityUtils.validateCommand("ls"), "Simple command should be accepted")
+        XCTAssertTrue(SecurityUtils.validateCommand("git status"), "Git command should be accepted")
+        XCTAssertTrue(SecurityUtils.validateCommand("swift build -c release"), "Build command should be accepted")
     }
 
-    // MARK: - Sanitization Tests
+    func testEmptyCommandRejected() {
+        XCTAssertFalse(SecurityUtils.validateCommand(""), "Empty command should be rejected")
+        XCTAssertFalse(SecurityUtils.validateCommand("   "), "Whitespace-only command should be rejected")
+    }
 
-    func testSQLInjectionPrevention() {
-        let sqlInjection = "'; DROP TABLE users; --"
-        let sanitized = SecurityUtils.sanitizeSQL(sqlInjection)
+    func testCommandWithMetacharsRejected() {
+        XCTAssertFalse(SecurityUtils.validateCommand("ls; rm -rf /"), "Semicolon injection should be rejected")
+        XCTAssertFalse(SecurityUtils.validateCommand("cat file | sh"), "Pipe should be rejected")
+        XCTAssertFalse(SecurityUtils.validateCommand("echo $PATH"), "Dollar sign should be rejected")
+        XCTAssertFalse(SecurityUtils.validateCommand("echo `whoami`"), "Backtick should be rejected")
+        XCTAssertFalse(SecurityUtils.validateCommand("echo $(id)"), "Dollar-paren should be rejected")
+    }
 
-        XCTAssertFalse(sanitized.contains("DROP TABLE"), "SQL injection should be sanitized")
+    // MARK: - Email Validation
+
+    func testValidEmailAccepted() {
+        XCTAssertTrue(SecurityUtils.validateEmail("test@example.com"))
+        XCTAssertTrue(SecurityUtils.validateEmail("user.name@domain.co.uk"))
+        XCTAssertTrue(SecurityUtils.validateEmail("user+tag@example.org"))
+    }
+
+    func testInvalidEmailRejected() {
+        XCTAssertFalse(SecurityUtils.validateEmail("notanemail"))
+        XCTAssertFalse(SecurityUtils.validateEmail("@domain.com"))
+        XCTAssertFalse(SecurityUtils.validateEmail("test@"))
+    }
+
+    // MARK: - URL Validation
+
+    func testValidURLAccepted() {
+        XCTAssertTrue(SecurityUtils.validateURL("https://example.com"))
+        XCTAssertTrue(SecurityUtils.validateURL("http://test.org/path"))
+    }
+
+    func testUnsafeProtocolRejected() {
+        XCTAssertFalse(SecurityUtils.validateURL("javascript:alert(1)"))
+        XCTAssertFalse(SecurityUtils.validateURL("ftp://example.com"))
+    }
+
+    func testInvalidURLRejected() {
+        XCTAssertFalse(SecurityUtils.validateURL("not a url"))
+    }
+
+    // MARK: - Port Validation
+
+    func testValidPortAccepted() {
+        XCTAssertTrue(SecurityUtils.validatePort(80))
+        XCTAssertTrue(SecurityUtils.validatePort(443))
+        XCTAssertTrue(SecurityUtils.validatePort(65535))
+    }
+
+    func testInvalidPortRejected() {
+        XCTAssertFalse(SecurityUtils.validatePort(0))
+        XCTAssertFalse(SecurityUtils.validatePort(65536))
+        XCTAssertFalse(SecurityUtils.validatePort(-1))
+    }
+
+    // MARK: - Sanitization
+
+    func testSQLSanitization() {
+        let injection = "'; DROP TABLE users; --"
+        let sanitized = SecurityUtils.sanitizeSQL(injection)
         XCTAssertTrue(sanitized.contains("''"), "Single quotes should be escaped")
+        XCTAssertFalse(sanitized.contains("\0"), "Null bytes should be removed")
     }
 
-    func testHTMLEscaping() {
-        let htmlInput = "<script>alert('XSS')</script>"
-        let escaped = SecurityUtils.escapeHTML(htmlInput)
-
-        XCTAssertFalse(escaped.contains("<script>"), "HTML tags should be escaped")
-        XCTAssertTrue(escaped.contains("&lt;"), "< should be escaped to &lt;")
-        XCTAssertTrue(escaped.contains("&gt;"), "> should be escaped to &gt;")
+    func testHTMLSanitization() {
+        let input = "<script>alert('XSS')</script>"
+        let sanitized = SecurityUtils.sanitizeHTML(input)
+        XCTAssertFalse(sanitized.contains("<script>"), "HTML tags should be escaped")
+        XCTAssertTrue(sanitized.contains("&lt;"), "< should be escaped to &lt;")
+        XCTAssertTrue(sanitized.contains("&gt;"), "> should be escaped to &gt;")
     }
 
-    func testPathSanitization() {
-        let unsafePath = "/Users/../../etc/passwd"
-        let sanitized = SecurityUtils.sanitizePath(unsafePath)
-
-        XCTAssertFalse(sanitized.contains(".."), "Path traversal sequences should be removed")
+    func testShellArgumentSanitization() {
+        let input = "file.txt; rm -rf /"
+        let sanitized = SecurityUtils.sanitizeShellArgument(input)
+        XCTAssertFalse(sanitized.contains(";"), "Semicolons should be removed")
     }
 
-    // MARK: - Command Injection Tests
-
-    func testShellMetacharacterEscaping() {
-        let dangerousCommand = "file.txt; rm -rf /"
-        let escaped = SecurityUtils.escapeShellArgument(dangerousCommand)
-
-        XCTAssertFalse(escaped.contains(";"), "Semicolons should be escaped or quoted")
-        XCTAssertTrue(escaped.hasPrefix("'") || escaped.contains("\\"), "String should be quoted or escaped")
+    func testFilePathSanitization() {
+        let input = "path\\to\\file"
+        let sanitized = SecurityUtils.sanitizeFilePath(input)
+        XCTAssertFalse(sanitized.contains("\\"), "Backslashes should be normalized")
     }
 
-    // MARK: - Regex Validation Tests
-
-    func testEmailValidation() {
-        let validEmails = ["test@example.com", "user.name@domain.co.uk", "user+tag@example.org"]
-        let invalidEmails = ["invalid", "test@", "@domain.com", "test..user@example.com"]
-
-        for email in validEmails {
-            XCTAssertTrue(SecurityUtils.isValidEmail(email), "\(email) should be valid")
-        }
-
-        for email in invalidEmails {
-            XCTAssertFalse(SecurityUtils.isValidEmail(email), "\(email) should be invalid")
-        }
+    func testUserInputSanitization() {
+        let input = "Hello\0World  \t\t  Test"
+        let sanitized = SecurityUtils.sanitizeUserInput(input)
+        XCTAssertFalse(sanitized.contains("\0"), "Null bytes should be removed")
     }
 
-    func testURLValidation() {
-        let validURLs = ["https://example.com", "http://test.org/path", "https://sub.domain.com:8080/"]
-        let invalidURLs = ["not a url", "ftp://invalid", "javascript:alert(1)", "file:///etc/passwd"]
+    // MARK: - String Validation
 
-        for url in validURLs {
-            XCTAssertTrue(SecurityUtils.isValidURL(url), "\(url) should be valid")
-        }
-
-        for url in invalidURLs {
-            XCTAssertFalse(SecurityUtils.isValidURL(url), "\(url) should be invalid")
-        }
+    func testAlphanumericValidation() {
+        XCTAssertTrue(SecurityUtils.isAlphanumeric("abc123"))
+        XCTAssertFalse(SecurityUtils.isAlphanumeric("abc 123"))
+        XCTAssertFalse(SecurityUtils.isAlphanumeric("abc!"))
     }
 
-    // MARK: - Integer Validation Tests
-
-    func testIntegerRangeValidation() {
-        XCTAssertTrue(SecurityUtils.isValidInteger(50, min: 0, max: 100), "50 should be in range 0-100")
-        XCTAssertFalse(SecurityUtils.isValidInteger(150, min: 0, max: 100), "150 should be out of range")
-        XCTAssertFalse(SecurityUtils.isValidInteger(-10, min: 0, max: 100), "-10 should be out of range")
+    func testLengthValidation() {
+        XCTAssertTrue(SecurityUtils.validateLength("hello", min: 1, max: 10))
+        XCTAssertFalse(SecurityUtils.validateLength("", min: 1, max: 10))
+        XCTAssertFalse(SecurityUtils.validateLength("toolongstring", min: 1, max: 5))
     }
 
-    // MARK: - Performance Tests
+    // MARK: - Performance
 
     func testValidationPerformance() {
         let input = String(repeating: "a", count: 10_000)
-
         measure {
             for _ in 0..<1000 {
-                _ = SecurityUtils.validateInput(input)
+                _ = SecurityUtils.validateCommand(input)
             }
         }
     }

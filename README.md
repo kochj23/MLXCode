@@ -14,6 +14,80 @@ MLX Code runs language models directly on Apple Silicon using the [mlx-swift](ht
 
 ## Architecture
 
+```mermaid
+graph TB
+    subgraph Views["SwiftUI Views"]
+        ChatView
+        SettingsView
+        PromptTemplatesView
+        GitHubPanelView
+        CodeAnalysisPanelView
+        OnboardingView
+    end
+
+    subgraph ViewModels["ViewModels"]
+        ChatVM["ChatViewModel"]
+        ProjectVM["ProjectViewModel"]
+        GitHubVM["GitHubViewModel"]
+        CodeAnalysisVM["CodeAnalysisViewModel"]
+    end
+
+    subgraph Tools["Tool Execution Layer -- 14 tools, 2 tiers"]
+        direction LR
+        subgraph Core["Core (always available)"]
+            FileOps["File Operations"]
+            Bash
+            Grep
+            Glob
+            Edit
+        end
+        subgraph Dev["Development (project open)"]
+            Xcode
+            Git
+            GitHub
+            CodeNav["Code Navigation"]
+            CodeAnalysis
+            ErrorDiag["Error Diagnosis"]
+            TestGen["Test Generation"]
+            DiffPreview
+            Help
+        end
+    end
+
+    subgraph Engine["Inference Engine"]
+        MLXService["MLXService (actor)\nmlx-swift-lm | AsyncStream | SafeTensors"]
+        ContextManager["ContextManager (actor)\nToken budgeting | Compaction"]
+        ContextBudget["ContextBudget\n70% messages | 20% project | 10% summary"]
+        SystemPrompts["SystemPrompts\n~500 token tool prompt"]
+        UserMemories["UserMemories (actor)\n50+ coding standards"]
+    end
+
+    subgraph Security["Security & Utilities"]
+        CommandValidator["CommandValidator\nRegex blocking | Metachar filter"]
+        ModelSecurity["ModelSecurityValidator\nSafeTensors only | Hash checks"]
+        Keychain["KeychainManager\nmacOS Keychain | SecItem*"]
+        SecureLogger["SecureLogger\nCategory-based | No PII"]
+        SecurityUtils["SecurityUtils\nInput sanitization"]
+        RepDetector["RepetitionDetector\nLoop detection | Auto-break"]
+    end
+
+    subgraph External["Extensions & Integrations"]
+        XcodeExt["Xcode Extension\n5 editor commands"]
+        Widget["Desktop Widget\n3 sizes | WidgetKit"]
+        NovaAPI["Nova API Server\nHTTP on 127.0.0.1:37422"]
+    end
+
+    Views --> ViewModels
+    ViewModels --> Tools
+    Tools --> Engine
+    Engine --> Security
+    MLXService --> |"model files"| ModelSecurity
+    ChatVM --> |"slash commands"| Tools
+    Views -.-> External
+```
+
+### Detailed Architecture (ASCII)
+
 ```
 +-----------------------------------------------------------------------------------+
 |                              MLX Code (macOS App)                                 |
@@ -373,6 +447,7 @@ Being honest about limitations:
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| **v6.4.1** | May 2026 | Comprehensive XCTest suite -- 16 test files, ~150 test cases covering models, security, context budgeting, build parsing, Keychain, and source-level security scanning |
 | **v6.4.0** | April 2026 | Prompt Engineering Toolkit -- 15 templates, 9 categories, API endpoints, in-app browser |
 | **v6.3.0** | March 2026 | Xcode Source Editor Extension, native downloads (no Python), syntax highlighting, collapsed tool calls, accurate context bar, resume generation, SafeTensors-only loading |
 | **v6.2.0** | March 2026 | Replaced Python subprocess with native mlx-swift-lm inference, removed 2,726 lines of dead code |
@@ -453,7 +528,39 @@ MLX Code Widget/                   WidgetKit desktop widget (3 sizes)
   SharedDataManager.swift          App Group data sync
   WidgetData.swift                 Widget data model
 
-MLX Code Tests/                    Unit tests
+MLX Code Tests/                    Unit tests (16 test files, ~150 test cases)
+```
+
+---
+
+## Test Suite
+
+The project includes a comprehensive XCTest suite covering unit tests, functional tests, and security tests. All tests compile and run without warnings (`-warnings-as-errors` is enabled).
+
+| Test File | Coverage Area | Key Tests |
+|-----------|--------------|-----------|
+| **AppSettingsTests** | Settings persistence, validation, defaults | Temperature clamping, path validation, save/load round-trip |
+| **CommandValidatorTests** | Shell command security | Injection prevention, metachar blocking, word-boundary regex, whitelist enforcement, SSRF prevention |
+| **ContextManagerTests** | Token budgeting, context assembly | Token estimation, budget calculations, message compaction, summary generation |
+| **ContextBudgetTests** | Budget allocation ratios | 70/20/10 ratio validation, model heuristics, output reservation caps |
+| **JSONRepairTests** | Tool-call JSON parsing | Single-quote repair, trailing commas, legacy format fallback, nested JSON |
+| **MLXServiceTests** | Model loading, daemon communication | JSON response decoding, path validation, file system access |
+| **MessageTests** | Message model | Creation, Codable round-trip, validation, sanitized content, API key redaction |
+| **ConversationTests** | Conversation model | Message management, auto-title, JSON export/import, validation |
+| **MLXModelTests** | Model configuration | Parameter validation, Codable, factory methods, formatted size |
+| **RepetitionDetectorTests** | Loop detection | Pattern detection, buffer management, excessive repetition |
+| **BuildErrorParserTests** | Xcode build output parsing | Error/warning extraction, categorization, suggestions, summary |
+| **KeychainManagerTests** | Secure credential storage | Save/load/delete, overwrite, special characters, error types |
+| **PromptTemplateTests** | Template rendering | Variable substitution, Codable, equality, performance |
+| **PromptTemplateLibraryTests** | Curated template library | Category coverage, unique IDs, variable definitions, rendering |
+| **SecurityUtilsTests** | Input validation & sanitization | Path/command/email/URL/port validation, HTML/SQL/shell sanitization |
+| **SecurityScanTests** | Source code security audit | No hardcoded API keys, no secrets in UserDefaults, no unsafe C functions, SSRF prevention |
+
+Run the suite:
+
+```bash
+xcodebuild -project "MLX Code.xcodeproj" -scheme "MLX Code" \
+  -destination "platform=macOS" test
 ```
 
 ---

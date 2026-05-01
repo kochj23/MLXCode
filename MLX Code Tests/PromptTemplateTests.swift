@@ -2,199 +2,215 @@
 //  PromptTemplateTests.swift
 //  MLX Code Tests
 //
-//  Created on 2025-11-18.
-//  Copyright © 2025. All rights reserved.
+//  Unit tests for PromptTemplate: rendering, variable substitution,
+//  Codable conformance, and edge cases.
+//
+//  Created by Jordan Koch.
 //
 
 import XCTest
 @testable import MLX_Code
 
-/// Unit tests for PromptTemplate
 final class PromptTemplateTests: XCTestCase {
 
-    // MARK: - Template Rendering Tests
+    // MARK: - Template Rendering
 
     func testSimpleVariableSubstitution() {
         let template = PromptTemplate(
+            id: "test-1",
             name: "Test",
-            category: .codeGeneration,
-            template: "Hello {{name}}!",
+            category: .review,
+            description: "A test template",
+            icon: "star",
+            template: "Hello {{NAME}}!",
             variables: [
-                PromptTemplate.Variable(name: "name", description: "Name", isRequired: true)
-            ]
+                PromptTemplate.TemplateVar(name: "NAME", label: "Name", placeholder: "e.g. World", required: true)
+            ],
+            tags: ["test"]
         )
-
-        let rendered = template.render(with: ["name": "World"])
+        let rendered = template.render(with: ["NAME": "World"])
         XCTAssertEqual(rendered, "Hello World!", "Variable should be substituted")
     }
 
     func testMultipleVariableSubstitution() {
         let template = PromptTemplate(
+            id: "test-2",
             name: "Test",
-            category: .codeGeneration,
-            template: "{{greeting}} {{name}}! How are you?",
+            category: .review,
+            description: "A test template",
+            icon: "star",
+            template: "{{GREETING}} {{NAME}}!",
             variables: [
-                PromptTemplate.Variable(name: "greeting", description: "Greeting", isRequired: true),
-                PromptTemplate.Variable(name: "name", description: "Name", isRequired: true)
-            ]
+                PromptTemplate.TemplateVar(name: "GREETING", label: "Greeting", placeholder: "Hi", required: true),
+                PromptTemplate.TemplateVar(name: "NAME", label: "Name", placeholder: "Alice", required: true)
+            ],
+            tags: ["test"]
         )
-
-        let rendered = template.render(with: ["greeting": "Hello", "name": "Alice"])
-        XCTAssertEqual(rendered, "Hello Alice! How are you?", "Multiple variables should be substituted")
+        let rendered = template.render(with: ["GREETING": "Hello", "NAME": "Alice"])
+        XCTAssertEqual(rendered, "Hello Alice!", "Multiple variables should be substituted")
     }
 
-    func testDefaultValueUsage() {
+    func testMissingVariableLeavesPlaceholder() {
         let template = PromptTemplate(
+            id: "test-3",
             name: "Test",
-            category: .codeGeneration,
-            template: "Hello {{name}}!",
+            category: .review,
+            description: "Test",
+            icon: "star",
+            template: "Hello {{NAME}}!",
             variables: [
-                PromptTemplate.Variable(name: "name", description: "Name", isRequired: false, defaultValue: "Guest")
-            ]
+                PromptTemplate.TemplateVar(name: "NAME", label: "Name", placeholder: "World", required: true)
+            ],
+            tags: ["test"]
         )
-
-        let rendered = template.render(with: [:]) // No values provided
-        XCTAssertEqual(rendered, "Hello Guest!", "Default value should be used when no value provided")
+        let rendered = template.render(with: [:])
+        XCTAssertEqual(rendered, "Hello {{NAME}}!", "Missing variable should leave placeholder")
     }
-
-    func testMissingVariableWithoutDefault() {
-        let template = PromptTemplate(
-            name: "Test",
-            category: .codeGeneration,
-            template: "Hello {{name}}!",
-            variables: [
-                PromptTemplate.Variable(name: "name", description: "Name", isRequired: true)
-            ]
-        )
-
-        let rendered = template.render(with: [:]) // No values provided
-        XCTAssertEqual(rendered, "Hello !", "Missing required variable should result in empty substitution")
-    }
-
-    func testComplexTemplate() {
-        let template = PromptTemplate(
-            name: "SwiftUI View",
-            category: .codeGeneration,
-            template: """
-            Create a SwiftUI view named {{viewName}} that {{functionality}}.
-            It should use {{architecture}} architecture.
-            """,
-            variables: [
-                PromptTemplate.Variable(name: "viewName", description: "View name", isRequired: true),
-                PromptTemplate.Variable(name: "functionality", description: "Functionality", isRequired: true),
-                PromptTemplate.Variable(name: "architecture", description: "Architecture", isRequired: false, defaultValue: "MVVM")
-            ]
-        )
-
-        let rendered = template.render(with: [
-            "viewName": "UserProfileView",
-            "functionality": "displays user information"
-        ])
-
-        XCTAssertTrue(rendered.contains("UserProfileView"), "View name should be substituted")
-        XCTAssertTrue(rendered.contains("displays user information"), "Functionality should be substituted")
-        XCTAssertTrue(rendered.contains("MVVM"), "Default architecture should be used")
-    }
-
-    // MARK: - Template Validation Tests
-
-    func testRequiredVariableDetection() {
-        let template = PromptTemplate(
-            name: "Test",
-            category: .codeGeneration,
-            template: "Hello {{name}}!",
-            variables: [
-                PromptTemplate.Variable(name: "name", description: "Name", isRequired: true)
-            ]
-        )
-
-        let hasRequiredVars = template.variables.contains { $0.isRequired }
-        XCTAssertTrue(hasRequiredVars, "Template should have required variables")
-    }
-
-    // MARK: - Built-in Templates Tests
-
-    func testBuiltInTemplatesAvailability() {
-        let templates = PromptTemplate.builtInTemplates()
-
-        XCTAssertGreaterThan(templates.count, 15, "Should have at least 15 built-in templates")
-
-        // Check for specific categories
-        let categories = Set(templates.map { $0.category })
-        XCTAssertTrue(categories.contains(.codeGeneration), "Should have code generation templates")
-        XCTAssertTrue(categories.contains(.refactoring), "Should have refactoring templates")
-        XCTAssertTrue(categories.contains(.documentation), "Should have documentation templates")
-        XCTAssertTrue(categories.contains(.debugging), "Should have debugging templates")
-    }
-
-    func testSwiftUIViewTemplate() {
-        let templates = PromptTemplate.builtInTemplates()
-        guard let swiftUITemplate = templates.first(where: { $0.name == "SwiftUI View" }) else {
-            XCTFail("SwiftUI View template should exist")
-            return
-        }
-
-        XCTAssertEqual(swiftUITemplate.category, .codeGeneration, "Should be in code generation category")
-        XCTAssertTrue(swiftUITemplate.template.contains("SwiftUI"), "Template should mention SwiftUI")
-        XCTAssertGreaterThan(swiftUITemplate.variables.count, 0, "Should have variables")
-    }
-
-    // MARK: - Edge Cases
 
     func testEmptyTemplate() {
         let template = PromptTemplate(
+            id: "test-4",
             name: "Empty",
-            category: .custom,
+            category: .debug,
+            description: "Empty",
+            icon: "star",
             template: "",
-            variables: []
+            variables: [],
+            tags: ["test"]
         )
-
         let rendered = template.render(with: [:])
         XCTAssertEqual(rendered, "", "Empty template should render as empty string")
     }
 
     func testTemplateWithoutVariables() {
         let template = PromptTemplate(
+            id: "test-5",
             name: "Static",
-            category: .custom,
+            category: .debug,
+            description: "Static",
+            icon: "star",
             template: "This is a static template.",
-            variables: []
+            variables: [],
+            tags: ["test"]
         )
-
         let rendered = template.render(with: ["unused": "value"])
         XCTAssertEqual(rendered, "This is a static template.", "Static template should not change")
     }
 
     func testTemplateWithSpecialCharacters() {
         let template = PromptTemplate(
+            id: "test-6",
             name: "Special",
-            category: .custom,
-            template: "Code: {{code}}\nNew line after",
+            category: .generate,
+            description: "Special chars",
+            icon: "star",
+            template: "Code: {{CODE}}\nNew line after",
             variables: [
-                PromptTemplate.Variable(name: "code", description: "Code", isRequired: true)
-            ]
+                PromptTemplate.TemplateVar(name: "CODE", label: "Code", placeholder: "...", required: true)
+            ],
+            tags: ["test"]
         )
-
-        let rendered = template.render(with: ["code": "func test() { }"])
-        XCTAssertTrue(rendered.contains("func test() { }"), "Special characters in values should be preserved")
-        XCTAssertTrue(rendered.contains("\n"), "Newlines in template should be preserved")
+        let rendered = template.render(with: ["CODE": "func test() { }"])
+        XCTAssertTrue(rendered.contains("func test() { }"), "Special characters should be preserved")
+        XCTAssertTrue(rendered.contains("\n"), "Newlines should be preserved")
     }
 
-    // MARK: - Performance Tests
+    // MARK: - TemplateCategory
+
+    func testAllCategoriesHaveRawValues() {
+        for category in PromptTemplate.TemplateCategory.allCases {
+            XCTAssertFalse(category.rawValue.isEmpty, "Category \(category) should have a raw value")
+        }
+    }
+
+    // MARK: - Equatable
+
+    func testEqualityByID() {
+        let t1 = PromptTemplate(
+            id: "same-id", name: "A", category: .review, description: "A",
+            icon: "a", template: "A", variables: [], tags: ["a"]
+        )
+        let t2 = PromptTemplate(
+            id: "same-id", name: "B", category: .debug, description: "B",
+            icon: "b", template: "B", variables: [], tags: ["b"]
+        )
+        XCTAssertEqual(t1, t2, "Templates with the same ID should be equal")
+    }
+
+    func testInequalityByID() {
+        let t1 = PromptTemplate(
+            id: "id-1", name: "Same", category: .review, description: "Same",
+            icon: "star", template: "Same", variables: [], tags: []
+        )
+        let t2 = PromptTemplate(
+            id: "id-2", name: "Same", category: .review, description: "Same",
+            icon: "star", template: "Same", variables: [], tags: []
+        )
+        XCTAssertNotEqual(t1, t2, "Templates with different IDs should not be equal")
+    }
+
+    // MARK: - Hashable
+
+    func testHashableInSet() {
+        let t1 = PromptTemplate(
+            id: "a", name: "A", category: .review, description: "A",
+            icon: "star", template: "A", variables: [], tags: []
+        )
+        let t2 = PromptTemplate(
+            id: "b", name: "B", category: .debug, description: "B",
+            icon: "star", template: "B", variables: [], tags: []
+        )
+        let set: Set<PromptTemplate> = [t1, t2]
+        XCTAssertEqual(set.count, 2)
+    }
+
+    // MARK: - Codable
+
+    func testCodableRoundTrip() throws {
+        let template = PromptTemplate(
+            id: "codable-test",
+            name: "Codable",
+            category: .security,
+            description: "Testing Codable",
+            icon: "lock",
+            template: "Audit {{SCOPE}}",
+            variables: [
+                PromptTemplate.TemplateVar(name: "SCOPE", label: "Scope", placeholder: "module", required: true)
+            ],
+            tags: ["security", "test"]
+        )
+
+        let encoder = JSONEncoder()
+        let data = try encoder.encode(template)
+
+        let decoder = JSONDecoder()
+        let decoded = try decoder.decode(PromptTemplate.self, from: data)
+
+        XCTAssertEqual(decoded.id, template.id)
+        XCTAssertEqual(decoded.name, template.name)
+        XCTAssertEqual(decoded.category, template.category)
+        XCTAssertEqual(decoded.variables.count, template.variables.count)
+        XCTAssertEqual(decoded.tags, template.tags)
+    }
+
+    // MARK: - Performance
 
     func testRenderPerformance() {
         let template = PromptTemplate(
-            name: "Performance Test",
-            category: .custom,
-            template: String(repeating: "{{var}} ", count: 100),
+            id: "perf-test",
+            name: "Perf",
+            category: .generate,
+            description: "Perf test",
+            icon: "star",
+            template: String(repeating: "{{VAR}} ", count: 100),
             variables: [
-                PromptTemplate.Variable(name: "var", description: "Variable", isRequired: true)
-            ]
+                PromptTemplate.TemplateVar(name: "VAR", label: "Var", placeholder: "v", required: true)
+            ],
+            tags: ["perf"]
         )
-
         measure {
             for _ in 0..<100 {
-                _ = template.render(with: ["var": "value"])
+                _ = template.render(with: ["VAR": "value"])
             }
         }
     }
