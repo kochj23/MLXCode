@@ -112,8 +112,10 @@ class ChatViewModel: ObservableObject {
     }
 
     /// Updates model status when the selected model changes in settings.
+    /// Debounced by 5 seconds to batch rapid changes.
     private func setupModelObserver() {
         AppSettings.shared.$selectedModel
+            .debounce(for: .seconds(5), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 Task { [weak self] in
@@ -132,10 +134,13 @@ class ChatViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
-    /// Estimates token count (rough approximation: 1 token ≈ 4 characters)
+    /// Estimates token count using word-based heuristic (words * 1.3 + punctuation count).
+    /// More accurate for code than the naive chars/4 approach.
     private func estimateTokenCount(_ text: String) -> Int {
-        // Simple estimation: ~4 characters per token on average
-        return max(1, text.count / 4)
+        guard !text.isEmpty else { return 0 }
+        let words = text.split(whereSeparator: { $0.isWhitespace || $0.isNewline }).count
+        let punctuationCount = text.filter { $0.isPunctuation || $0.isSymbol }.count
+        return max(1, Int(Double(words) * 1.3) + punctuationCount)
     }
 
     // MARK: - Public Methods
@@ -149,9 +154,13 @@ class ChatViewModel: ObservableObject {
         // Sanitize input
         let sanitizedInput = SecurityUtils.sanitizeUserInput(userInput)
 
-        // Validate input length
-        guard SecurityUtils.validateLength(sanitizedInput, max: 10_000) else {
-            errorMessage = "Message is too long. Maximum 10,000 characters."
+        // Validate input by estimated tokens against model context window
+        let estimatedTokens = estimateTokenCount(sanitizedInput)
+        let contextWindowSize = AppSettings.shared.selectedModel?.contextWindowSize ?? 8192
+        // Reserve 25% of context window for response, allow input up to 75%
+        let maxInputTokens = Int(Double(contextWindowSize) * 0.75)
+        guard estimatedTokens <= maxInputTokens else {
+            errorMessage = "Message is too long. Estimated \(estimatedTokens) tokens exceeds limit of \(maxInputTokens) (75% of \(contextWindowSize) context window)."
             return
         }
 
