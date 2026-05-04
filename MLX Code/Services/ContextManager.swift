@@ -171,7 +171,7 @@ actor ContextManager {
         }
 
         // Recent files from MemorySystem (first 200 chars each, max 3)
-        let recentFiles = await MemorySystem.shared.getAllFileContexts()
+        let recentFiles = MemorySystem.shared.getAllFileContexts()
         let sortedFiles = recentFiles
             .sorted { $0.lastModified > $1.lastModified }
             .prefix(3)

@@ -17,6 +17,14 @@
 		117B8C9D0E1F2A3B4C5D6E7F /* ContextBudget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228C9D0E1F2A3B4C5D6E7F81 /* ContextBudget.swift */; };
 		12C39D162F6650606907452D /* HelpTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = B87A92AF8834D4EAB5ED2FED /* HelpTool.swift */; };
 		1802C4097A43219B3A26BD6D /* JSONRepairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A0F623FA1030DD1C482C57 /* JSONRepairTests.swift */; };
+		A1B2C3D4E5F60718293A4B5C /* ToolRegistryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F5061728394A5B6C /* ToolRegistryTests.swift */; };
+		A2B3C4D5E6F70829304B5C6D /* SlashCommandHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F6172839405B6C7D /* SlashCommandHandlerTests.swift */; };
+		A3B4C5D6E7F8093A415C6D7E /* ModelSecurityValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C4D5E6F7283940516C7D8E /* ModelSecurityValidatorTests.swift */; };
+		A4B5C6D7E8F90A4B526D7E8F /* SessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C5D6E7F8394A51627D8E9F /* SessionManagerTests.swift */; };
+		A5B6C7D8E9FA1B5C637E8F90 /* LogEntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C6D7E8F94A5B62738E9FA0 /* LogEntryTests.swift */; };
+		A6B7C8D9EAFB2C6D748F90A1 /* ConversationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D8E9FA5B6C73849FA0B1 /* ConversationManagerTests.swift */; };
+		A7B8C9DAEBFC3D7E8590A1B2 /* NovaAPIRequestParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C8D9EAFB6C7D8495A0B1C2 /* NovaAPIRequestParsingTests.swift */; };
+		A8B9CADBECED4E8F96A1B2C3 /* FrameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C9DAEBFC7D8E95A6B1C2D3 /* FrameTests.swift */; };
 		18791BFABC004C46B272FB28E9157DBF /* MLXService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0095C89C8F1E4539863AE74D96B702F4 /* MLXService.swift */; };
 		1E0676463A705C10980A113D /* MLXModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200E4247E4F8B39E87890B78 /* MLXModelTests.swift */; };
 		21B357BD3B307E30CF749E7D /* ToolProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF68411190D219F58CC40B0 /* ToolProtocol.swift */; };
@@ -291,6 +299,14 @@
 		FF7455C7A2CE4EAA997C11353C876821 /* SecureLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureLogger.swift; sourceTree = "<group>"; };
 		FF9E24703A8FCDC2C9B4B0BA /* FileOperationsTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileOperationsTool.swift; path = Tools/FileOperationsTool.swift; sourceTree = "<group>"; };
 		FFEE0E9158DFE873189E8195 /* PromptTemplateLibraryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PromptTemplateLibraryTests.swift; sourceTree = "<group>"; };
+		B1C2D3E4F5061728394A5B6C /* ToolRegistryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ToolRegistryTests.swift; sourceTree = "<group>"; };
+		B2C3D4E5F6172839405B6C7D /* SlashCommandHandlerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SlashCommandHandlerTests.swift; sourceTree = "<group>"; };
+		B3C4D5E6F7283940516C7D8E /* ModelSecurityValidatorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ModelSecurityValidatorTests.swift; sourceTree = "<group>"; };
+		B4C5D6E7F8394A51627D8E9F /* SessionManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SessionManagerTests.swift; sourceTree = "<group>"; };
+		B5C6D7E8F94A5B62738E9FA0 /* LogEntryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LogEntryTests.swift; sourceTree = "<group>"; };
+		B6C7D8E9FA5B6C73849FA0B1 /* ConversationManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ConversationManagerTests.swift; sourceTree = "<group>"; };
+		B7C8D9EAFB6C7D8495A0B1C2 /* NovaAPIRequestParsingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NovaAPIRequestParsingTests.swift; sourceTree = "<group>"; };
+		B8C9DAEBFC7D8E95A6B1C2D3 /* FrameTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FrameTests.swift; sourceTree = "<group>"; };
 		FFF2B58504414094AD2F4B06D9B90954 /* ModelSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSelectorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -520,6 +536,14 @@
 				53FABF1BF6BBB5CBCE80A011 /* ContextBudgetTests.swift */,
 				F887651B4DC1CDA387493EA6 /* SecurityScanTests.swift */,
 				FFEE0E9158DFE873189E8195 /* PromptTemplateLibraryTests.swift */,
+				B1C2D3E4F5061728394A5B6C /* ToolRegistryTests.swift */,
+				B2C3D4E5F6172839405B6C7D /* SlashCommandHandlerTests.swift */,
+				B3C4D5E6F7283940516C7D8E /* ModelSecurityValidatorTests.swift */,
+				B4C5D6E7F8394A51627D8E9F /* SessionManagerTests.swift */,
+				B5C6D7E8F94A5B62738E9FA0 /* LogEntryTests.swift */,
+				B6C7D8E9FA5B6C73849FA0B1 /* ConversationManagerTests.swift */,
+				B7C8D9EAFB6C7D8495A0B1C2 /* NovaAPIRequestParsingTests.swift */,
+				B8C9DAEBFC7D8E95A6B1C2D3 /* FrameTests.swift */,
 			);
 			name = "MLX Code Tests";
 			path = "MLX Code Tests";
@@ -842,6 +866,14 @@
 				F5EFDF129122CB323A521993 /* ContextBudgetTests.swift in Sources */,
 				2C8EE1735B4B097290E1BDA2 /* SecurityScanTests.swift in Sources */,
 				D0B5B42A819D03A92F522B4C /* PromptTemplateLibraryTests.swift in Sources */,
+				A1B2C3D4E5F60718293A4B5C /* ToolRegistryTests.swift in Sources */,
+				A2B3C4D5E6F70829304B5C6D /* SlashCommandHandlerTests.swift in Sources */,
+				A3B4C5D6E7F8093A415C6D7E /* ModelSecurityValidatorTests.swift in Sources */,
+				A4B5C6D7E8F90A4B526D7E8F /* SessionManagerTests.swift in Sources */,
+				A5B6C7D8E9FA1B5C637E8F90 /* LogEntryTests.swift in Sources */,
+				A6B7C8D9EAFB2C6D748F90A1 /* ConversationManagerTests.swift in Sources */,
+				A7B8C9DAEBFC3D7E8590A1B2 /* NovaAPIRequestParsingTests.swift in Sources */,
+				A8B9CADBECED4E8F96A1B2C3 /* FrameTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

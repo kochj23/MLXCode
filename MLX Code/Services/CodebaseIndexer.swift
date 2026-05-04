@@ -69,48 +69,46 @@ actor CodebaseIndexer {
         // Recursively find all Swift, Objective-C, and Python files
         let extensions = ["swift", "m", "mm", "h", "py", "js", "ts", "jsx", "tsx"]
 
-        if let enumerator = fileManager.enumerator(at: url, includingPropertiesForKeys: [.isRegularFileKey]) {
-            for case let fileURL as URL in enumerator {
-                guard let ext = fileURL.pathExtension.lowercased() as String?,
-                      extensions.contains(ext) else {
-                    continue
-                }
+        let allURLs = fileManager.enumerator(at: url, includingPropertiesForKeys: [.isRegularFileKey])?
+            .allObjects.compactMap { $0 as? URL } ?? []
 
-                // Skip build directories
-                if fileURL.path.contains("build/") ||
-                   fileURL.path.contains("DerivedData/") ||
-                   fileURL.path.contains(".build/") ||
-                   fileURL.path.contains("Pods/") {
-                    continue
-                }
+        for fileURL in allURLs {
+            let ext = fileURL.pathExtension.lowercased()
+            guard extensions.contains(ext) else {
+                continue
+            }
 
-                do {
-                    let attributes = try fileManager.attributesOfItem(atPath: fileURL.path)
-                    let size = attributes[.size] as? Int ?? 0
-                    let modified = attributes[.modificationDate] as? Date ?? Date()
+            if fileURL.path.contains("build/") ||
+               fileURL.path.contains("DerivedData/") ||
+               fileURL.path.contains(".build/") ||
+               fileURL.path.contains("Pods/") {
+                continue
+            }
 
-                    // Only cache file content for files under 1 MB to limit memory usage
-                    let maxCachedContentSize = 1_048_576  // 1 MB
-                    let content = try String(contentsOf: fileURL, encoding: .utf8)
-                    let cachedContent = size <= maxCachedContentSize ? content : ""
+            do {
+                let attributes = try fileManager.attributesOfItem(atPath: fileURL.path)
+                let size = attributes[.size] as? Int ?? 0
+                let modified = attributes[.modificationDate] as? Date ?? Date()
 
-                    let symbols = extractSymbols(from: content, language: ext)
+                let maxCachedContentSize = 1_048_576
+                let content = try String(contentsOf: fileURL, encoding: .utf8)
+                let cachedContent = size <= maxCachedContentSize ? content : ""
 
-                    let indexed = IndexedFile(
-                        path: fileURL.path,
-                        content: cachedContent,
-                        language: ext,
-                        lastModified: modified,
-                        size: size,
-                        symbols: symbols
-                    )
+                let symbols = extractSymbols(from: content, language: ext)
 
-                    index[fileURL.path] = indexed
-                    filesIndexed += 1
-                } catch {
-                    // Skip files we can't read
-                    continue
-                }
+                let indexed = IndexedFile(
+                    path: fileURL.path,
+                    content: cachedContent,
+                    language: ext,
+                    lastModified: modified,
+                    size: size,
+                    symbols: symbols
+                )
+
+                index[fileURL.path] = indexed
+                filesIndexed += 1
+            } catch {
+                continue
             }
         }
 

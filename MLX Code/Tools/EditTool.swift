@@ -171,7 +171,7 @@ enum EditError: LocalizedError {
             return "File not found: \(path)"
         case .stringNotFound(let string):
             return "String not found in file: \(string.prefix(50))..."
-        case .notUnique(let string, let count):
+        case .notUnique(_, let count):
             return "String appears \(count) times (must be unique). Use replaceAll=true or provide more context."
         case .writeError(let details):
             return "Failed to write file: \(details)"

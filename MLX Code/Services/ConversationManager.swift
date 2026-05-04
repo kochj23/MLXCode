@@ -69,7 +69,7 @@ class ConversationManager: ObservableObject {
             }
             conversations.sort { $0.updatedAt > $1.updatedAt }
         } catch {
-            Task { await LogManager.shared.error("Failed to load conversations: \(error)", category: "ConversationManager") }
+            Task { LogManager.shared.error("Failed to load conversations: \(error)", category: "ConversationManager") }
         }
     }
 

@@ -134,29 +134,29 @@ actor MultiFileOperations {
 
         var filesModified = 0
 
-        if let enumerator = fileManager.enumerator(at: url, includingPropertiesForKeys: nil) {
-            for case let fileURL as URL in enumerator {
-                guard let ext = fileURL.pathExtension as String?,
-                      fileExtensions.contains(ext) else {
-                    continue
-                }
+        let fileURLs: [URL] = fileManager.enumerator(at: url, includingPropertiesForKeys: nil)?
+            .allObjects
+            .compactMap { $0 as? URL } ?? []
 
-                // Skip build directories
-                if fileURL.path.contains("build/") || fileURL.path.contains("DerivedData/") {
-                    continue
-                }
+        for fileURL in fileURLs {
+            guard fileExtensions.contains(fileURL.pathExtension) else {
+                continue
+            }
 
-                do {
-                    let content = try String(contentsOf: fileURL, encoding: .utf8)
-                    let newContent = content.replacingOccurrences(of: pattern, with: replacement, options: .regularExpression)
+            if fileURL.path.contains("build/") || fileURL.path.contains("DerivedData/") {
+                continue
+            }
 
-                    if content != newContent {
-                        try newContent.write(to: fileURL, atomically: true, encoding: .utf8)
-                        filesModified += 1
-                    }
-                } catch {
-                    print("Failed to process \(fileURL.path): \(error)")
+            do {
+                let content = try String(contentsOf: fileURL, encoding: .utf8)
+                let newContent = content.replacingOccurrences(of: pattern, with: replacement, options: .regularExpression)
+
+                if content != newContent {
+                    try newContent.write(to: fileURL, atomically: true, encoding: .utf8)
+                    filesModified += 1
                 }
+            } catch {
+                print("Failed to process \(fileURL.path): \(error)")
             }
         }
 

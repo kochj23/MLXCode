@@ -209,14 +209,6 @@ actor ModelSecurityValidator {
 
         defer { try? fileHandle.close() }
 
-        // Pickle magic bytes
-        let pickleOpcodes: [UInt8] = [
-            0x80, 0x02,  // Pickle protocol 2
-            0x80, 0x03,  // Pickle protocol 3
-            0x80, 0x04,  // Pickle protocol 4
-            0x80, 0x05   // Pickle protocol 5
-        ]
-
         // Check for pickle signatures
         for i in 0..<(data.count - 1) {
             if data[i] == 0x80 && (2...5).contains(data[i + 1]) {

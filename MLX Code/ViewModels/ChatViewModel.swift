@@ -254,13 +254,13 @@ class ChatViewModel: ObservableObject {
     /// Regenerates the last assistant response
     func regenerateLastResponse() async {
         guard let conversation = currentConversation else {
-            await LogManager.shared.warning("No conversation to regenerate", category: "Chat")
+            LogManager.shared.warning("No conversation to regenerate", category: "Chat")
             return
         }
 
         // Find the last assistant message
         guard let lastAssistantIndex = conversation.messages.lastIndex(where: { $0.role == .assistant }) else {
-            await LogManager.shared.warning("No assistant message to regenerate", category: "Chat")
+            LogManager.shared.warning("No assistant message to regenerate", category: "Chat")
             return
         }
 
@@ -269,7 +269,7 @@ class ChatViewModel: ObservableObject {
 
         // Regenerate response
         await generateResponse()
-        await LogManager.shared.info("Regenerated last response", category: "Chat")
+        LogManager.shared.info("Regenerated last response", category: "Chat")
     }
 
     /// Exports a conversation to JSON
@@ -553,19 +553,19 @@ class ChatViewModel: ObservableObject {
 
     private func logInfo(_ message: String, category: String) {
         Task {
-            await LogManager.shared.info(message, category: category)
+            LogManager.shared.info(message, category: category)
         }
     }
 
     private func logWarning(_ message: String, category: String) {
         Task {
-            await LogManager.shared.warning(message, category: category)
+            LogManager.shared.warning(message, category: category)
         }
     }
 
     private func logError(_ message: String, category: String) {
         Task {
-            await LogManager.shared.error(message, category: category)
+            LogManager.shared.error(message, category: category)
         }
     }
 

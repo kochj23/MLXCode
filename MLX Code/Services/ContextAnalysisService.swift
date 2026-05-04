@@ -690,7 +690,8 @@ actor ContextAnalysisService {
             return nil
         }
 
-        for case let fileURL as URL in enumerator {
+        let allURLs = enumerator.allObjects.compactMap { $0 as? URL }
+        for fileURL in allURLs {
             if fileURL.path.hasSuffix(ext) {
                 return fileURL.path
             }
@@ -708,7 +709,8 @@ actor ContextAnalysisService {
             return []
         }
 
-        for case let fileURL as URL in enumerator {
+        let allURLs = enumerator.allObjects.compactMap { $0 as? URL }
+        for fileURL in allURLs {
             let path = fileURL.path
 
             // Skip build directories and dependencies
@@ -751,7 +753,7 @@ actor ContextAnalysisService {
                 let trimmed = line.trimmingCharacters(in: .whitespaces)
 
                 // Match class declarations
-                if let match = trimmed.range(of: #"^(public |private |internal |open )?class\s+(\w+)"#, options: .regularExpression) {
+                if trimmed.range(of: #"^(public |private |internal |open )?class\s+(\w+)"#, options: .regularExpression) != nil {
                     let className = extractName(from: trimmed, pattern: #"class\s+(\w+)"#)
                     if let name = className {
                         classes.append(AnalysisSymbolInfo(

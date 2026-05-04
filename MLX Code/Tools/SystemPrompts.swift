@@ -113,6 +113,11 @@ struct SystemPrompts {
     {"name": "grep", "args": {"pattern": "TODO", "path": "."}}
     </tool>
 
+    User: Search for retain cycles in Swift files with context
+    Assistant: <tool>
+    {"name": "grep", "args": {"pattern": "\\bself\\b", "path": ".", "file_pattern": "*.swift", "case_sensitive": true, "context_lines": 3, "max_results": 20}}
+    </tool>
+
     User: Run the tests
     Assistant: <tool>
     {"name": "bash", "args": {"command": "swift test"}}
