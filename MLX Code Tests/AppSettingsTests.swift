@@ -27,7 +27,9 @@ final class AppSettingsTests: XCTestCase {
     // MARK: - Temperature Tests
 
     func testTemperatureDefaultValue() {
-        XCTAssertEqual(settings.temperature, 0.7, "Default temperature should be 0.7")
+        // Default was intentionally lowered from 0.7 to 0.2 (commit b0b95ac) for more
+        // deterministic output; this test tracks the current documented default.
+        XCTAssertEqual(settings.temperature, 0.2, "Default temperature should be 0.2")
     }
 
     func testTemperatureValidation() {
@@ -121,7 +123,7 @@ final class AppSettingsTests: XCTestCase {
         settings.resetToDefaults()
 
         // Verify defaults
-        XCTAssertEqual(settings.temperature, 0.7, "Temperature should reset to default")
+        XCTAssertEqual(settings.temperature, 0.2, "Temperature should reset to default")
         XCTAssertEqual(settings.maxTokens, 2048, "Max tokens should reset to default")
         XCTAssertEqual(settings.theme, .system, "Theme should reset to system")
     }

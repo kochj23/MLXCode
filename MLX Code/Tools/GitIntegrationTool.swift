@@ -12,7 +12,7 @@ import Foundation
 class GitIntegrationTool: BaseTool {
     init() {
         super.init(
-            name: "git",
+            name: "git_integration",
             description: """
             Git version control operations: status, diff, commit, push, pull, branch management, history, and more.
             Can generate AI-powered commit messages based on staged changes.

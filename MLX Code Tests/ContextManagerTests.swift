@@ -255,7 +255,7 @@ final class ContextManagerTests: XCTestCase {
         var messages: [Message] = []
         for i in 0..<200 {
             messages.append(Message.user("Question about topic \(i)"))
-            messages.append(Message.assistant("Answer about topic \(i) " + String(repeating: "detail ", count: 50)))
+            messages.append(Message.assistant("Answer about topic \(i) " + String(repeating: "detail ", count: 200)))
         }
 
         let optimized = try await manager.optimizeContext(messages: messages, systemPrompt: nil)

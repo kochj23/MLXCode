@@ -38,7 +38,7 @@ class NovaAPIServer {
             return existing
         }
         let token = UUID().uuidString
-        UserDefaults.standard.set(token, forKey: key)
+        UserDefaults.standard.set(token, forKey: key) // nosec: local-only anti-CSRF token (random UUID), not a credential
         return token
     }()
 
