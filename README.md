@@ -227,18 +227,43 @@ Local HTTP API on port **37422** (loopback only).
 
 ## Installation
 
-### From DMG
+### From DMG (recommended for most users)
 
-Download from [Releases](https://github.com/kochj23/MLXCode/releases), open the DMG, drag to Applications, launch, download a model from Settings.
+1. Download the latest `.dmg` from [Releases](https://github.com/kochj23/MLXCode/releases).
+2. Open it and drag **MLX Code** into your **Applications** folder.
+3. Launch it from Applications and download a model from Settings. That's it — no Xcode, no toolchains, nothing else to install.
+
+> **See "MLX Code can't be opened because the developer cannot be verified"?**
+> That means you have a build that isn't yet Developer-ID-signed **and** notarized. To open it anyway:
+> - **macOS 14 and earlier:** Control-click (right-click) the app → **Open** → **Open**.
+> - **macOS 15 (Sequoia) / 26 and later:** double-click it, dismiss the dialog, then open **System Settings → Privacy & Security**, scroll down, and click **Open Anyway**.
+> - Or from Terminal: `xattr -dr com.apple.quarantine "/Applications/MLX Code.app"`
+>
+> **Notarized releases open with no prompt at all** — maintainers, see [RELEASE.md](RELEASE.md).
 
 ### From Source
+
+Requires **Xcode 15 or later**. Because the app bundles **MLX** for on-device LLM inference, the build
+compiles Metal GPU shaders, which needs Apple's **Metal Toolchain** — a component recent Xcode versions
+no longer ship by default. Install it once:
+
+```bash
+xcodebuild -downloadComponent MetalToolchain
+# (or in Xcode: Settings → Components → Metal Toolchain → Get)
+```
+
+Then build:
 
 ```bash
 git clone git@github.com:kochj23/MLXCode.git
 cd MLXCode
-open "MLX Code.xcodeproj"
-# Build: Cmd+R (Xcode 15+, macOS 14.0+ target)
+open "MLX Code.xcodeproj"   # Xcode resolves Swift packages on first open (mlx-swift, mlx-swift-examples, …)
+# Build & run: Cmd+R (Xcode 15+, macOS 14.0+ target)
 ```
+
+> Skipping the Metal Toolchain step produces a wall of `CompileMetalFile … cannot execute tool 'metal'
+> due to missing Metal Toolchain` errors from the `mlx-swift` dependency. That's the missing component,
+> not a problem with the project.
 
 ### Enabling the Xcode Extension
 
