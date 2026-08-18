@@ -23,6 +23,13 @@ enum SecurityUtils {
             return false
         }
 
+        // Check path length on the raw input BEFORE resolution (prevent buffer overflow).
+        // resolvingSymlinksInPath silently truncates paths to PATH_MAX (~1024 bytes), which
+        // would bypass a length check performed on the resolved path, so validate the input.
+        guard path.utf8.count < 4096 else {
+            return false
+        }
+
         // Expand tilde and resolve symlinks
         let expandedPath = (path as NSString).expandingTildeInPath
         let resolvedPath = (expandedPath as NSString).resolvingSymlinksInPath
@@ -169,14 +176,17 @@ enum SecurityUtils {
     static func sanitizeHTML(_ string: String) -> String {
         var sanitized = string
 
-        // Escape HTML entities
-        let replacements: [String: String] = [
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            "\"": "&quot;",
-            "'": "&#x27;",
-            "/": "&#x2F;"
+        // Escape HTML entities. Order matters: "&" MUST be escaped first, otherwise the
+        // ampersands introduced by later replacements (e.g. "<" -> "&lt;") would be
+        // double-escaped into "&amp;lt;". An ordered array guarantees this; a Dictionary
+        // has no defined iteration order and produced intermittently corrupted output.
+        let replacements: [(char: String, entity: String)] = [
+            ("&", "&amp;"),
+            ("<", "&lt;"),
+            (">", "&gt;"),
+            ("\"", "&quot;"),
+            ("'", "&#x27;"),
+            ("/", "&#x2F;")
         ]
 
         for (char, entity) in replacements {

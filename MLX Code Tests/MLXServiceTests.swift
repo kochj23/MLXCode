@@ -61,7 +61,7 @@ class MLXServiceTests: XCTestCase {
                 let decoder = JSONDecoder()
                 let response = try decoder.decode(PythonResponse.self, from: jsonData)
                 print("  ✅ Decoded successfully")
-                print("     type: \(response.type)")
+                print("     type: \(response.type ?? "nil")")
                 print("     success: \(response.success ?? false)")
                 print("     message: \(response.message ?? "nil")")
                 print("     path: \(response.path ?? "nil")")
@@ -141,7 +141,7 @@ class MLXServiceTests: XCTestCase {
 
             do {
                 let decoded = try JSONDecoder().decode(PythonResponse.self, from: data)
-                print("  ✅ Decoded: type=\(decoded.type), success=\(decoded.success ?? false)\n")
+                print("  ✅ Decoded: type=\(decoded.type ?? "nil"), success=\(decoded.success ?? false)\n")
             } catch {
                 print("  ❌ Decode failed: \(error)\n")
                 XCTFail("Failed to decode: \(error)")
@@ -188,7 +188,10 @@ class MLXServiceTests: XCTestCase {
 
 // Make PythonResponse accessible for testing
 private struct PythonResponse: Codable {
-    let type: String
+    // 'type' is optional: the daemon's model-load success response omits it entirely
+    // (see the "Load success response (missing 'type' field)" case below), so requiring
+    // it here would reject a legitimate message.
+    let type: String?
     let success: Bool?
     let error: String?
     let message: String?

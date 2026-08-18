@@ -300,8 +300,16 @@ class ToolRegistry: ObservableObject {
         for (key, value) in args {
             if let stringValue = value as? String {
                 stringParams[key] = stringValue
-            } else if let intValue = value as? Int {
-                stringParams[key] = String(intValue)
+            } else if let number = value as? NSNumber {
+                // JSONSerialization returns both booleans and integers as NSNumber.
+                // Casting an NSNumber-backed bool via `as? Int` yields 1/0, so a JSON
+                // `true` would incorrectly stringify to "1". Distinguish the boolean
+                // type explicitly via CFBoolean before treating it as a number.
+                if CFGetTypeID(number) == CFBooleanGetTypeID() {
+                    stringParams[key] = number.boolValue ? "true" : "false"
+                } else {
+                    stringParams[key] = number.stringValue
+                }
             } else if let boolValue = value as? Bool {
                 stringParams[key] = String(boolValue)
             } else {

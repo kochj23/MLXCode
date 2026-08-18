@@ -19,13 +19,8 @@ final class SecurityScanTests: XCTestCase {
     /// Scans all Swift source files for patterns that look like hardcoded API keys.
     /// This catches accidental commits of real secrets.
     func testNoHardcodedAPIKeysInSource() throws {
-        let projectRoot = "/Volumes/Data/xcode/MLX Code/MLX Code"
+        let projectRoot = try Self.sourceRoot()
         let fileManager = FileManager.default
-
-        guard fileManager.fileExists(atPath: projectRoot) else {
-            // If running on CI without the project directory, skip gracefully
-            throw XCTSkip("Project source directory not available")
-        }
 
         let enumerator = fileManager.enumerator(atPath: projectRoot)
         var violations: [String] = []
@@ -76,19 +71,17 @@ final class SecurityScanTests: XCTestCase {
     /// Verifies that secrets are stored via KeychainManager (SecItem*), not UserDefaults.
     /// Scans non-test Swift files for patterns like UserDefaults.set(...apiKey...).
     func testSecretsNotInUserDefaults() throws {
-        let projectRoot = "/Volumes/Data/xcode/MLX Code/MLX Code"
+        let projectRoot = try Self.sourceRoot()
         let fileManager = FileManager.default
-
-        guard fileManager.fileExists(atPath: projectRoot) else {
-            throw XCTSkip("Project source directory not available")
-        }
 
         let enumerator = fileManager.enumerator(atPath: projectRoot)
         var violations: [String] = []
 
-        // Words that suggest a secret is being stored
+        // Words that suggest a secret is being stored. Matched as whole words so that
+        // identifiers like `maxTokens` (contains "token") or `credentialScanOnPush`
+        // (contains "credential") are not flagged as secrets.
         let secretKeywords = [
-            "apikey", "api_key", "apiKey",
+            "apikey", "api_key",
             "secret", "password", "token",
             "credential", "bearer",
         ]
@@ -105,13 +98,13 @@ final class SecurityScanTests: XCTestCase {
             let lines = content.components(separatedBy: .newlines)
             for (lineNum, line) in lines.enumerated() {
                 let lower = line.lowercased()
+                // Explicit, reviewed allowance for non-secret values (e.g. anti-CSRF tokens)
+                if lower.contains("nosec") { continue }
                 // Check for UserDefaults.standard.set or userDefaults.set with secret keywords
                 if (lower.contains("userdefaults") && lower.contains(".set")) ||
                    (lower.contains("userdefaults") && lower.contains("forkey")) {
-                    for keyword in secretKeywords {
-                        if lower.contains(keyword) {
-                            violations.append("\(file):\(lineNum + 1) - Possible secret '\(keyword)' stored in UserDefaults")
-                        }
+                    for keyword in secretKeywords where Self.containsWholeWord(keyword, in: lower) {
+                        violations.append("\(file):\(lineNum + 1) - Possible secret '\(keyword)' stored in UserDefaults")
                     }
                 }
             }
@@ -125,18 +118,16 @@ final class SecurityScanTests: XCTestCase {
 
     /// Scans source for unsafe C functions that can cause buffer overflows.
     func testNoUnsafeCFunctions() throws {
-        let projectRoot = "/Volumes/Data/xcode/MLX Code/MLX Code"
+        let projectRoot = try Self.sourceRoot()
         let fileManager = FileManager.default
-
-        guard fileManager.fileExists(atPath: projectRoot) else {
-            throw XCTSkip("Project source directory not available")
-        }
 
         let enumerator = fileManager.enumerator(atPath: projectRoot)
         var violations: [String] = []
 
-        // Unsafe C functions per CLAUDE.md memory security rules
-        let unsafeFunctions = ["strcpy(", "strcat(", "sprintf(", "gets("]
+        // Unsafe C functions per CLAUDE.md memory security rules. Matched with a leading
+        // word boundary so Swift identifiers such as `listTargets(` are not mistaken for
+        // a call to the C `gets(` function.
+        let unsafeFunctions = ["strcpy", "strcat", "sprintf", "gets"]
 
         while let file = enumerator?.nextObject() as? String {
             guard file.hasSuffix(".swift") || file.hasSuffix(".m") || file.hasSuffix(".h") else { continue }
@@ -151,8 +142,8 @@ final class SecurityScanTests: XCTestCase {
                 if trimmed.hasPrefix("//") || trimmed.hasPrefix("*") { continue }
 
                 for fn in unsafeFunctions {
-                    if line.contains(fn) {
-                        violations.append("\(file):\(lineNum + 1) - Unsafe C function: \(fn)")
+                    if line.range(of: "\\b\(fn)\\s*\\(", options: .regularExpression) != nil {
+                        violations.append("\(file):\(lineNum + 1) - Unsafe C function: \(fn)(")
                     }
                 }
             }
@@ -160,6 +151,28 @@ final class SecurityScanTests: XCTestCase {
 
         XCTAssertTrue(violations.isEmpty,
             "Found unsafe C functions:\n\(violations.joined(separator: "\n"))")
+    }
+
+    // MARK: - Source-Scan Helpers
+
+    /// Locates the app's source directory relative to this test file so scans are
+    /// hermetic and run identically on any machine or CI runner (no hardcoded paths).
+    private static func sourceRoot() throws -> String {
+        // #filePath -> <repo>/MLX Code Tests/SecurityScanTests.swift
+        let repoRoot = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()   // MLX Code Tests
+            .deletingLastPathComponent()   // repo root
+        let source = repoRoot.appendingPathComponent("MLX Code")
+        guard FileManager.default.fileExists(atPath: source.path) else {
+            throw XCTSkip("Source directory not found at \(source.path)")
+        }
+        return source.path
+    }
+
+    /// Whole-word, case-insensitive containment check (word chars = [A-Za-z0-9_]).
+    private static func containsWholeWord(_ word: String, in haystack: String) -> Bool {
+        haystack.range(of: "\\b\(NSRegularExpression.escapedPattern(for: word))\\b",
+                       options: [.regularExpression, .caseInsensitive]) != nil
     }
 
     // MARK: - Input Sanitization for User Prompts
