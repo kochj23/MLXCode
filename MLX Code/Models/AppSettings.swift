@@ -108,6 +108,22 @@ class AppSettings: ObservableObject {
     /// Enable user memories in LLM system prompt
     @Published var enableMemories: Bool = true
 
+    // MARK: - Multi-Model Load Balancer Settings
+
+    /// Balance across ALL installed local models (native MLX + Ollama), not just
+    /// the single pinned model. Off by default — preserves existing behavior.
+    @Published var useAllLocalModels: Bool = false
+
+    /// Include all frontier models (via an OpenRouter API key) in the balancer pool.
+    @Published var enableAllFrontierModels: Bool = false
+
+    /// Include the optional Nova Gateway as one balancer entry. Nova is never a
+    /// hard requirement — if its health probe fails it simply drops from the pool.
+    @Published var useNovaGateway: Bool = false
+
+    /// Nova Gateway base URL (OpenAI-compatible; health via `/v1/models`).
+    @Published var novaGatewayURL: String = ModelRegistry.novaGatewayDefaultURL
+
     // MARK: - Private Properties
 
     private let userDefaults = UserDefaults.standard
@@ -141,6 +157,10 @@ class AppSettings: ObservableObject {
         static let credentialScanOnPush = "credentialScanOnPush"
         static let authorName = "authorName"
         static let enableMemories = "enableMemories"
+        static let useAllLocalModels = "useAllLocalModels"
+        static let enableAllFrontierModels = "enableAllFrontierModels"
+        static let useNovaGateway = "useNovaGateway"
+        static let novaGatewayURL = "novaGatewayURL"
     }
 
     // MARK: - Initialization
@@ -324,6 +344,20 @@ class AppSettings: ObservableObject {
             enableMemories = userDefaults.bool(forKey: Keys.enableMemories)
         }
 
+        // Load load-balancer settings
+        if userDefaults.object(forKey: Keys.useAllLocalModels) != nil {
+            useAllLocalModels = userDefaults.bool(forKey: Keys.useAllLocalModels)
+        }
+        if userDefaults.object(forKey: Keys.enableAllFrontierModels) != nil {
+            enableAllFrontierModels = userDefaults.bool(forKey: Keys.enableAllFrontierModels)
+        }
+        if userDefaults.object(forKey: Keys.useNovaGateway) != nil {
+            useNovaGateway = userDefaults.bool(forKey: Keys.useNovaGateway)
+        }
+        if let url = userDefaults.string(forKey: Keys.novaGatewayURL), !url.isEmpty {
+            novaGatewayURL = url
+        }
+
         // Load available models
         if let modelsData = userDefaults.data(forKey: Keys.availableModels),
            let models = try? JSONDecoder().decode([MLXModel].self, from: modelsData) {
@@ -371,6 +405,12 @@ class AppSettings: ObservableObject {
         userDefaults.set(credentialScanOnPush, forKey: Keys.credentialScanOnPush)
         userDefaults.set(authorName, forKey: Keys.authorName)
         userDefaults.set(enableMemories, forKey: Keys.enableMemories)
+
+        // Save load-balancer settings
+        userDefaults.set(useAllLocalModels, forKey: Keys.useAllLocalModels)
+        userDefaults.set(enableAllFrontierModels, forKey: Keys.enableAllFrontierModels)
+        userDefaults.set(useNovaGateway, forKey: Keys.useNovaGateway)
+        userDefaults.set(novaGatewayURL, forKey: Keys.novaGatewayURL)
 
         // Save selected model ID
         if let modelId = selectedModel?.id.uuidString {
@@ -631,6 +671,31 @@ class AppSettings: ObservableObject {
             .store(in: &cancellables)
 
         $conversationsExportPath
+            .dropFirst()
+            .debounce(for: .seconds(1.0), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in self?.saveSettings() }
+            .store(in: &cancellables)
+
+        // Observe load-balancer settings
+        $useAllLocalModels
+            .dropFirst()
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in self?.saveSettings() }
+            .store(in: &cancellables)
+
+        $enableAllFrontierModels
+            .dropFirst()
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in self?.saveSettings() }
+            .store(in: &cancellables)
+
+        $useNovaGateway
+            .dropFirst()
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in self?.saveSettings() }
+            .store(in: &cancellables)
+
+        $novaGatewayURL
             .dropFirst()
             .debounce(for: .seconds(1.0), scheduler: DispatchQueue.main)
             .sink { [weak self] _ in self?.saveSettings() }

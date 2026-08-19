@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Multi-model load balancing: optionally spread each chat across all installed local models (native MLX + Ollama), all frontier models (OpenRouter), and an optional Nova Gateway — health-gated and load-balanced — instead of a single pinned model
+- Three independent, persisted toggles in **Settings → Balancer**: All local models, All frontier models (OpenRouter), Nova Gateway (with a configurable gateway URL and Keychain-stored OpenRouter key)
+- `ModelRegistry` (model discovery + pool composition), `LoadBalancer` (round-robin / least-busy with health gating), `OpenRouterProvider` / `OpenAICompatibleRequest`, and `KeychainStore` — pure, network-free, unit-tested building blocks ported from AIStudio
+- `LLMBalancer` service wiring discovery → health map → balanced dispatch into `ChatViewModel`
+- Network-free `LoadBalancerTests` suite (24 tests) covering parsing, pool composition, and selection policies
+
+### Changed
+- `ChatViewModel` routes generation through the balancer when any toggle is on; falls back cleanly to the single pinned MLX model when the pool is empty or all toggles are off (existing behavior preserved)
+
+### Notes
+- Nova is never a hard requirement — the balancer works with zero Nova present; the Nova Gateway is one optional, health-probed entry that drops out if unavailable
+
 ## [5.0.0] - 2026-02-19
 
 ### Removed

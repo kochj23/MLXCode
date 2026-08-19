@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AABB01000000000000000002 /* ModelRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB01000000000000000001 /* ModelRegistry.swift */; };
+		AABB02000000000000000002 /* OpenRouterProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB02000000000000000001 /* OpenRouterProvider.swift */; };
+		AABB03000000000000000002 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB03000000000000000001 /* KeychainStore.swift */; };
+		AABB04000000000000000002 /* LLMBalancer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB04000000000000000001 /* LLMBalancer.swift */; };
+		AABB05000000000000000002 /* LoadBalancerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB05000000000000000001 /* LoadBalancerTests.swift */; };
 		043C4E7F3FCA17ECD6EB1A51 /* PromptTemplatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942A3F3878CD789BDF616A78 /* PromptTemplatesView.swift */; };
 		0475B2DD296EECD045126C17 /* PrerequisitesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BF0FCAFA31E5516E7B5EC6 /* PrerequisitesView.swift */; };
 		054C45D18234B5AE6A2A3233 /* GettingStarted.md in Resources */ = {isa = PBXBuildFile; fileRef = 3072558342FD102B940FF3DB /* GettingStarted.md */; };
@@ -178,6 +183,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AABB01000000000000000001 /* ModelRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelRegistry.swift; sourceTree = "<group>"; };
+		AABB02000000000000000001 /* OpenRouterProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterProvider.swift; sourceTree = "<group>"; };
+		AABB03000000000000000001 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		AABB04000000000000000001 /* LLMBalancer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMBalancer.swift; sourceTree = "<group>"; };
+		AABB05000000000000000001 /* LoadBalancerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LoadBalancerTests.swift; sourceTree = "<group>"; };
 		0095C89C8F1E4539863AE74D96B702F4 /* MLXService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLXService.swift; sourceTree = "<group>"; };
 		01A056387C5D6883F0932FA4 /* GitService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GitService.swift; path = "MLX Code/Services/GitService.swift"; sourceTree = "<group>"; };
 		0674F2D9E84C4AC3AC8ED170619E99EA /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
@@ -487,6 +497,10 @@
 		8D7B12981853422D971FCAD3B063E827 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				AABB01000000000000000001 /* ModelRegistry.swift */,
+				AABB02000000000000000001 /* OpenRouterProvider.swift */,
+				AABB03000000000000000001 /* KeychainStore.swift */,
+				AABB04000000000000000001 /* LLMBalancer.swift */,
 				0095C89C8F1E4539863AE74D96B702F4 /* MLXService.swift */,
 				BB001CDEF123456789ABCDE000022222 /* XcodeActionHandler.swift */,
 				2113E8E02AFC404C917BDECE45AD0C31 /* XcodeService.swift */,
@@ -523,6 +537,7 @@
 		CE911C9235A55156197C996A /* MLX Code Tests */ = {
 			isa = PBXGroup;
 			children = (
+				AABB05000000000000000001 /* LoadBalancerTests.swift */,
 				1B364AD048BC9F2567D45CC7 /* AppSettingsTests.swift */,
 				8C37CB4BC161157E297B1C70 /* CommandValidatorTests.swift */,
 				F975089CB3BD79BDBC9F5CD3 /* ContextManagerTests.swift */,
@@ -859,6 +874,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AABB05000000000000000002 /* LoadBalancerTests.swift in Sources */,
 				678CCB7627496E9731B7D734 /* AppSettingsTests.swift in Sources */,
 				AA74C582F22930DF98A0CB7B /* CommandValidatorTests.swift in Sources */,
 				2CAAE35717EEF0F0BB6889D1 /* ContextManagerTests.swift in Sources */,
@@ -899,6 +915,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AABB01000000000000000002 /* ModelRegistry.swift in Sources */,
+				AABB02000000000000000002 /* OpenRouterProvider.swift in Sources */,
+				AABB03000000000000000002 /* KeychainStore.swift in Sources */,
+				AABB04000000000000000002 /* LLMBalancer.swift in Sources */,
 				E2FCF04057F99E48BF46CCF3 /* CommandValidator.swift in Sources */,
 				A0013163E03EA758655F244E /* ModelSecurityValidator.swift in Sources */,
 				4A14B6380E9E4A44949059C9DE2D703A /* MLXCodeApp.swift in Sources */,
