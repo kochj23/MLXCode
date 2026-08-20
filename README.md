@@ -198,6 +198,57 @@ Models download automatically via native Hub Swift API. Custom models from any m
 
 ---
 
+## Multi-model load balancing
+
+By default MLX Code talks to a single pinned MLX model. Optionally, it can spread each chat across **every** model available to the machine -- all installed local models (native MLX + a local Ollama, if present), all frontier models via an OpenRouter key, and an optional Nova Gateway -- health-gated and load-balanced. This is off by default; when every toggle is off, behavior is exactly as before.
+
+Three independent toggles live in **Settings → Balancer**:
+
+| Toggle | Adds to the pool | Requires |
+|---|---|---|
+| **All local models** | Every installed SafeTensors MLX model + any models served by a local Ollama | Nothing (Ollama optional) |
+| **All frontier models** | Frontier models via OpenRouter | An OpenRouter API key (stored in the Keychain) |
+| **Nova Gateway** | One entry that routes to Nova's OpenAI-compatible gateway | Nothing -- **entirely optional** |
+
+**Nova is never a hard requirement.** With zero Nova present the balancer still works over local MLX/Ollama models and/or OpenRouter. The Nova Gateway is just one optional entry: if its health probe (`GET <url>/v1/models`) fails, that entry is marked unavailable and every other model keeps working.
+
+Selection is **health-gated then balanced**: each distinct backend is probed once (MLX = a model is loaded; Ollama = `/api/tags` 200; OpenRouter = a key is present; Nova = `/v1/models` 200), unhealthy models are dropped, and the `LoadBalancer` picks the next model by **least-busy** (fewest in-flight requests) or **round-robin**. A model that fails mid-request is removed and the next healthy one is tried; if the pool is empty it falls back cleanly to the single pinned MLX model.
+
+```mermaid
+flowchart TB
+    subgraph Discovery["Discovery (ModelRegistry, network-free parsing)"]
+        MLXd["Local MLX models<br/>MLXService.discoverModels()"]
+        Ollama["Ollama /api/tags"]
+        OR["OpenRouter /models"]
+        Nova["Nova Gateway entry"]
+    end
+
+    subgraph Toggles["AppSettings toggles"]
+        T1["useAllLocalModels"]
+        T2["enableAllFrontierModels"]
+        T3["useNovaGateway"]
+    end
+
+    MLXd --> Pool
+    Ollama --> Pool
+    OR --> Pool
+    Nova --> Pool
+    T1 -.gates.-> Pool
+    T2 -.gates.-> Pool
+    T3 -.gates.-> Pool
+
+    Pool["assemblePool()<br/>[DiscoveredModel] (deduped)"] --> Health["healthMap()<br/>probe each backend once"]
+    Health --> Balancer["LoadBalancer.next()<br/>least-busy / round-robin"]
+    Balancer --> Dispatch{"dispatchBalanced"}
+    Dispatch -->|mlx| InProc["MLXService.chatCompletion<br/>(in-process, streamed)"]
+    Dispatch -->|ollama / openRouter / novaGateway| HTTP["OpenAI-compatible POST"]
+    Dispatch -->|all fail / empty pool| Fallback["Single pinned MLX model"]
+```
+
+Implemented by `ModelRegistry` / `LoadBalancer` / `OpenRouterProvider` / `KeychainStore` (the pure, network-free, unit-tested pieces) wired together by `LLMBalancer` and invoked from `ChatViewModel`. Covered by the network-free `LoadBalancerTests` suite.
+
+---
+
 ## Nova API Server
 
 Local HTTP API on port **37422** (loopback only).

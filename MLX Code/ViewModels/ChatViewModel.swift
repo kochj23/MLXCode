@@ -358,80 +358,97 @@ class ChatViewModel: ObservableObject {
                 budget: budget
             )
 
-            // Get response from MLX service with streaming
-            let response = try await MLXService.shared.chatCompletion(
-                messages: optimizedMessages,
-                parameters: selectedModel?.parameters,
-                streamHandler: { [weak self] token in
-                    Task { @MainActor [weak self] in
-                        guard let self = self else { return }
+            // Shared streaming token handler. Used by both the single-model MLX
+            // path and the multi-model load-balanced path so behavior is identical.
+            let streamHandler: (String) -> Void = { [weak self] token in
+                Task { @MainActor [weak self] in
+                    guard let self = self else { return }
 
-                        // Check if we should stop generation
-                        guard !shouldStopGeneration else {
-                            logWarning("⚠️ Stopping generation due to repetition/length limit", category: "ChatViewModel")
-                            return
-                        }
+                    // Check if we should stop generation
+                    guard !shouldStopGeneration else {
+                        logWarning("⚠️ Stopping generation due to repetition/length limit", category: "ChatViewModel")
+                        return
+                    }
 
-                        // First token received - update status
-                        if self.isWaitingForFirstToken {
-                            self.isWaitingForFirstToken = false
-                            self.statusMessage = "Generating..."
-                        }
+                    // First token received - update status
+                    if self.isWaitingForFirstToken {
+                        self.isWaitingForFirstToken = false
+                        self.statusMessage = "Generating..."
+                    }
 
-                        accumulatedResponse += token
+                    accumulatedResponse += token
 
-                        // Update token count
-                        self.tokenCount += 1
-                        self.currentTokenCount = self.tokenCount
+                    // Update token count
+                    self.tokenCount += 1
+                    self.currentTokenCount = self.tokenCount
 
-                        // Calculate tokens per second
-                        if let startTime = self.generationStartTime {
-                            let elapsed = Date().timeIntervalSince(startTime)
-                            if elapsed > 0 {
-                                self.tokensPerSecond = Double(self.tokenCount) / elapsed
-                            }
-                        }
-
-                        // Tool call detection is handled in MLXService — it breaks the stream
-                        // loop as soon as </tool> appears, so we just update UI here.
-
-                        // Check for repetition
-                        if let detector = self.repetitionDetector {
-                            let hasRepetition = detector.addToken(token)
-                            let hasExcessiveRepetition = detector.detectExcessiveRepetition()
-
-                            if hasRepetition || hasExcessiveRepetition {
-                                shouldStopGeneration = true
-
-                                if accumulatedResponse.count > 500 {
-                                    let keepLength = Int(Double(accumulatedResponse.count) * 0.8)
-                                    let truncateIndex = accumulatedResponse.index(accumulatedResponse.startIndex, offsetBy: keepLength)
-                                    accumulatedResponse = String(accumulatedResponse[..<truncateIndex])
-                                    accumulatedResponse += "\n\n[Response truncated due to repetition detection]"
-                                }
-                            }
-                        }
-
-                        // Check for maximum length
-                        if accumulatedResponse.count > ChatViewModel.maxResponseLength {
-                            shouldStopGeneration = true
-                            accumulatedResponse += "\n\n[Response truncated: maximum length reached]"
-                        }
-
-                        // Check for maximum token count
-                        if self.tokenCount > ChatViewModel.maxResponseTokens {
-                            shouldStopGeneration = true
-                            accumulatedResponse += "\n\n[Response truncated: maximum tokens reached]"
-                        }
-
-                        // Update the message content
-                        if let messageId = self.streamingMessageId,
-                           let index = self.currentConversation?.messages.firstIndex(where: { $0.id == messageId }) {
-                            self.currentConversation?.messages[index].content = accumulatedResponse
+                    // Calculate tokens per second
+                    if let startTime = self.generationStartTime {
+                        let elapsed = Date().timeIntervalSince(startTime)
+                        if elapsed > 0 {
+                            self.tokensPerSecond = Double(self.tokenCount) / elapsed
                         }
                     }
+
+                    // Tool call detection is handled in MLXService — it breaks the stream
+                    // loop as soon as </tool> appears, so we just update UI here.
+
+                    // Check for repetition
+                    if let detector = self.repetitionDetector {
+                        let hasRepetition = detector.addToken(token)
+                        let hasExcessiveRepetition = detector.detectExcessiveRepetition()
+
+                        if hasRepetition || hasExcessiveRepetition {
+                            shouldStopGeneration = true
+
+                            if accumulatedResponse.count > 500 {
+                                let keepLength = Int(Double(accumulatedResponse.count) * 0.8)
+                                let truncateIndex = accumulatedResponse.index(accumulatedResponse.startIndex, offsetBy: keepLength)
+                                accumulatedResponse = String(accumulatedResponse[..<truncateIndex])
+                                accumulatedResponse += "\n\n[Response truncated due to repetition detection]"
+                            }
+                        }
+                    }
+
+                    // Check for maximum length
+                    if accumulatedResponse.count > ChatViewModel.maxResponseLength {
+                        shouldStopGeneration = true
+                        accumulatedResponse += "\n\n[Response truncated: maximum length reached]"
+                    }
+
+                    // Check for maximum token count
+                    if self.tokenCount > ChatViewModel.maxResponseTokens {
+                        shouldStopGeneration = true
+                        accumulatedResponse += "\n\n[Response truncated: maximum tokens reached]"
+                    }
+
+                    // Update the message content
+                    if let messageId = self.streamingMessageId,
+                       let index = self.currentConversation?.messages.firstIndex(where: { $0.id == messageId }) {
+                        self.currentConversation?.messages[index].content = accumulatedResponse
+                    }
                 }
-            )
+            }
+
+            // Get response. When any load-balancer toggle is on, spread work across
+            // the healthy enabled pool (all local models + frontier + Nova); the
+            // balancer returns nil when its pool is empty so we fall back cleanly to
+            // the single pinned MLX model — preserving existing behavior when off.
+            let response: String
+            if await LLMBalancer.shared.isBalancingEnabled(),
+               let balanced = try await LLMBalancer.shared.chatCompletionBalanced(
+                    messages: optimizedMessages,
+                    parameters: selectedModel?.parameters,
+                    streamHandler: streamHandler
+               ) {
+                response = balanced
+            } else {
+                response = try await MLXService.shared.chatCompletion(
+                    messages: optimizedMessages,
+                    parameters: selectedModel?.parameters,
+                    streamHandler: streamHandler
+                )
+            }
 
             // Update final message
             if let messageId = streamingMessageId,

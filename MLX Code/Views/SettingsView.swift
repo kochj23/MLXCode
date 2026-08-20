@@ -31,6 +31,12 @@ struct SettingsView: View {
     /// Download status messages
     @State private var downloadStatus: [UUID: String] = [:]
 
+    /// OpenRouter API key (loaded from / saved to the Keychain).
+    @State private var openRouterKey: String = ""
+
+    /// Whether the OpenRouter key was just saved (for UI feedback).
+    @State private var openRouterKeySaved = false
+
 
     var body: some View {
         ZStack {
@@ -91,6 +97,12 @@ struct SettingsView: View {
                         Label("Model", systemImage: "cpu")
                     }
 
+                // Load-balancer settings
+                balancerSettings
+                    .tabItem {
+                        Label("Balancer", systemImage: "arrow.triangle.branch")
+                    }
+
                 // Appearance settings
                 appearanceSettings
                     .tabItem {
@@ -122,6 +134,94 @@ struct SettingsView: View {
             }
         }
         .frame(width: 700, height: 600)
+    }
+
+    // MARK: - Load Balancer Settings
+
+    private var balancerSettings: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                // Intro
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Multi-Model Load Balancing")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    Text("Spread chat across ALL installed local models, frontier models, and the optional Nova Gateway — health-gated and load-balanced — instead of a single pinned model. When every toggle is off, MLX Code uses only the selected model as before.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                Divider()
+
+                // Three toggles
+                VStack(alignment: .leading, spacing: 12) {
+                    Toggle("All local models (native MLX + Ollama)", isOn: $settings.useAllLocalModels)
+                        .toggleStyle(.switch)
+                    Text("Discovers every installed SafeTensors MLX model plus any models served by a local Ollama instance.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    Toggle("All frontier models (OpenRouter)", isOn: $settings.enableAllFrontierModels)
+                        .toggleStyle(.switch)
+                    Text("Requires an OpenRouter API key below. Frontier models are unavailable (skipped) until a key is set.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    Toggle("Nova Gateway (optional)", isOn: $settings.useNovaGateway)
+                        .toggleStyle(.switch)
+                    Text("Optional. If the gateway health check fails, this entry shows as unavailable and everything else keeps working — Nova is never required.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                Divider()
+
+                // Nova Gateway URL
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Nova Gateway URL")
+                        .font(.subheadline)
+                        .foregroundColor(.primary)
+                    TextField("http://127.0.0.1:18792", text: $settings.novaGatewayURL)
+                        .textFieldStyle(.roundedBorder)
+                        .disableAutocorrection(true)
+                    Text("OpenAI-compatible base URL. Health is probed via \(settings.novaGatewayURL)/v1/models.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                Divider()
+
+                // OpenRouter API key
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("OpenRouter API Key")
+                        .font(.subheadline)
+                        .foregroundColor(.primary)
+                    HStack {
+                        SecureField("sk-or-...", text: $openRouterKey)
+                            .textFieldStyle(.roundedBorder)
+                        Button("Save") {
+                            let store = KeychainStore(service: OpenRouterProvider.keychainService)
+                            if openRouterKey.isEmpty {
+                                store.delete()
+                            } else {
+                                store.set(openRouterKey)
+                            }
+                            openRouterKeySaved = true
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                    Text(openRouterKeySaved
+                         ? "Saved to the macOS Keychain."
+                         : "Stored securely in the macOS Keychain — never in UserDefaults.")
+                        .font(.caption)
+                        .foregroundColor(openRouterKeySaved ? .green : .secondary)
+                }
+            }
+            .padding()
+        }
+        .onAppear {
+            openRouterKey = KeychainStore(service: OpenRouterProvider.keychainService).get() ?? ""
+        }
     }
 
     // MARK: - General Settings
