@@ -8,10 +8,20 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: macos-15
+    # mlx-swift-lm 3.x and its dependencies need Swift tools 6.3–6.4 (Xcode 26.x).
+    runs-on: macos-26
 
     steps:
     - uses: actions/checkout@v7
+
+    - name: Select the newest Xcode
+      # Plain shell, not a third-party action: the repo only allows GitHub-owned
+      # and verified actions, and setup-xcode is neither (startup_failure).
+      run: |
+        X=$(ls -d /Applications/Xcode_*.app | grep -v -i beta | sort -V | tail -1)
+        sudo xcode-select -s "$X"
+        xcodebuild -version
+        swift --version
 
     - name: Install Metal Toolchain
       # MLX Code bundles mlx-swift, which compiles Metal shaders; recent Xcode no
@@ -25,6 +35,8 @@ jobs:
           -project "MLX Code.xcodeproj" \
           -scheme "MLX Code" \
           -destination 'platform=macOS' \
+          -skipMacroValidation \
+          -skipPackagePluginValidation \
           CODE_SIGNING_ALLOWED=NO \
           CODE_SIGNING_REQUIRED=NO \
           SWIFT_TREAT_WARNINGS_AS_ERRORS=NO \

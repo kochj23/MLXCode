@@ -18,6 +18,7 @@
 //
 
 import Foundation
+import MLXLMCommon
 
 // MARK: - Backend type
 
@@ -260,6 +261,7 @@ actor LLMBalancer {
     func chatCompletionBalanced(
         messages: [Message],
         parameters: ModelParameters?,
+        tools: [ToolSpec]? = nil,
         streamHandler: ((String) -> Void)? = nil
     ) async throws -> String? {
         let s = await snapshot()
@@ -277,12 +279,15 @@ actor LLMBalancer {
                     model: choice,
                     messages: messages,
                     parameters: parameters,
+                    tools: tools,
                     streamHandler: streamHandler
                 )
                 balancer.checkIn(choice.id)
                 return result
             } catch {
                 balancer.checkIn(choice.id)
+                // Stop pressed: don't fail over to the next backend.
+                if error is CancellationError || Task.isCancelled { throw CancellationError() }
                 lastError = error
                 remaining.removeAll { $0.id == choice.id }
                 continue
@@ -298,6 +303,7 @@ actor LLMBalancer {
         model: DiscoveredModel,
         messages: [Message],
         parameters: ModelParameters?,
+        tools: [ToolSpec]?,
         streamHandler: ((String) -> Void)?
     ) async throws -> String {
         switch model.backend {
@@ -306,6 +312,7 @@ actor LLMBalancer {
             return try await MLXService.shared.chatCompletion(
                 messages: messages,
                 parameters: parameters,
+                tools: tools,
                 streamHandler: streamHandler
             )
         case .ollama:

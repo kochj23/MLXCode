@@ -358,6 +358,56 @@ struct SettingsView: View {
 
                 Divider()
 
+                // KV Cache Section (mapped into mlx-swift-lm GenerateParameters)
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("KV Cache")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+
+                    HStack {
+                        Text("Quantization")
+                            .frame(width: 120, alignment: .leading)
+                        Picker("", selection: $settings.kvCacheBits) {
+                            Text("None (full precision)").tag(0)
+                            Text("8-bit").tag(8)
+                            Text("4-bit").tag(4)
+                        }
+                        .labelsHidden()
+                        .frame(maxWidth: 220)
+                    }
+                    Text("Quantizing the KV cache cuts memory for long conversations; 8-bit is near-lossless.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    HStack {
+                        Text("Max KV Size")
+                            .frame(width: 120, alignment: .leading)
+                        Text(settings.maxKVSize == 0 ? "Unlimited" : "\(settings.maxKVSize)")
+                            .foregroundColor(.secondary)
+                            .frame(width: 80, alignment: .trailing)
+                        Stepper("", value: $settings.maxKVSize, in: 0...1_048_576, step: 4096)
+                            .labelsHidden()
+                    }
+                    Text("Caps cache memory with a rotating window (oldest tokens are dropped). 0 = unlimited.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    HStack {
+                        Text("Prefill Step")
+                            .frame(width: 120, alignment: .leading)
+                        Text(settings.prefillStepSize == 0 ? "Auto" : "\(settings.prefillStepSize)")
+                            .foregroundColor(.secondary)
+                            .frame(width: 80, alignment: .trailing)
+                        Stepper("", value: $settings.prefillStepSize, in: 0...8192, step: 256)
+                            .labelsHidden()
+                    }
+                    Text("Tokens processed per prompt-prefill pass. Larger is faster but uses more peak memory.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                Divider()
+
                 // Available Models Section
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
