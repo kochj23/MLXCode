@@ -73,6 +73,13 @@ struct MLXModel: Identifiable, Codable, Equatable, Hashable {
 
 /// Model inference parameters
 struct ModelParameters: Codable, Equatable, Hashable {
+    /// Repetition penalty shipped as the default before v6.4 (too aggressive: it
+    /// degraded code output). Persisted values equal to it are migrated on decode.
+    static let legacyDefaultRepetitionPenalty = 1.8
+
+    /// Current default repetition penalty
+    static let defaultRepetitionPenalty = 1.1
+
     /// Temperature for sampling (0.0 to 2.0)
     var temperature: Double
 
@@ -84,6 +91,9 @@ struct ModelParameters: Codable, Equatable, Hashable {
 
     /// Top-k sampling parameter
     var topK: Int
+
+    /// Min-p sampling threshold relative to the most likely token (0 disables)
+    var minP: Double
 
     /// Repetition penalty
     var repetitionPenalty: Double
@@ -97,22 +107,44 @@ struct ModelParameters: Codable, Equatable, Hashable {
     ///   - maxTokens: Maximum tokens to generate (default: 2048)
     ///   - topP: Top-p sampling (default: 0.9)
     ///   - topK: Top-k sampling (default: 40)
-    ///   - repetitionPenalty: Repetition penalty (default: 1.2, higher = less repetition)
-    ///   - repetitionContextSize: Context size for repetition (default: 64, look back farther)
+    ///   - minP: Min-p sampling (default: 0.0, disabled)
+    ///   - repetitionPenalty: Repetition penalty (default: 1.1)
+    ///   - repetitionContextSize: Context size for repetition (default: 256)
     init(
         temperature: Double = 0.2,
         maxTokens: Int = 2048,  // Restored: chat templates + RepetitionDetector prevent loops
         topP: Double = 0.9,
         topK: Int = 40,
-        repetitionPenalty: Double = 1.8,  // Keep high to penalize repetition
-        repetitionContextSize: Int = 256  // Keep wide lookback for repetition detection
+        minP: Double = 0.0,
+        repetitionPenalty: Double = ModelParameters.defaultRepetitionPenalty,
+        repetitionContextSize: Int = 256
     ) {
         self.temperature = temperature
         self.maxTokens = maxTokens
         self.topP = topP
         self.topK = topK
+        self.minP = minP
         self.repetitionPenalty = repetitionPenalty
         self.repetitionContextSize = repetitionContextSize
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case temperature, maxTokens, topP, topK, minP, repetitionPenalty, repetitionContextSize
+    }
+
+    /// Tolerant decoder: fields added later (e.g. `minP`) default when missing, and the
+    /// legacy 1.8 repetition-penalty default is migrated to the current default.
+    init(from decoder: Decoder) throws {
+        let defaults = ModelParameters()
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        temperature = try c.decodeIfPresent(Double.self, forKey: .temperature) ?? defaults.temperature
+        maxTokens = try c.decodeIfPresent(Int.self, forKey: .maxTokens) ?? defaults.maxTokens
+        topP = try c.decodeIfPresent(Double.self, forKey: .topP) ?? defaults.topP
+        topK = try c.decodeIfPresent(Int.self, forKey: .topK) ?? defaults.topK
+        minP = try c.decodeIfPresent(Double.self, forKey: .minP) ?? defaults.minP
+        let penalty = try c.decodeIfPresent(Double.self, forKey: .repetitionPenalty) ?? defaults.repetitionPenalty
+        repetitionPenalty = penalty == Self.legacyDefaultRepetitionPenalty ? Self.defaultRepetitionPenalty : penalty
+        repetitionContextSize = try c.decodeIfPresent(Int.self, forKey: .repetitionContextSize) ?? defaults.repetitionContextSize
     }
 }
 
@@ -139,6 +171,11 @@ extension ModelParameters {
 
         // Top-k should be positive
         guard topK > 0 && topK <= 1000 else {
+            return false
+        }
+
+        // Min-p should be between 0.0 and 1.0
+        guard minP >= 0.0 && minP <= 1.0 else {
             return false
         }
 
@@ -208,21 +245,25 @@ extension MLXModel {
 extension MLXModel {
     /// Creates a default model configuration
     /// - Parameter basePath: Base directory for models (uses smart default if not provided)
-    /// - Returns: A new MLXModel with default settings (Qwen 2.5 7B — best for coding)
+    /// - Returns: A new MLXModel with default settings (Qwen3.5 9B — fast, strong coder, native tool calling)
     static func `default`(basePath: String? = nil) -> MLXModel {
         let modelBasePath = basePath ?? AppSettings.detectWritableModelsPath()
         return MLXModel(
-            name: "Qwen 2.5 7B",
-            path: "\(modelBasePath)/qwen-2.5-7b",
+            name: "Qwen3.5 9B",
+            path: "\(modelBasePath)/qwen3.5-9b",
             parameters: ModelParameters(),
             isDownloaded: false,
-            huggingFaceId: "mlx-community/Qwen2.5-7B-Instruct-4bit",
-            description: "Alibaba's Qwen 2.5 7B — Best for coding tasks. ~4GB",
-            contextWindowSize: 32768
+            huggingFaceId: "mlx-community/Qwen3.5-9B-4bit",
+            description: "Alibaba's Qwen3.5 9B — fast all-rounder with native tool calling. ~5GB",
+            contextWindowSize: 262144
         )
     }
 
-    /// Creates model configurations for common MLX models
+    /// Creates model configurations for common MLX models.
+    ///
+    /// Every entry is an `mlx-community` quantized repo whose `model_type` is supported by
+    /// mlx-swift-lm 3.32 (verified against huggingface.co and LLMModelFactory, Nov 2026).
+    /// Context sizes come from each repo's config.json (`text_config` where nested).
     /// - Parameter basePath: Base directory for models (uses smart default if not provided)
     /// - Returns: Array of pre-configured MLXModel instances
     static func commonModels(basePath: String? = nil) -> [MLXModel] {
@@ -231,97 +272,87 @@ extension MLXModel {
         return [
             // RECOMMENDED: Best Quality/Performance Balance
             MLXModel(
-                name: "Qwen 2.5 7B ⭐ RECOMMENDED",
+                name: "Qwen3.5 9B ⭐ RECOMMENDED",
+                path: "\(modelBasePath)/qwen3.5-9b",
+                parameters: ModelParameters(),
+                isDownloaded: false,
+                huggingFaceId: "mlx-community/Qwen3.5-9B-4bit",
+                description: "Qwen3.5 9B - Fast, strong at code, native tool calling. 16GB+ Macs. ~5GB",
+                contextWindowSize: 262144
+            ),
+
+            // Coding specialists
+            MLXModel(
+                name: "Qwen3-Coder 30B-A3B (MoE) ⭐ CODING",
+                path: "\(modelBasePath)/qwen3-coder-30b-a3b",
+                parameters: ModelParameters(),
+                isDownloaded: false,
+                huggingFaceId: "mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit",
+                description: "Qwen3-Coder MoE (3B active) - Agentic coding model, fast for its size. 32GB+ Macs. ~17GB",
+                contextWindowSize: 262144
+            ),
+
+            MLXModel(
+                name: "Devstral Small 2 24B",
+                path: "\(modelBasePath)/devstral-small-2-24b",
+                parameters: ModelParameters(),
+                isDownloaded: false,
+                huggingFaceId: "mlx-community/Devstral-Small-2-24B-Instruct-2512-4bit",
+                description: "Mistral's Devstral Small 2 - Software-engineering agent model. 32GB+ Macs. ~14GB",
+                contextWindowSize: 393216
+            ),
+
+            // Larger general models (better quality)
+            MLXModel(
+                name: "Qwen3.6 35B-A3B (MoE)",
+                path: "\(modelBasePath)/qwen3.6-35b-a3b",
+                parameters: ModelParameters(),
+                isDownloaded: false,
+                huggingFaceId: "mlx-community/Qwen3.6-35B-A3B-4bit",
+                description: "Qwen3.6 MoE (3B active) - High quality with MoE speed. 32GB+ Macs. ~20GB",
+                contextWindowSize: 262144
+            ),
+
+            MLXModel(
+                name: "Qwen3.6 27B (Best Quality)",
+                path: "\(modelBasePath)/qwen3.6-27b",
+                parameters: ModelParameters(),
+                isDownloaded: false,
+                huggingFaceId: "mlx-community/Qwen3.6-27B-4bit",
+                description: "Qwen3.6 27B dense - Best quality, slower. 32GB+ Macs. ~16GB",
+                contextWindowSize: 262144
+            ),
+
+            // Compact models (faster)
+            MLXModel(
+                name: "Gemma 4 E4B",
+                path: "\(modelBasePath)/gemma-4-e4b",
+                parameters: ModelParameters(),
+                isDownloaded: false,
+                huggingFaceId: "mlx-community/gemma-4-e4b-it-4bit",
+                description: "Google's Gemma 4 E4B - Efficient on-device model, good instruction following. ~4GB",
+                contextWindowSize: 131072
+            ),
+
+            MLXModel(
+                name: "Qwen3.5 2B (Fast)",
+                path: "\(modelBasePath)/qwen3.5-2b",
+                parameters: ModelParameters(),
+                isDownloaded: false,
+                huggingFaceId: "mlx-community/Qwen3.5-2B-4bit",
+                description: "Qwen3.5 2B - Very fast, low memory. Good for quick edits on 8GB Macs. ~1.5GB",
+                contextWindowSize: 262144
+            ),
+
+            // Kept for existing installs
+            MLXModel(
+                name: "Qwen 2.5 7B (Legacy)",
                 path: "\(modelBasePath)/qwen-2.5-7b",
                 parameters: ModelParameters(),
                 isDownloaded: false,
                 huggingFaceId: "mlx-community/Qwen2.5-7B-Instruct-4bit",
-                description: "Alibaba's Qwen 2.5 - Excellent quality, good instruction following. Best for coding. ~4GB",
+                description: "Qwen 2.5 7B - Previous default, kept for existing installs. ~4GB",
                 contextWindowSize: 32768
-            ),
-
-            MLXModel(
-                name: "Mistral 7B v0.3 ⭐ POPULAR",
-                path: "\(modelBasePath)/mistral-7b",
-                parameters: ModelParameters(),
-                isDownloaded: false,
-                huggingFaceId: "mlx-community/Mistral-7B-Instruct-v0.3-4bit",
-                description: "Mistral AI's 7B - Very popular, versatile, good for code. ~4GB",
-                contextWindowSize: 32768
-            ),
-
-            // Larger Models (Better Quality)
-            MLXModel(
-                name: "Qwen 2.5 14B (Best Quality)",
-                path: "\(modelBasePath)/qwen-2.5-14b",
-                parameters: ModelParameters(),
-                isDownloaded: false,
-                huggingFaceId: "mlx-community/Qwen2.5-14B-Instruct-4bit",
-                description: "Qwen 2.5 14B - Best quality, slower but excellent results. ~8GB",
-                contextWindowSize: 32768
-            ),
-
-            MLXModel(
-                name: "Llama 3.1 8B",
-                path: "\(modelBasePath)/llama-3.1-8b",
-                parameters: ModelParameters(),
-                isDownloaded: false,
-                huggingFaceId: "mlx-community/Meta-Llama-3.1-8B-Instruct-4bit",
-                description: "Meta's Llama 3.1 8B - Solid performance, good for general use. ~5GB",
-                contextWindowSize: 131072
-            ),
-
-            // Specialized Models
-            MLXModel(
-                name: "DeepSeek Coder 6.7B",
-                path: "\(modelBasePath)/deepseek-coder",
-                parameters: ModelParameters(),
-                isDownloaded: false,
-                huggingFaceId: "mlx-community/deepseek-coder-6.7b-instruct",
-                description: "DeepSeek Coder - Specialized for code, excellent for programming tasks. ~4GB",
-                contextWindowSize: 16384
-            ),
-
-            MLXModel(
-                name: "CodeLlama 7B",
-                path: "\(modelBasePath)/codellama-7b",
-                parameters: ModelParameters(),
-                isDownloaded: false,
-                huggingFaceId: "mlx-community/CodeLlama-7b-Instruct-hf-4bit-MLX",
-                description: "Meta's CodeLlama - Trained specifically for code generation. ~4GB",
-                contextWindowSize: 16384
-            ),
-
-            // Compact Models (Faster)
-            MLXModel(
-                name: "Phi-3.5 Mini (Fast)",
-                path: "\(modelBasePath)/phi-3.5-mini",
-                parameters: ModelParameters(),
-                isDownloaded: false,
-                huggingFaceId: "mlx-community/Phi-3.5-mini-instruct-4bit",
-                description: "Microsoft's Phi-3.5 - Small but capable, very fast. ~2GB",
-                contextWindowSize: 4096
-            ),
-
-            MLXModel(
-                name: "Gemma 2 9B",
-                path: "\(modelBasePath)/gemma-2-9b",
-                parameters: ModelParameters(),
-                isDownloaded: false,
-                huggingFaceId: "mlx-community/gemma-2-9b-it-4bit",
-                description: "Google's Gemma 2 9B - Excellent quality, good instruction following. ~5GB",
-                contextWindowSize: 8192
-            ),
-
-            // Keep original for backwards compatibility
-            MLXModel(
-                name: "Llama 3.2 3B (Small - NOT RECOMMENDED)",
-                path: "\(modelBasePath)/llama-3.2-3b",
-                parameters: ModelParameters(),
-                isDownloaded: false,
-                huggingFaceId: "mlx-community/Llama-3.2-3B-Instruct-4bit",
-                description: "Meta's Llama 3.2 3B - Too small, causes loops. Use Qwen or Mistral instead. ~2GB",
-                contextWindowSize: 8192
             )
         ]
     }

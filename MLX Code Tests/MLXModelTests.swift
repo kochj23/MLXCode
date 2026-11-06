@@ -194,7 +194,8 @@ final class MLXModelTests: XCTestCase {
     func testDefaultModelIsQwen() {
         let model = MLXModel.default(basePath: "/tmp/test-models")
         XCTAssertTrue(model.name.contains("Qwen"), "Default model should be Qwen")
-        XCTAssertEqual(model.contextWindowSize, 32768)
+        XCTAssertEqual(model.huggingFaceId, "mlx-community/Qwen3.5-9B-4bit")
+        XCTAssertEqual(model.contextWindowSize, 262144)
     }
 
     // MARK: - Equatable / Hashable

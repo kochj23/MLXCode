@@ -25,6 +25,8 @@ build/
 Packages/
 Package.pins
 Package.resolved
+# ...but commit the app's pinned dependency graph
+!MLX Code.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 
 # macOS
 .DS_Store

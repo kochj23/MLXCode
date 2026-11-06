@@ -5,11 +5,11 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Swift](https://img.shields.io/badge/Swift-5.9%2B-orange)
 ![Apple Silicon](https://img.shields.io/badge/Apple%20Silicon-M1%20%7C%20M2%20%7C%20M3%20%7C%20M4-silver)
-![Tests](https://img.shields.io/badge/tests-618-brightgreen)
+![Tests](https://img.shields.io/badge/tests-574-brightgreen)
 
 A local AI coding assistant for macOS, powered by Apple MLX. No cloud. No subscriptions. No data leaving your machine.
 
-MLX Code runs language models directly on Apple Silicon using the [mlx-swift](https://github.com/ml-explore/mlx-swift) framework. It provides a chat interface with 14 built-in tools that can read files, search code, run shell commands, build Xcode projects, manage Git repos, and interact with GitHub -- all driven by a local model running on your GPU.
+MLX Code runs language models directly on Apple Silicon using [mlx-swift](https://github.com/ml-explore/mlx-swift) and [mlx-swift-lm](https://github.com/ml-explore/mlx-swift-lm) 3.x. It provides a chat interface with 14 built-in tools that can read files, search code, run shell commands, build Xcode projects, manage Git repos, and interact with GitHub -- all driven by a local model running on your GPU.
 
 Written by Jordan Koch.
 
@@ -59,6 +59,8 @@ graph TB
 
     subgraph Engine["Inference Engine"]
         MLXService["MLXService (actor)"]
+        Generator["InferenceGenerator (protocol)"]
+        MLXLM["mlx-swift-lm 3.x ModelContainer"]
         ContextManager["ContextManager (actor)"]
         ContextBudget["70% messages / 20% project / 10% summary"]
         UserMemories["UserMemories (actor)"]
@@ -81,6 +83,7 @@ graph TB
     Views --> ViewModels
     ViewModels --> Tools
     Tools --> Engine
+    MLXService --> Generator --> MLXLM
     Engine --> Security
     Views -.-> External
 ```
@@ -100,18 +103,66 @@ sequenceDiagram
     ChatView->>ChatViewModel: Send message
     ChatViewModel->>ContextManager: Assemble context (budget-aware)
     ContextManager-->>ChatViewModel: System prompt + history + project context
-    ChatViewModel->>MLXService: Generate (AsyncStream)
-    MLXService-->>ChatViewModel: Stream tokens
-    ChatViewModel->>ChatViewModel: Detect tool call in output
-    ChatViewModel->>ToolRegistry: Execute tool
-    ToolRegistry-->>ChatViewModel: Tool result
-    ChatViewModel->>MLXService: Continue generation with result
+    ChatViewModel->>ToolRegistry: Build native ToolSpecs
+    ChatViewModel->>MLXService: chatCompletion(messages, tools) in a cancellable Task
+    MLXService-->>ChatViewModel: Stream chunks + native tool calls (rendered as <tool> blocks)
+    ChatViewModel->>ChatViewModel: Extract tool calls (native or text fallback)
+    ChatViewModel->>ToolRegistry: Execute approved tools
+    ToolRegistry-->>ChatViewModel: Tool results
+    ChatViewModel->>MLXService: Continue generation with results
     MLXService-->>ChatView: Final response
+    User-->>ChatViewModel: Stop (cancels the Task; MLXService ends the token stream)
+```
+
+### Inference Path (mlx-swift-lm 3.x)
+
+```mermaid
+flowchart LR
+    subgraph App["MLX Code"]
+        VM["ChatViewModel<br/>generationTask"]
+        Settings["AppSettings<br/>KV cache: bits / max size / prefill step"]
+        Params["ModelParameters<br/>temp, topP, topK, minP,<br/>repetition penalty + context"]
+        Svc["MLXService (actor)<br/>busy flag, cancellation,<br/>tool-call mapping"]
+        Mapper["GenerationParameterMapper"]
+        Specs["ToolSpecBuilder<br/>ToolRegistry → [ToolSpec]"]
+        Fmt["NativeToolCallFormatter<br/>toolCall → &lt;tool&gt;{json}&lt;/tool&gt;"]
+    end
+    subgraph LM["mlx-swift-lm 3.32"]
+        Loader["LLMModelFactory.loadContainer(from: URL,<br/>using: #huggingFaceTokenizerLoader())"]
+        Container["ModelContainer.prepare / generate"]
+        Stream["AsyncStream&lt;Generation&gt;<br/>.chunk / .toolCall / .info"]
+    end
+    subgraph HF["Hugging Face"]
+        Hub["HubClient.downloadSnapshot<br/>*.safetensors *.json *.jinja *.txt *.model"]
+        Tok["swift-transformers Tokenizers<br/>(chat template)"]
+    end
+
+    Hub --> Loader
+    Tok --> Loader
+    VM --> Svc
+    Specs --> Svc
+    Params --> Mapper
+    Settings --> Mapper
+    Mapper -->|GenerateParameters| Container
+    Svc --> Container --> Stream
+    Stream -->|chunks| Svc
+    Stream -->|tool calls| Fmt --> Svc
+    Svc -->|stream to UI| VM
+    VM -. "Stop: Task.cancel()" .-> Svc
 ```
 
 ---
 
 ## Features
+
+### Native On-Device Inference (mlx-swift-lm 3.x)
+
+- **Real Stop** -- Stop cancels the generation task; token generation ends inside mlx-swift-lm and the next request starts immediately. The partial answer is kept.
+- **Native tool calling** -- the tool registry is sent to the model's chat template as `ToolSpec`s, and `Generation.toolCall` events (Qwen, Llama, Mistral, Gemma, Harmony and more formats parsed by mlx-swift-lm) feed the existing approval flow -- several calls per turn are supported. The `<tool>…</tool>` text protocol remains as a fallback.
+- **KV-cache controls** -- Settings → Model: KV quantization (none / 8-bit / 4-bit), max KV size (rotating cache) and prefill step size.
+- **Full sampling controls** -- temperature, top-p, top-k, min-p, repetition penalty (default 1.1) and repetition context size are all passed to the sampler.
+- **Complete downloads** -- chat templates (`*.jinja`), BPE merges (`*.txt`) and SentencePiece models (`*.model`) are fetched along with weights and configs.
+- **Context detection** -- the context window is read from `config.json`, including nested `text_config` (Qwen3.5/3.6, Gemma 4, Devstral 2).
 
 ### 14 Built-in Tools
 
@@ -189,12 +240,18 @@ Uses [mlx-community](https://huggingface.co/mlx-community) models from Hugging F
 
 | Model | Size | Context | Best for |
 |---|---|---|---|
-| **Qwen 2.5 7B** (default) | ~4 GB | 32K | General coding, tool calling |
-| Mistral 7B v0.3 | ~4 GB | 32K | Versatile, instructions |
-| DeepSeek Coder 6.7B | ~4 GB | 16K | Code-specific tasks |
-| Qwen 2.5 14B | ~8 GB | 32K | Best quality (16GB+ RAM) |
+| **Qwen3.5 9B** (default) | ~5 GB | 256K | General coding, native tool calling (16 GB+ RAM) |
+| Qwen3-Coder 30B-A3B (MoE) | ~17 GB | 256K | Agentic coding (32 GB+ RAM) |
+| Devstral Small 2 24B | ~14 GB | 384K | Software-engineering agent tasks (32 GB+ RAM) |
+| Qwen3.6 35B-A3B (MoE) | ~20 GB | 256K | High quality at MoE speed (32 GB+ RAM) |
+| Qwen3.6 27B | ~16 GB | 256K | Best quality, slower (32 GB+ RAM) |
+| Gemma 4 E4B | ~4 GB | 128K | Efficient general model |
+| Qwen3.5 2B | ~1.5 GB | 256K | Fast edits on 8 GB Macs |
+| Qwen 2.5 7B (legacy) | ~4 GB | 32K | Kept for existing installs |
 
-Models download automatically via native Hub Swift API. Custom models from any mlx-community repository are supported. All models must be **SafeTensors** format -- PyTorch pickle files are rejected.
+All entries are `mlx-community` 4-bit repos whose architectures are supported by mlx-swift-lm 3.32. Long contexts need a lot of memory -- use the KV-cache settings to cap or quantize it.
+
+Models download automatically via the native Swift Hugging Face client (`HubClient`). Custom models from any mlx-community repository are supported. All models must be **SafeTensors** format -- PyTorch pickle files are rejected.
 
 ---
 
@@ -274,7 +331,7 @@ Local HTTP API on port **37422** (loopback only).
 - **Apple Silicon** (M1, M2, M3, M4)
 - **8 GB RAM** minimum (16 GB recommended)
 - **No Python required** -- inference and downloads are pure Swift
-- **Xcode 15+** -- only needed for the Source Editor Extension
+- **Xcode 26+** -- only needed to build from source (mlx-swift-lm 3.x uses swift-tools 6.2 and Swift macros)
 
 ## Installation
 
@@ -294,7 +351,7 @@ Local HTTP API on port **37422** (loopback only).
 
 ### From Source
 
-Requires **Xcode 15 or later**. Because the app bundles **MLX** for on-device LLM inference, the build
+Requires **Xcode 26 or later**. Because the app bundles **MLX** for on-device LLM inference, the build
 compiles Metal GPU shaders, which needs Apple's **Metal Toolchain** — a component recent Xcode versions
 no longer ship by default. Install it once:
 
@@ -308,9 +365,12 @@ Then build:
 ```bash
 git clone git@github.com:kochj23/MLXCode.git
 cd MLXCode
-open "MLX Code.xcodeproj"   # Xcode resolves Swift packages on first open (mlx-swift, mlx-swift-examples, …)
-# Build & run: Cmd+R (Xcode 15+, macOS 14.0+ target)
+open "MLX Code.xcodeproj"   # Xcode resolves Swift packages on first open (mlx-swift, mlx-swift-lm, swift-huggingface, swift-transformers)
+# Build & run: Cmd+R (Xcode 26+, macOS 14.0+ target). Approve the MLXHuggingFace macros when Xcode asks.
 ```
+
+Command-line builds must pass `-skipMacroValidation` (mlx-swift-lm's `#huggingFaceTokenizerLoader()` is a Swift macro).
+Pinned dependency versions are committed in `MLX Code.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`.
 
 > Skipping the Metal Toolchain step produces a wall of `CompileMetalFile … cannot execute tool 'metal'
 > due to missing Metal Toolchain` errors from the `mlx-swift` dependency. That's the missing component,
@@ -349,12 +409,35 @@ open "MLX Code.xcodeproj"   # Xcode resolves Swift packages on first open (mlx-s
 
 ## Test Suite
 
-618 tests across 27 test files covering models, services, security, context budgeting, build parsing, Keychain, tool registry, JSON repair, prompt templates, and source-level security scanning.
+574 tests across 28 test files covering models, services, security, context budgeting, build parsing, Keychain, tool registry, JSON repair, prompt templates, source-level security scanning, and the inference engine (parameter mapping, Stop/cancellation, native tool calls, download patterns, catalog, context parsing) via a mock generator -- no model download needed.
 
 ```bash
 xcodebuild -project "MLX Code.xcodeproj" -scheme "MLX Code" \
-  -destination "platform=macOS" test
+  -destination "platform=macOS" -skipMacroValidation test
 ```
+
+Optional real-model integration test (skipped by default):
+
+```bash
+TEST_RUNNER_MLXCODE_INTEGRATION=1 TEST_RUNNER_MLXCODE_MODEL_PATH=/path/to/mlx-model \
+  xcodebuild -project "MLX Code.xcodeproj" -scheme "MLX Code" -destination "platform=macOS" \
+  -skipMacroValidation -only-testing:"MLX Code Tests/MLXServiceTests/testIntegrationLoadAndStreamRealModel" test
+```
+
+---
+
+## Version History
+
+| Version | Date | Highlights |
+|---|---|---|
+| 6.4.0 | 2026-11 (unreleased) | mlx-swift-lm 3.32 / mlx-swift 0.32.3, real Stop, native tool calling, KV-cache settings, min-p, model catalog refresh (Qwen3.5/3.6, Qwen3-Coder, Gemma 4, Devstral 2), complete tokenizer downloads, dead Python scripts removed; multi-model load balancer (local + frontier + optional Nova) |
+| 6.3.0 | 2026-03-04 | Native model downloads, tool-call reliability, Xcode Source Editor Extension |
+| 6.1.0 | 2026-02-26 | Security hardening and code-quality audit |
+| 5.0.0 | 2026-02-19 | Focused rewrite: removed media generation, RAG and auxiliary panels |
+| 4.0.0 | 2026-02-19 | Native mlx-swift inference |
+| 1.0.0 | 2025-11-18 | Initial release |
+
+See [CHANGELOG.md](CHANGELOG.md) for details.
 
 ---
 

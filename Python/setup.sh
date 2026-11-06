@@ -25,6 +25,9 @@ echo "   pip is available ✓"
 echo ""
 
 # Install dependencies
+# NOTE: version specifiers MUST be quoted. Unquoted `pkg>=1.0` is parsed by the shell
+# as `pkg` plus an output redirect into a file named `=1.0` (which is how the stray
+# Python/=0.0.10 etc. files were created).
 echo "📦 Installing Python dependencies..."
 echo "   This may take a few minutes..."
 echo ""
@@ -32,16 +35,16 @@ echo ""
 /usr/bin/python3 -m pip install --user --upgrade pip
 
 echo "   Installing MLX framework..."
-/usr/bin/python3 -m pip install --user mlx>=0.0.10 mlx-lm>=0.0.10
+/usr/bin/python3 -m pip install --user "mlx>=0.0.10" "mlx-lm>=0.0.10"
 
 echo "   Installing HuggingFace tools..."
-/usr/bin/python3 -m pip install --user huggingface-hub>=0.19.0 transformers>=4.35.0
+/usr/bin/python3 -m pip install --user "huggingface-hub>=0.19.0" "transformers>=4.35.0"
 
 echo "   Installing RAG dependencies..."
-/usr/bin/python3 -m pip install --user sentence-transformers>=2.2.0 chromadb>=0.4.0
+/usr/bin/python3 -m pip install --user "sentence-transformers>=2.2.0" "chromadb>=0.4.0"
 
 echo "   Installing utilities..."
-/usr/bin/python3 -m pip install --user numpy>=1.24.0 tqdm>=4.65.0
+/usr/bin/python3 -m pip install --user "numpy>=1.24.0" "tqdm>=4.65.0"
 
 echo ""
 echo "✅ Installation complete!"

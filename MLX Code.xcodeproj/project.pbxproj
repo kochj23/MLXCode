@@ -11,6 +11,8 @@
 		AABB02000000000000000002 /* OpenRouterProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB02000000000000000001 /* OpenRouterProvider.swift */; };
 		AABB03000000000000000002 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB03000000000000000001 /* KeychainStore.swift */; };
 		AABB04000000000000000002 /* LLMBalancer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB04000000000000000001 /* LLMBalancer.swift */; };
+		AABB06000000000000000002 /* InferenceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB06000000000000000001 /* InferenceEngine.swift */; };
+		AABB07000000000000000002 /* InferenceEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB07000000000000000001 /* InferenceEngineTests.swift */; };
 		AABB05000000000000000002 /* LoadBalancerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB05000000000000000001 /* LoadBalancerTests.swift */; };
 		043C4E7F3FCA17ECD6EB1A51 /* PromptTemplatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942A3F3878CD789BDF616A78 /* PromptTemplatesView.swift */; };
 		0475B2DD296EECD045126C17 /* PrerequisitesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BF0FCAFA31E5516E7B5EC6 /* PrerequisitesView.swift */; };
@@ -39,7 +41,6 @@
 		375B23CD55B79FC1C62A5B23 /* MemorySystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F90FA396C5680D706B96B9 /* MemorySystem.swift */; };
 		3BB85EED3A53FFBB2C040746 /* GitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A056387C5D6883F0932FA4 /* GitService.swift */; };
 		3CEE60DFFD9C4E6F5C07E7A4 /* ModernDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76E1CC6DC5CF4943D05FF452 /* ModernDesign.swift */; };
-		3E0C215F286586A6A3FB0DA1 /* rag_system.py in Resources */ = {isa = PBXBuildFile; fileRef = 36512DB9403F2C61AD03ECF3 /* rag_system.py */; };
 		406CEA4CA10F45879033D10841AF85C6 /* MessageRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7294A0A7EFE8407C852ADC2F428A1167 /* MessageRowView.swift */; };
 		40A41D7F5CA9B0C7666F953C /* SecurityUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2C5C8715E9DF0CD60700C51 /* SecurityUtilsTests.swift */; };
 		4446DD89E33C99BFDB36347F /* LogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266478D14D864C5C22CB0D15 /* LogEntry.swift */; };
@@ -121,7 +122,6 @@
 		E9092BA47E894E33897524DF0DDAEF6E /* PythonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FFCCE81A9942AD88F69691662852EC /* PythonService.swift */; };
 		EA3DD729B1A1D45A5484F4CE /* ThinkingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18CD3C400C3AD1177178192 /* ThinkingIndicatorView.swift */; };
 		EC5EC65B8FD9A5025E274336 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B7E2C6F89FEDAA54C278A7 /* HelpView.swift */; };
-		ECB016DEEB77015CF0327B53 /* mlx_inference.py in Resources */ = {isa = PBXBuildFile; fileRef = 254D9DD9EEB20CA0D74A5E00 /* mlx_inference.py */; };
 		ED15B41EF1DB3130F9B71173 /* SharedDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8ECCA430CED7181E9845C7 /* SharedDataManager.swift */; };
 		ED42A86D2B4D4BCE84B60AA7411AEFCF /* SecurityUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7492C8D46DB847CFABCF1E5B031731B3 /* SecurityUtils.swift */; };
 		EE5F6A7B8C9D0E1F2A3B4C5D /* ToolApprovalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6A7B8C9D0E1F2A3B4C5D6E /* ToolApprovalView.swift */; };
@@ -187,6 +187,8 @@
 		AABB02000000000000000001 /* OpenRouterProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterProvider.swift; sourceTree = "<group>"; };
 		AABB03000000000000000001 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		AABB04000000000000000001 /* LLMBalancer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMBalancer.swift; sourceTree = "<group>"; };
+		AABB06000000000000000001 /* InferenceEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InferenceEngine.swift; sourceTree = "<group>"; };
+		AABB07000000000000000001 /* InferenceEngineTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InferenceEngineTests.swift; sourceTree = "<group>"; };
 		AABB05000000000000000001 /* LoadBalancerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LoadBalancerTests.swift; sourceTree = "<group>"; };
 		0095C89C8F1E4539863AE74D96B702F4 /* MLXService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLXService.swift; sourceTree = "<group>"; };
 		01A056387C5D6883F0932FA4 /* GitService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GitService.swift; path = "MLX Code/Services/GitService.swift"; sourceTree = "<group>"; };
@@ -204,7 +206,6 @@
 		22BF0FCAFA31E5516E7B5EC6 /* PrerequisitesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PrerequisitesView.swift; path = "MLX Code/Views/PrerequisitesView.swift"; sourceTree = "<group>"; };
 		2366C310D2A09B3F23571AF5 /* ToolParameterParsingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ToolParameterParsingTests.swift; sourceTree = "<group>"; };
 		2484B300512B2B737C691AF5 /* WidgetDataSync.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetDataSync.swift; sourceTree = "<group>"; };
-		254D9DD9EEB20CA0D74A5E00 /* mlx_inference.py */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.python; name = mlx_inference.py; path = Python/mlx_inference.py; sourceTree = "<group>"; };
 		266478D14D864C5C22CB0D15 /* LogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogEntry.swift; sourceTree = "<group>"; };
 		2B297A603876CBEB5317C8DE /* WidgetData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetData.swift; sourceTree = "<group>"; };
 		2C8ECCA430CED7181E9845C7 /* SharedDataManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SharedDataManager.swift; sourceTree = "<group>"; };
@@ -212,7 +213,6 @@
 		2E4D71253A090F8C814711B9 /* MLXServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MLXServiceTests.swift; sourceTree = "<group>"; };
 		3072558342FD102B940FF3DB /* GettingStarted.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = GettingStarted.md; path = Help/GettingStarted.md; sourceTree = "<group>"; };
 		3417A99CC7EF0780993CEAF5 /* NovaAPIServer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NovaAPIServer.swift; path = "MLX Code/Services/NovaAPIServer.swift"; sourceTree = "<group>"; };
-		36512DB9403F2C61AD03ECF3 /* rag_system.py */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.python; name = rag_system.py; path = Python/rag_system.py; sourceTree = "<group>"; };
 		3BA6541CD08A3BD34802C064 /* HelpView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		41314070C970B31CB3C15767 /* RepetitionDetectorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RepetitionDetectorTests.swift; sourceTree = "<group>"; };
 		416CC836CD6FD1509FE5E7E4 /* Features.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = Features.md; path = Help/Features.md; sourceTree = "<group>"; };
@@ -234,7 +234,6 @@
 		64071C1709105BE6194D0570 /* DiffPreviewTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DiffPreviewTool.swift; path = Tools/DiffPreviewTool.swift; sourceTree = "<group>"; };
 		64FB3692EC085C7E8F420ABC /* LogViewerPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewerPanel.swift; sourceTree = "<group>"; };
 		6610B63C407D26B6EF1E3F90 /* SessionManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionManager.swift; path = "MLX Code/Services/SessionManager.swift"; sourceTree = "<group>"; };
-		6CC6C830E9E5801EFE2690F2 /* mlx_daemon.py */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.python; name = mlx_daemon.py; path = Python/mlx_daemon.py; sourceTree = "<group>"; };
 		6FD0BB3BC560F8D474C00FAC /* Troubleshooting.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = Troubleshooting.md; path = Help/Troubleshooting.md; sourceTree = "<group>"; };
 		6FF8710DDF681985366DCED2 /* MessageTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MessageTests.swift; sourceTree = "<group>"; };
 		7047E47FAE5738E4C3742DD4 /* BuildErrorParserTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BuildErrorParserTests.swift; sourceTree = "<group>"; };
@@ -320,7 +319,6 @@
 		FD5FD20620CC8E07FFA1428A /* BashTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BashTool.swift; path = Tools/BashTool.swift; sourceTree = "<group>"; };
 		FDF863EF632E990FA28CCD29 /* MLX_Code_Widget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = MLX_Code_Widget.entitlements; sourceTree = "<group>"; };
 		FE07B6436E0D401DBA11F15F8CDA7B09 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		FEDDB0ED1A61C0892F6EDF1B /* huggingface_downloader.py */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.python; name = huggingface_downloader.py; path = Python/huggingface_downloader.py; sourceTree = "<group>"; };
 		FF6A7B8C9D0E1F2A3B4C5D6E /* ToolApprovalView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToolApprovalView.swift; path = "MLX Code/Views/ToolApprovalView.swift"; sourceTree = SOURCE_ROOT; };
 		FF7455C7A2CE4EAA997C11353C876821 /* SecureLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureLogger.swift; sourceTree = "<group>"; };
 		FF9E24703A8FCDC2C9B4B0BA /* FileOperationsTool.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileOperationsTool.swift; path = Tools/FileOperationsTool.swift; sourceTree = "<group>"; };
@@ -386,16 +384,6 @@
 			);
 			path = Resources;
 			sourceTree = "<group>";
-		};
-		512191759EAFD5368C431D56 /* Python */ = {
-			isa = PBXGroup;
-			children = (
-				FEDDB0ED1A61C0892F6EDF1B /* huggingface_downloader.py */,
-				254D9DD9EEB20CA0D74A5E00 /* mlx_inference.py */,
-				36512DB9403F2C61AD03ECF3 /* rag_system.py */,
-			);
-			name = Python;
-			sourceTree = SOURCE_ROOT;
 		};
 		6B35EA916216071CF5CC28C7 /* MLX Code Widget */ = {
 			isa = PBXGroup;
@@ -501,6 +489,7 @@
 				AABB02000000000000000001 /* OpenRouterProvider.swift */,
 				AABB03000000000000000001 /* KeychainStore.swift */,
 				AABB04000000000000000001 /* LLMBalancer.swift */,
+				AABB06000000000000000001 /* InferenceEngine.swift */,
 				0095C89C8F1E4539863AE74D96B702F4 /* MLXService.swift */,
 				BB001CDEF123456789ABCDE000022222 /* XcodeActionHandler.swift */,
 				2113E8E02AFC404C917BDECE45AD0C31 /* XcodeService.swift */,
@@ -538,6 +527,7 @@
 			isa = PBXGroup;
 			children = (
 				AABB05000000000000000001 /* LoadBalancerTests.swift */,
+				AABB07000000000000000001 /* InferenceEngineTests.swift */,
 				1B364AD048BC9F2567D45CC7 /* AppSettingsTests.swift */,
 				8C37CB4BC161157E297B1C70 /* CommandValidatorTests.swift */,
 				F975089CB3BD79BDBC9F5CD3 /* ContextManagerTests.swift */,
@@ -650,8 +640,6 @@
 				E2EF41EA1A31A3E9484FC8C3 /* Views */,
 				6F0229DF0B6AF4821D6BC3FE /* Services */,
 				7E5FCD73CEE595B2B243ACB7 /* Utilities */,
-				512191759EAFD5368C431D56 /* Python */,
-				6CC6C830E9E5801EFE2690F2 /* mlx_daemon.py */,
 				0E5675694C64139E1C905003 /* CodeBlockView.swift */,
 				564D43E7BF13C063A567706B /* EnhancedMessageView.swift */,
 				86DA95C55CF31CAA085E0CD4 /* CodebaseIndexer.swift */,
@@ -748,6 +736,9 @@
 				B2CDB41D8A69A6A26D70BBE7 /* MLXNN */,
 				B38BA712F974D727652E810F /* MLXLLM */,
 				5BA7AB349C44E6745850757A /* MLXLMCommon */,
+				A1F00000000000000000B001 /* MLXHuggingFace */,
+				A1F00000000000000000B002 /* HuggingFace */,
+				A1F00000000000000000B003 /* Tokenizers */,
 			);
 			productName = "MLX Code";
 			productReference = A618C93267C54CBEA8B15E4321B53726 /* MLX Code.app */;
@@ -803,6 +794,8 @@
 			packageReferences = (
 				2A5EF90852B06B563B319AD6 /* XCRemoteSwiftPackageReference "mlx-swift" */,
 				588B05B0E11878C953EE0334 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */,
+				A1F00000000000000000A001 /* XCRemoteSwiftPackageReference "swift-huggingface" */,
+				A1F00000000000000000A002 /* XCRemoteSwiftPackageReference "swift-transformers" */,
 			);
 			productRefGroup = DBD46EBB13194FBBA1D0AADBCBBFE22B /* Products */;
 			projectDirPath = "";
@@ -829,8 +822,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C95840B1287C494587897311FF59BBC8 /* Assets.xcassets in Resources */,
-				ECB016DEEB77015CF0327B53 /* mlx_inference.py in Resources */,
-				3E0C215F286586A6A3FB0DA1 /* rag_system.py in Resources */,
 				EEE1340E1501B4ACBEFF3472 /* GettingStarted.md in Resources */,
 				BC51340E6DC042F101EC852C /* Features.md in Resources */,
 				7A0F8C83531AC0524598D2AF /* KeyboardShortcuts.md in Resources */,
@@ -875,6 +866,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AABB05000000000000000002 /* LoadBalancerTests.swift in Sources */,
+				AABB07000000000000000002 /* InferenceEngineTests.swift in Sources */,
 				678CCB7627496E9731B7D734 /* AppSettingsTests.swift in Sources */,
 				AA74C582F22930DF98A0CB7B /* CommandValidatorTests.swift in Sources */,
 				2CAAE35717EEF0F0BB6889D1 /* ContextManagerTests.swift in Sources */,
@@ -919,6 +911,7 @@
 				AABB02000000000000000002 /* OpenRouterProvider.swift in Sources */,
 				AABB03000000000000000002 /* KeychainStore.swift in Sources */,
 				AABB04000000000000000002 /* LLMBalancer.swift in Sources */,
+				AABB06000000000000000002 /* InferenceEngine.swift in Sources */,
 				E2FCF04057F99E48BF46CCF3 /* CommandValidator.swift in Sources */,
 				A0013163E03EA758655F244E /* ModelSecurityValidator.swift in Sources */,
 				4A14B6380E9E4A44949059C9DE2D703A /* MLXCodeApp.swift in Sources */,
@@ -1056,7 +1049,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QRRCB8HB3W;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1071,7 +1064,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 6.3.0;
+				MARKETING_VERSION = 6.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1161,7 +1154,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = "MLX Code Widget/MLX_Code_Widget.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = QRRCB8HB3W;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "MLX Code Widget/Info.plist";
@@ -1171,7 +1164,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 6.3.0;
+				MARKETING_VERSION = 6.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1251,7 +1244,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = "MLX Code Widget/MLX_Code_Widget.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = QRRCB8HB3W;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "MLX Code Widget/Info.plist";
@@ -1261,7 +1254,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 6.3.0;
+				MARKETING_VERSION = 6.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1279,7 +1272,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = QRRCB8HB3W;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1293,7 +1286,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.2;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode.xcodeeditor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1314,7 +1307,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = QRRCB8HB3W;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1328,7 +1321,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.2;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode.xcodeeditor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1351,7 +1344,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QRRCB8HB3W;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1366,7 +1359,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 6.3.0;
+				MARKETING_VERSION = 6.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.local.mlxcode;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1431,7 +1424,7 @@
 			repositoryURL = "https://github.com/ml-explore/mlx-swift";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 0.30.3;
+				minimumVersion = 0.32.3;
 			};
 		};
 		588B05B0E11878C953EE0334 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */ = {
@@ -1439,7 +1432,23 @@
 			repositoryURL = "https://github.com/ml-explore/mlx-swift-lm";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 2.30.3;
+				minimumVersion = 3.32.3;
+			};
+		};
+		A1F00000000000000000A001 /* XCRemoteSwiftPackageReference "swift-huggingface" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/huggingface/swift-huggingface";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.13.0;
+			};
+		};
+		A1F00000000000000000A002 /* XCRemoteSwiftPackageReference "swift-transformers" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/huggingface/swift-transformers";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 1.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1464,6 +1473,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2A5EF90852B06B563B319AD6 /* XCRemoteSwiftPackageReference "mlx-swift" */;
 			productName = MLX;
+		};
+		A1F00000000000000000B001 /* MLXHuggingFace */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 588B05B0E11878C953EE0334 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
+			productName = MLXHuggingFace;
+		};
+		A1F00000000000000000B002 /* HuggingFace */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1F00000000000000000A001 /* XCRemoteSwiftPackageReference "swift-huggingface" */;
+			productName = HuggingFace;
+		};
+		A1F00000000000000000B003 /* Tokenizers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1F00000000000000000A002 /* XCRemoteSwiftPackageReference "swift-transformers" */;
+			productName = Tokenizers;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

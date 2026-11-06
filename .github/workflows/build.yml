@@ -25,6 +25,8 @@ jobs:
           -project "MLX Code.xcodeproj" \
           -scheme "MLX Code" \
           -destination 'platform=macOS' \
+          -skipMacroValidation \
+          -skipPackagePluginValidation \
           CODE_SIGNING_ALLOWED=NO \
           CODE_SIGNING_REQUIRED=NO \
           SWIFT_TREAT_WARNINGS_AS_ERRORS=NO \

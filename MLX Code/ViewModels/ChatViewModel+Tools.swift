@@ -226,6 +226,7 @@ extension ChatViewModel {
             approved[i].approved = true
         }
         pendingToolCalls = []
+        stopRequested = false
         await executePendingToolCalls(approved)
     }
 

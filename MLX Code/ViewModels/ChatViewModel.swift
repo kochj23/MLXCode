@@ -73,7 +73,17 @@ class ChatViewModel: ObservableObject {
     // MARK: - Private Properties
 
     private var cancellables = Set<AnyCancellable>()
-    private let conversationsDirectory: URL
+    /// Where conversations are persisted. `nil` disables persistence (tests).
+    private let conversationsDirectory: URL?
+    /// Inference backend (MLXService.shared in the app; injectable for tests)
+    let inference: MLXService
+    /// The in-flight generation. Cancelling it stops token generation in MLXService.
+    private(set) var generationTask: Task<String, Error>?
+    /// Set by `stopGeneration()`; blocks the agentic tool loop from continuing until
+    /// the user starts a new request.
+    var stopRequested = false
+    /// Whether the multi-model load balancer may be used (tests pin generation to `inference`).
+    var allowLoadBalancing = true
     private var streamingMessageId: UUID?
     private var generationStartTime: Date?
     private var tokenCount: Int = 0
@@ -83,15 +93,28 @@ class ChatViewModel: ObservableObject {
 
     // MARK: - Initialization
 
-    init() {
-        // Setup conversations directory
+    /// Default on-disk location for saved conversations.
+    nonisolated static var defaultConversationsDirectory: URL {
         guard let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
             fatalError("Application Support directory unavailable")
         }
-        conversationsDirectory = appSupport.appendingPathComponent("MLX Code/Conversations", isDirectory: true)
+        return appSupport.appendingPathComponent("MLX Code/Conversations", isDirectory: true)
+    }
+
+    /// - Parameters:
+    ///   - conversationsDirectory: Persistence location; `nil` disables saving/loading.
+    ///   - inference: Inference backend.
+    init(
+        conversationsDirectory: URL? = ChatViewModel.defaultConversationsDirectory,
+        inference: MLXService = .shared
+    ) {
+        self.conversationsDirectory = conversationsDirectory
+        self.inference = inference
 
         // Create directory if needed
-        try? FileManager.default.createDirectory(at: conversationsDirectory, withIntermediateDirectories: true)
+        if let conversationsDirectory {
+            try? FileManager.default.createDirectory(at: conversationsDirectory, withIntermediateDirectories: true)
+        }
 
         // Load conversations
         loadConversations()
@@ -183,6 +206,7 @@ class ChatViewModel: ObservableObject {
         }
 
         userInput = ""
+        stopRequested = false
         await generateResponse()
     }
 
@@ -207,8 +231,10 @@ class ChatViewModel: ObservableObject {
 
     func deleteConversation(_ conversation: Conversation) {
         conversations.removeAll { $0.id == conversation.id }
-        let fileURL = conversationsDirectory.appendingPathComponent("\(conversation.id.uuidString).json")
-        try? FileManager.default.removeItem(at: fileURL)
+        if let conversationsDirectory {
+            let fileURL = conversationsDirectory.appendingPathComponent("\(conversation.id.uuidString).json")
+            try? FileManager.default.removeItem(at: fileURL)
+        }
         if currentConversation?.id == conversation.id {
             currentConversation = nil
         }
@@ -221,7 +247,7 @@ class ChatViewModel: ObservableObject {
         errorMessage = nil
 
         do {
-            try await MLXService.shared.loadModel(model)
+            try await inference.loadModel(model)
             isModelLoaded = true
             statusMessage = "Model loaded: \(model.name)"
 
@@ -237,7 +263,7 @@ class ChatViewModel: ObservableObject {
 
     /// Unloads the current model
     func unloadModel() async {
-        await MLXService.shared.unloadModel()
+        await inference.unloadModel()
         isModelLoaded = false
         statusMessage = "Model unloaded"
 
@@ -249,12 +275,19 @@ class ChatViewModel: ObservableObject {
         var nudge = Message.system("[Continue the response — do not repeat what was already written above]")
         nudge.metadata = ["collapsible": "true", "collapsed": "true"]
         currentConversation?.addMessage(nudge)
+        stopRequested = false
         Task { await generateResponse() }
     }
 
-    /// Stops the current generation
+    /// Stops the current generation.
+    ///
+    /// Cancels the in-flight generation task, which stops token generation inside
+    /// MLXService (and mlx-swift-lm) and frees it for the next request. The partial
+    /// response is kept, and the agentic tool loop does not continue.
     func stopGeneration() {
-        guard isGenerating else { return }
+        guard isGenerating || generationTask != nil else { return }
+        stopRequested = true
+        generationTask?.cancel()
         isGenerating = false
         isWaitingForFirstToken = false
         statusMessage = "Generation stopped"
@@ -277,6 +310,7 @@ class ChatViewModel: ObservableObject {
         currentConversation?.messages.remove(at: lastAssistantIndex)
 
         // Regenerate response
+        stopRequested = false
         await generateResponse()
         LogManager.shared.info("Regenerated last response", category: "Chat")
     }
@@ -307,13 +341,30 @@ class ChatViewModel: ObservableObject {
 
     // MARK: - Private Methods
 
+    /// Why an in-flight generation was cut short
+    private enum EarlyStop {
+        /// User pressed Stop
+        case user
+        /// Repetition / length guard tripped — keep the truncated response
+        case limit
+    }
+
     /// Generates a response from the model
     func generateResponse() async {
         guard let conversation = currentConversation else { return }
 
+        // The user pressed Stop: don't let the agentic loop start another turn.
+        guard !stopRequested else { return }
+
         guard isModelLoaded else {
             errorMessage = "No model is loaded. Please load a model first."
             return
+        }
+
+        // Make sure any previous generation has fully wound down so MLXService is free.
+        if let previous = generationTask {
+            previous.cancel()
+            _ = try? await previous.value
         }
 
         isGenerating = true
@@ -342,11 +393,12 @@ class ChatViewModel: ObservableObject {
 
         var accumulatedResponse = ""
         var shouldStopGeneration = false
+        var earlyStop: EarlyStop?
 
         do {
             // Build context budget from loaded model
             let selectedModel = AppSettings.shared.selectedModel
-            let daemonContextWindow = await MLXService.shared.loadedModelContextWindow
+            let daemonContextWindow = await inference.loadedModelContextWindow
             let budget = ContextBudget.forModel(selectedModel, daemonContextWindow: daemonContextWindow)
 
             // Assemble optimized context within budget
@@ -358,6 +410,9 @@ class ChatViewModel: ObservableObject {
                 budget: budget
             )
 
+            // Native tool calling: advertise the registry's tools to the chat template.
+            let toolSpecs = toolModeEnabled ? ToolSpecBuilder.specs(for: toolRegistry.getAllTools()) : nil
+
             // Shared streaming token handler. Used by both the single-model MLX
             // path and the multi-model load-balanced path so behavior is identical.
             let streamHandler: (String) -> Void = { [weak self] token in
@@ -365,10 +420,7 @@ class ChatViewModel: ObservableObject {
                     guard let self = self else { return }
 
                     // Check if we should stop generation
-                    guard !shouldStopGeneration else {
-                        logWarning("⚠️ Stopping generation due to repetition/length limit", category: "ChatViewModel")
-                        return
-                    }
+                    guard !shouldStopGeneration, earlyStop == nil else { return }
 
                     // First token received - update status
                     if self.isWaitingForFirstToken {
@@ -389,9 +441,6 @@ class ChatViewModel: ObservableObject {
                             self.tokensPerSecond = Double(self.tokenCount) / elapsed
                         }
                     }
-
-                    // Tool call detection is handled in MLXService — it breaks the stream
-                    // loop as soon as </tool> appears, so we just update UI here.
 
                     // Check for repetition
                     if let detector = self.repetitionDetector {
@@ -422,6 +471,13 @@ class ChatViewModel: ObservableObject {
                         accumulatedResponse += "\n\n[Response truncated: maximum tokens reached]"
                     }
 
+                    // A guard tripped: actually stop the model instead of discarding tokens.
+                    if shouldStopGeneration {
+                        logWarning("⚠️ Stopping generation due to repetition/length limit", category: "ChatViewModel")
+                        earlyStop = .limit
+                        self.generationTask?.cancel()
+                    }
+
                     // Update the message content
                     if let messageId = self.streamingMessageId,
                        let index = self.currentConversation?.messages.firstIndex(where: { $0.id == messageId }) {
@@ -434,21 +490,43 @@ class ChatViewModel: ObservableObject {
             // the healthy enabled pool (all local models + frontier + Nova); the
             // balancer returns nil when its pool is empty so we fall back cleanly to
             // the single pinned MLX model — preserving existing behavior when off.
-            let response: String
-            if await LLMBalancer.shared.isBalancingEnabled(),
-               let balanced = try await LLMBalancer.shared.chatCompletionBalanced(
+            //
+            // Runs in a stored Task so Stop can cancel it (cancellation propagates into
+            // MLXService, which ends the mlx-swift-lm token stream).
+            let inference = self.inference
+            let allowLoadBalancing = self.allowLoadBalancing
+            let task = Task<String, Error> {
+                if allowLoadBalancing, await LLMBalancer.shared.isBalancingEnabled(),
+                   let balanced = try await LLMBalancer.shared.chatCompletionBalanced(
+                        messages: optimizedMessages,
+                        parameters: selectedModel?.parameters,
+                        tools: toolSpecs,
+                        streamHandler: streamHandler
+                   ) {
+                    return balanced
+                }
+                return try await inference.chatCompletion(
                     messages: optimizedMessages,
                     parameters: selectedModel?.parameters,
-                    streamHandler: streamHandler
-               ) {
-                response = balanced
-            } else {
-                response = try await MLXService.shared.chatCompletion(
-                    messages: optimizedMessages,
-                    parameters: selectedModel?.parameters,
+                    tools: toolSpecs,
                     streamHandler: streamHandler
                 )
             }
+            generationTask = task
+
+            let response: String
+            do {
+                response = try await task.value
+            } catch is CancellationError {
+                if stopRequested { earlyStop = .user }
+                guard earlyStop == .limit else { throw CancellationError() }
+                // Repetition/length guard: keep the truncated text as the final answer.
+                response = accumulatedResponse
+            }
+            generationTask = nil
+
+            // A Stop that raced with normal completion still counts as a stop.
+            if stopRequested { throw CancellationError() }
 
             // Update final message
             if let messageId = streamingMessageId,
@@ -485,17 +563,39 @@ class ChatViewModel: ObservableObject {
                 logInfo("🔧 Tool calls detected in response", category: "ChatViewModel")
                 await handleToolCallsInResponse(response)
             }
+        } catch is CancellationError {
+            // User pressed Stop: keep whatever was streamed so far.
+            generationTask = nil
+            isGenerating = false
+            isWaitingForFirstToken = false
+            statusMessage = "Generation stopped"
+
+            if let messageId = streamingMessageId,
+               let index = currentConversation?.messages.firstIndex(where: { $0.id == messageId }) {
+                if accumulatedResponse.isEmpty {
+                    currentConversation?.messages.remove(at: index)
+                } else {
+                    currentConversation?.messages[index].content = accumulatedResponse
+                }
+            }
+            streamingMessageId = nil
+
+            if let conversation = currentConversation {
+                saveConversation(conversation)
+            }
+            logInfo("Generation stopped by user", category: "ChatViewModel")
         } catch {
+            generationTask = nil
             errorMessage = "Failed to generate response: \(error.localizedDescription)"
             isGenerating = false
             isWaitingForFirstToken = false
             statusMessage = "Generation failed"
-            streamingMessageId = nil
 
             // Remove placeholder message
             if let messageId = streamingMessageId {
                 currentConversation?.removeMessage(withId: messageId)
             }
+            streamingMessageId = nil
 
             logError("Failed to generate response: \(error.localizedDescription)", category: "ChatViewModel")
         }
@@ -503,16 +603,16 @@ class ChatViewModel: ObservableObject {
 
     /// Updates the model loaded status and syncs the context window size
     private func updateModelStatus() async {
-        isModelLoaded = await MLXService.shared.isLoaded()
+        isModelLoaded = await inference.isLoaded()
 
-        if let model = await MLXService.shared.getCurrentModel() {
+        if let model = await inference.getCurrentModel() {
             statusMessage = "Model loaded: \(model.name)"
         } else {
             statusMessage = "No model loaded"
         }
 
         // Sync actual context window from the loaded model
-        if let contextWindow = await MLXService.shared.loadedModelContextWindow {
+        if let contextWindow = await inference.loadedModelContextWindow {
             maxTokens = contextWindow
         }
     }
@@ -521,7 +621,8 @@ class ChatViewModel: ObservableObject {
     private func loadConversations() {
         let fileManager = FileManager.default
 
-        guard let files = try? fileManager.contentsOfDirectory(at: conversationsDirectory, includingPropertiesForKeys: nil) else {
+        guard let conversationsDirectory,
+              let files = try? fileManager.contentsOfDirectory(at: conversationsDirectory, includingPropertiesForKeys: nil) else {
             return
         }
 
@@ -546,10 +647,11 @@ class ChatViewModel: ObservableObject {
             return
         }
 
-        let fileURL = conversationsDirectory.appendingPathComponent("\(conversation.id.uuidString).json")
-
         if let data = conversation.toJSONData() {
-            try? data.write(to: fileURL)
+            if let conversationsDirectory {
+                let fileURL = conversationsDirectory.appendingPathComponent("\(conversation.id.uuidString).json")
+                try? data.write(to: fileURL)
+            }
 
             // Update in conversations list
             if let index = conversations.firstIndex(where: { $0.id == conversation.id }) {

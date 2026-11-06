@@ -37,6 +37,20 @@ class AppSettings: ObservableObject {
     /// Top-k sampling parameter
     @Published var topK: Int = 40
 
+    /// KV-cache quantization bits: 0 (none), 8 or 4. Lower = less memory, slight quality cost.
+    @Published var kvCacheBits: Int = KVCacheSettings.default.bits
+
+    /// Maximum KV-cache size in tokens (rotating cache). 0 = unlimited.
+    @Published var maxKVSize: Int = KVCacheSettings.default.maxSize
+
+    /// Prompt prefill step size in tokens. 0 = model default.
+    @Published var prefillStepSize: Int = KVCacheSettings.default.prefillStepSize
+
+    /// KV-cache settings snapshot passed to MLXService for every generation.
+    var kvCacheSettings: KVCacheSettings {
+        KVCacheSettings(bits: kvCacheBits, maxSize: maxKVSize, prefillStepSize: prefillStepSize).sanitized()
+    }
+
     /// Path to Python executable
     @Published var pythonPath: String = "/usr/bin/python3"
 
@@ -136,6 +150,9 @@ class AppSettings: ObservableObject {
         static let maxTokens = "maxTokens"
         static let topP = "topP"
         static let topK = "topK"
+        static let kvCacheBits = "kvCacheBits"
+        static let maxKVSize = "maxKVSize"
+        static let prefillStepSize = "prefillStepSize"
         static let pythonPath = "pythonPath"
         static let theme = "theme"
         static let fontSize = "fontSize"
@@ -255,6 +272,18 @@ class AppSettings: ObservableObject {
         let loadedTopK = userDefaults.integer(forKey: Keys.topK)
         if loadedTopK > 0 {
             topK = min(max(loadedTopK, 1), 1000)
+        }
+
+        // Load KV-cache settings (sanitized: unknown values fall back to defaults)
+        if userDefaults.object(forKey: Keys.kvCacheBits) != nil {
+            let stored = KVCacheSettings(
+                bits: userDefaults.integer(forKey: Keys.kvCacheBits),
+                maxSize: userDefaults.integer(forKey: Keys.maxKVSize),
+                prefillStepSize: userDefaults.integer(forKey: Keys.prefillStepSize)
+            ).sanitized()
+            kvCacheBits = stored.bits
+            maxKVSize = stored.maxSize
+            prefillStepSize = stored.prefillStepSize
         }
 
         // Load python path with validation
@@ -380,6 +409,9 @@ class AppSettings: ObservableObject {
         userDefaults.set(maxTokens, forKey: Keys.maxTokens)
         userDefaults.set(topP, forKey: Keys.topP)
         userDefaults.set(topK, forKey: Keys.topK)
+        userDefaults.set(kvCacheBits, forKey: Keys.kvCacheBits)
+        userDefaults.set(maxKVSize, forKey: Keys.maxKVSize)
+        userDefaults.set(prefillStepSize, forKey: Keys.prefillStepSize)
         userDefaults.set(pythonPath, forKey: Keys.pythonPath)
         userDefaults.set(theme.rawValue, forKey: Keys.theme)
         userDefaults.set(fontSize, forKey: Keys.fontSize)
@@ -429,6 +461,9 @@ class AppSettings: ObservableObject {
         maxTokens = 2048
         topP = 0.9
         topK = 40
+        kvCacheBits = KVCacheSettings.default.bits
+        maxKVSize = KVCacheSettings.default.maxSize
+        prefillStepSize = KVCacheSettings.default.prefillStepSize
         pythonPath = "/usr/bin/python3"
         theme = .system
         fontSize = 14.0
@@ -586,6 +621,11 @@ class AppSettings: ObservableObject {
 
         $topK
             .dropFirst()
+            .debounce(for: .seconds(1.0), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in self?.saveSettings() }
+            .store(in: &cancellables)
+
+        Publishers.Merge3($kvCacheBits.dropFirst(), $maxKVSize.dropFirst(), $prefillStepSize.dropFirst())
             .debounce(for: .seconds(1.0), scheduler: DispatchQueue.main)
             .sink { [weak self] _ in self?.saveSettings() }
             .store(in: &cancellables)
